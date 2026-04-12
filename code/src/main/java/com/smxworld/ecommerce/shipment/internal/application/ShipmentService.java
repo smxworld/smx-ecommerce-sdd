@@ -7,7 +7,7 @@ import com.smxworld.ecommerce.shipment.ShipmentInfo;
 import com.smxworld.ecommerce.shipment.internal.domain.ShipmentEntity;
 import com.smxworld.ecommerce.shipment.internal.infrastructure.ShipmentRepository;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.modulith.ApplicationModuleListener;
+import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

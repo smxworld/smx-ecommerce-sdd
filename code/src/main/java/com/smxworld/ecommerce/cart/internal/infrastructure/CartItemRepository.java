@@ -5,4 +5,4 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.UUID;
 
-interface CartItemRepository extends JpaRepository<CartItemEntity, UUID> {}
+public interface CartItemRepository extends JpaRepository<CartItemEntity, UUID> {}

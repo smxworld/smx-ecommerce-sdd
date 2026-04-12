@@ -6,7 +6,7 @@ import com.smxworld.ecommerce.analytics.internal.domain.SearchLogEntity;
 import com.smxworld.ecommerce.analytics.internal.infrastructure.SearchLogRepository;
 import com.smxworld.ecommerce.catalog.SearchPerformedEvent;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.modulith.ApplicationModuleListener;
+import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

@@ -12,7 +12,7 @@ import com.smxworld.ecommerce.warehouse.WarehouseApi;
 import com.smxworld.ecommerce.warehouse.internal.domain.StockEntity;
 import com.smxworld.ecommerce.warehouse.internal.infrastructure.StockRepository;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.modulith.ApplicationModuleListener;
+import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

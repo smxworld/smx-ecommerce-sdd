@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 import java.util.UUID;
 
-interface SearchLogRepository extends JpaRepository<SearchLogEntity, UUID> {
+public interface SearchLogRepository extends JpaRepository<SearchLogEntity, UUID> {
 
     @Query("""
         SELECT s.queryText, COUNT(s) as cnt
