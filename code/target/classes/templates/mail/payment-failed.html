@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="it">
+<head><meta charset="UTF-8"><title>Problema con il Pagamento</title></head>
+<body style="font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px;">
+  <div style="max-width: 600px; margin: auto; background: white; padding: 30px; border-radius: 8px;">
+    <h2 style="color: #c62828;">Problema con il pagamento</h2>
+    <p>Siamo spiacenti, si è verificato un problema durante il processamento del pagamento per il tuo ordine.</p>
+    <table style="width:100%; border-collapse: collapse; margin-top: 20px;">
+      <tr>
+        <td style="padding: 8px; font-weight: bold;">Numero ordine:</td>
+        <td style="padding: 8px;" th:text="${orderId}">ORDER-ID</td>
+      </tr>
+      <tr>
+        <td style="padding: 8px; font-weight: bold;">Motivo:</td>
+        <td style="padding: 8px;" th:text="${reason}">reason</td>
+      </tr>
+    </table>
+    <p style="margin-top: 20px; color: #666;">Per assistenza contatta il nostro supporto.</p>
+    <p style="color: #999; font-size: 12px; margin-top: 30px;">SmxECommerce — noreply@smxecommerce.local</p>
+  </div>
+</body>
+</html>

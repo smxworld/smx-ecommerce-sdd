@@ -1,0 +1,33 @@
+@startuml
+set separator none
+title SmxECommerceApplication
+
+top to bottom direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Component>
+
+Container_Boundary("SmxECommerceApplication.SmxECommerceApplication_boundary", "SmxECommerceApplication", $tags="") {
+  Component(SmxECommerceApplication.SmxECommerceApplication.Review, "Review", $techn="Module", $descr="", $tags="", $link="")
+  Component(SmxECommerceApplication.SmxECommerceApplication.Shipment, "Shipment", $techn="Module", $descr="", $tags="", $link="")
+  Component(SmxECommerceApplication.SmxECommerceApplication.Warehouse, "Warehouse", $techn="Module", $descr="", $tags="", $link="")
+  Component(SmxECommerceApplication.SmxECommerceApplication.Analytics, "Analytics", $techn="Module", $descr="", $tags="", $link="")
+  Component(SmxECommerceApplication.SmxECommerceApplication.Api, "Api", $techn="Module", $descr="", $tags="", $link="")
+  Component(SmxECommerceApplication.SmxECommerceApplication.Cart, "Cart", $techn="Module", $descr="", $tags="", $link="")
+  Component(SmxECommerceApplication.SmxECommerceApplication.Catalog, "Catalog", $techn="Module", $descr="", $tags="", $link="")
+  Component(SmxECommerceApplication.SmxECommerceApplication.Order, "Order", $techn="Module", $descr="", $tags="", $link="")
+}
+
+Rel(SmxECommerceApplication.SmxECommerceApplication.Catalog, SmxECommerceApplication.SmxECommerceApplication.Analytics, "listens to", $techn="", $tags="", $link="")
+Rel(SmxECommerceApplication.SmxECommerceApplication.Catalog, SmxECommerceApplication.SmxECommerceApplication.Review, "listens to", $techn="", $tags="", $link="")
+Rel(SmxECommerceApplication.SmxECommerceApplication.Warehouse, SmxECommerceApplication.SmxECommerceApplication.Order, "depends on", $techn="", $tags="", $link="")
+Rel(SmxECommerceApplication.SmxECommerceApplication.Api, SmxECommerceApplication.SmxECommerceApplication.Catalog, "uses", $techn="", $tags="", $link="")
+Rel(SmxECommerceApplication.SmxECommerceApplication.Api, SmxECommerceApplication.SmxECommerceApplication.Cart, "uses", $techn="", $tags="", $link="")
+Rel(SmxECommerceApplication.SmxECommerceApplication.Api, SmxECommerceApplication.SmxECommerceApplication.Order, "uses", $techn="", $tags="", $link="")
+Rel(SmxECommerceApplication.SmxECommerceApplication.Api, SmxECommerceApplication.SmxECommerceApplication.Warehouse, "uses", $techn="", $tags="", $link="")
+Rel(SmxECommerceApplication.SmxECommerceApplication.Api, SmxECommerceApplication.SmxECommerceApplication.Shipment, "uses", $techn="", $tags="", $link="")
+Rel(SmxECommerceApplication.SmxECommerceApplication.Api, SmxECommerceApplication.SmxECommerceApplication.Review, "uses", $techn="", $tags="", $link="")
+
+SHOW_LEGEND(true)
+@enduml
