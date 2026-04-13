@@ -45,7 +45,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/smx
+          issuer-uri: http://localhost:8180/realms/smxworld
 
 # ─── Per-module datasource configuration ─────────────────────────────────────
 # Ogni modulo legge la propria sezione tramite @ConfigurationProperties.

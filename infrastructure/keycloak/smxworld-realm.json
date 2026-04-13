@@ -1,0 +1,113 @@
+{
+  "id": "smxworld",
+  "realm": "smxworld",
+  "displayName": "SMX Ecommerce",
+  "enabled": true,
+  "sslRequired": "external",
+  "registrationAllowed": false,
+  "loginWithEmailAllowed": true,
+  "duplicateEmailsAllowed": false,
+  "resetPasswordAllowed": false,
+  "editUsernameAllowed": false,
+  "bruteForceProtected": false,
+  "roles": {
+    "realm": [
+      {
+        "id": "a1b2c3d4-0001-0000-0000-000000000001",
+        "name": "ROLE_USER",
+        "description": "Standard user role",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "smxworld"
+      },
+      {
+        "id": "a1b2c3d4-0002-0000-0000-000000000002",
+        "name": "ROLE_OPERATOR",
+        "description": "Backoffice operator role",
+        "composite": false,
+        "clientRole": false,
+        "containerId": "smxworld"
+      }
+    ]
+  },
+  "clients": [
+    {
+      "id": "b1c2d3e4-0001-0000-0000-000000000001",
+      "clientId": "smxworld-frontend",
+      "name": "SMX Frontend",
+      "description": "Public client for React frontend",
+      "enabled": true,
+      "publicClient": true,
+      "bearerOnly": false,
+      "standardFlowEnabled": true,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": true,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect",
+      "redirectUris": [
+        "http://localhost:5173/*"
+      ],
+      "webOrigins": [
+        "http://localhost:5173"
+      ],
+      "attributes": {
+        "pkce.code.challenge.method": "S256"
+      }
+    },
+    {
+      "id": "b1c2d3e4-0002-0000-0000-000000000002",
+      "clientId": "smxworld-backend",
+      "name": "SMX Backend",
+      "description": "Confidential client for Spring Boot backend",
+      "enabled": true,
+      "publicClient": false,
+      "bearerOnly": true,
+      "standardFlowEnabled": false,
+      "implicitFlowEnabled": false,
+      "directAccessGrantsEnabled": false,
+      "serviceAccountsEnabled": false,
+      "protocol": "openid-connect"
+    }
+  ],
+  "users": [
+    {
+      "id": "c1d2e3f4-0001-0000-0000-000000000001",
+      "username": "acquirente@smx.local",
+      "email": "acquirente@smx.local",
+      "firstName": "Mario",
+      "lastName": "Rossi",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "ROLE_USER"
+      ]
+    },
+    {
+      "id": "c1d2e3f4-0002-0000-0000-000000000002",
+      "username": "operatore@smx.local",
+      "email": "operatore@smx.local",
+      "firstName": "Laura",
+      "lastName": "Bianchi",
+      "enabled": true,
+      "emailVerified": true,
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password123",
+          "temporary": false
+        }
+      ],
+      "realmRoles": [
+        "ROLE_USER",
+        "ROLE_OPERATOR"
+      ]
+    }
+  ]
+}
