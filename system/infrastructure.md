@@ -53,7 +53,7 @@ Nel file `code/src/main/resources/application.yml`:
 ```yaml
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/smx
+    url: jdbc:postgresql://localhost:5432/smx_ecommerce
     username: smx
     password: smx
 

@@ -6,7 +6,7 @@ spring:
   # Ogni modulo configura il proprio DataSource bean (via @ConfigurationProperties)
   # che punta allo stesso cluster PostgreSQL con schema dedicato (search_path).
   datasource:
-    url: jdbc:postgresql://localhost:5432/smx
+    url: jdbc:postgresql://localhost:5432/smx_ecommerce
     username: smx
     password: smx
     driver-class-name: org.postgresql.Driver
@@ -54,42 +54,42 @@ smx:
   modules:
     catalog:
       datasource:
-        url: jdbc:postgresql://localhost:5432/smx?currentSchema=smx_catalog
+        url: jdbc:postgresql://localhost:5432/smx_ecommerce?currentSchema=smx_catalog
         username: smx
         password: smx
     cart:
       datasource:
-        url: jdbc:postgresql://localhost:5432/smx?currentSchema=smx_cart
+        url: jdbc:postgresql://localhost:5432/smx_ecommerce?currentSchema=smx_cart
         username: smx
         password: smx
     order:
       datasource:
-        url: jdbc:postgresql://localhost:5432/smx?currentSchema=smx_order
+        url: jdbc:postgresql://localhost:5432/smx_ecommerce?currentSchema=smx_order
         username: smx
         password: smx
     payment:
       datasource:
-        url: jdbc:postgresql://localhost:5432/smx?currentSchema=smx_payment
+        url: jdbc:postgresql://localhost:5432/smx_ecommerce?currentSchema=smx_payment
         username: smx
         password: smx
     warehouse:
       datasource:
-        url: jdbc:postgresql://localhost:5432/smx?currentSchema=smx_warehouse
+        url: jdbc:postgresql://localhost:5432/smx_ecommerce?currentSchema=smx_warehouse
         username: smx
         password: smx
     shipment:
       datasource:
-        url: jdbc:postgresql://localhost:5432/smx?currentSchema=smx_shipment
+        url: jdbc:postgresql://localhost:5432/smx_ecommerce?currentSchema=smx_shipment
         username: smx
         password: smx
     review:
       datasource:
-        url: jdbc:postgresql://localhost:5432/smx?currentSchema=smx_review
+        url: jdbc:postgresql://localhost:5432/smx_ecommerce?currentSchema=smx_review
         username: smx
         password: smx
     analytics:
       datasource:
-        url: jdbc:postgresql://localhost:5432/smx?currentSchema=smx_analytics
+        url: jdbc:postgresql://localhost:5432/smx_ecommerce?currentSchema=smx_analytics
         username: smx
         password: smx
 

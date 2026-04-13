@@ -6,13 +6,13 @@ services:
     environment:
       POSTGRES_USER: smx
       POSTGRES_PASSWORD: smx
-      POSTGRES_DB: smx
+      POSTGRES_DB: smx_ecommerce
     ports:
       - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U smx -d smx"]
+      test: ["CMD-SHELL", "pg_isready -U smx -d smx_ecommerce"]
       interval: 10s
       timeout: 5s
       retries: 5
