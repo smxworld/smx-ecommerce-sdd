@@ -1,36 +1,36 @@
 ---
-title: "Magazzino e Spedizione"
+title: "Warehouse and Shipment"
 status: synced
 author: ""
 last-modified: "2026-04-10T00:00:00.000Z"
 version: "1.0"
 ---
 
-# Magazzino e Spedizione
+# Warehouse and Shipment
 
 ## User Stories
 
-- Come acquirente, vedo se un prodotto è disponibile
-- Come acquirente, ricevo una notifica quando l'ordine viene spedito
-- Come operatore, posso aggiornare la quantità disponibile
-- Come operatore, posso avviare manualmente la spedizione
+- As a buyer, I can see whether a product is available
+- As a buyer, I receive a notification when the order is shipped
+- As an operator, I can update the available quantity
+- As an operator, I can manually trigger a shipment
 
-## Comportamento — Warehouse
+## Behavior — Warehouse
 
-- Consuma `ProductBookedEvent` e `ProductUnbookedEvent` da cart
-- Quando chiamato da order tramite `reserveStock()`: scala lo stock e pubblica `StockReservedEvent` o `StockReservationFailedEvent`
-- Consuma `OrderCancelledEvent` per rilasciare prenotazioni
+- Consumes `ProductBookedEvent` and `ProductUnbookedEvent` from cart
+- When called by order via `reserveStock()`: decrements stock and publishes `StockReservedEvent` or `StockReservationFailedEvent`
+- Consumes `OrderCancelledEvent` to release reservations
 - `quantity_available = quantity_total - quantity_reserved`
 
-## Comportamento — Shipment
+## Behavior — Shipment
 
-- Consuma eventi da warehouse per registrare la spedizione
-- Genera tracking number simulato
-- Pubblica `OrderShippedEvent` consumato da notification
-- ShipmentApi espone: `getShipment(UUID orderId)`
+- Consumes events from warehouse to register the shipment
+- Generates a simulated tracking number
+- Publishes `OrderShippedEvent` consumed by notification
+- ShipmentApi exposes: `getShipment(UUID orderId)`
 
 ## Agent Notes
 
-- Usare `@Version` per optimistic locking sulla tabella stock
-- WarehouseApi espone: `getStock`, `reserveStock`, `releaseReservation`, `updateStock`
-- Shipment simula il corriere generando un tracking number UUID
+- Use `@Version` for optimistic locking on the stock table
+- WarehouseApi exposes: `getStock`, `reserveStock`, `releaseReservation`, `updateStock`
+- Shipment simulates the carrier by generating a UUID tracking number

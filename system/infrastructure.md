@@ -1,54 +1,54 @@
 ---
-title: "Infrastruttura"
+title: "Infrastructure"
 status: synced
 author: ""
 last-modified: "2026-04-12T00:00:00.000Z"
 version: "1.0"
 ---
 
-# Infrastruttura
+# Infrastructure
 
-Configurazione completa dell'ambiente di sviluppo locale tramite Docker Compose.
+Complete configuration of the local development environment via Docker Compose.
 
-## Componenti
+## Components
 
-| Componente | Immagine | Porta | Scopo |
+| Component | Image | Port | Purpose |
 |---|---|---|---|
-| PostgreSQL | `postgres:17` | 5432 | Database principale (tutti gli schemi) |
-| Keycloak | `quay.io/keycloak/keycloak:24` | 8180 | Autenticazione e autorizzazione |
-| Elasticsearch | `elasticsearch:8.13.0` | 9200 | Search index prodotti |
-| Mailhog | `mailhog/mailhog` | 1025 (SMTP), 8025 (UI) | Mock SMTP per email |
+| PostgreSQL | `postgres:17` | 5432 | Main database (all schemas) |
+| Keycloak | `quay.io/keycloak/keycloak:24` | 8180 | Authentication and authorization |
+| Elasticsearch | `elasticsearch:8.13.0` | 9200 | Product search index |
+| Mailhog | `mailhog/mailhog` | 1025 (SMTP), 8025 (UI) | Mock SMTP for emails |
 
 ## Docker Compose
 
-Il file `docker-compose.yml` sta nella root del progetto.
+The `docker-compose.yml` file is in the project root.
 
 ### PostgreSQL
 
-- Un singolo container PostgreSQL
-- Tutti gli schemi (`smx_catalog`, `smx_cart`, `smx_order`, ecc.) vengono creati automaticamente da Flyway all'avvio dell'applicazione
-- Credenziali: `user=smx`, `password=smx`, `database=smx`
+- A single PostgreSQL container
+- All schemas (`smx_catalog`, `smx_cart`, `smx_order`, etc.) are created automatically by Flyway on application startup
+- Credentials: `user=smx`, `password=smx`, `database=smx`
 
 ### Keycloak
 
 - Realm: `smx`
-- Client: `smx-frontend` (public client, per React) e `smx-backend` (confidential, per Spring Boot)
-- Il realm viene importato automaticamente all'avvio da `infrastructure/keycloak/realm-export.json`
-- URL admin: `http://localhost:8180/admin` — credenziali: `admin/admin`
+- Client: `smx-frontend` (public client, for React) and `smx-backend` (confidential, for Spring Boot)
+- The realm is imported automatically on startup from `infrastructure/keycloak/realm-export.json`
+- Admin URL: `http://localhost:8180/admin` — credentials: `admin/admin`
 
 ### Elasticsearch
 
-- Security disabilitata in sviluppo (`xpack.security.enabled=false`)
-- Indice `products` creato automaticamente da Spring Data Elasticsearch all'avvio
+- Security disabled in development (`xpack.security.enabled=false`)
+- `products` index created automatically by Spring Data Elasticsearch on startup
 
 ### Mailhog
 
-- Tutte le email inviate dall'applicazione finiscono qui
-- UI web per vedere le email: `http://localhost:8025`
+- All emails sent by the application end up here
+- Web UI to view emails: `http://localhost:8025`
 
-## Configurazione Spring Boot
+## Spring Boot Configuration
 
-Nel file `code/src/main/resources/application.yml`:
+In the file `code/src/main/resources/application.yml`:
 
 ```yaml
 spring:
@@ -77,35 +77,35 @@ keycloak:
 
 ## CORS
 
-Il backend Spring Boot deve accettare richieste da `http://localhost:5173` (Vite dev server).
+The Spring Boot backend must accept requests from `http://localhost:5173` (Vite dev server).
 
-Configurare un `CorsConfigurationSource` bean che permette:
+Configure a `CorsConfigurationSource` bean that allows:
 - Origins: `http://localhost:5173`
 - Methods: GET, POST, PUT, DELETE, OPTIONS
 - Headers: Authorization, Content-Type
 - Allow credentials: true
 
-## Avvio dell'ambiente
+## Starting the environment
 
 ```bash
-# 1. Avvia l'infrastruttura
+# 1. Start the infrastructure
 docker compose up -d
 
-# 2. Avvia il backend Spring Boot
+# 2. Start the Spring Boot backend
 cd code && mvn spring-boot:run -Dspring-boot.run.profiles=dev
 
-# 3. Avvia il frontend React
+# 3. Start the React frontend
 cd code/frontend && npm install && npm run dev
 ```
 
-Backend disponibile su `http://localhost:8080`
-Frontend disponibile su `http://localhost:5173`
+Backend available at `http://localhost:8080`
+Frontend available at `http://localhost:5173`
 
 ## Agent Notes
 
-- Creare `docker-compose.yml` nella root del progetto (non dentro `code/`)
-- Creare `infrastructure/keycloak/realm-export.json` con il realm completo
-- Il realm export deve includere: realm `smx`, client `smx-frontend` e `smx-backend`, i due utenti di seed, i ruoli `ROLE_USER` e `ROLE_OPERATOR`
-- Elasticsearch in sviluppo non richiede autenticazione — impostare `xpack.security.enabled=false`
-- Aggiungere un `healthcheck` su PostgreSQL nel docker-compose per evitare race condition all'avvio
-- Il backend Spring Boot non gira dentro Docker in sviluppo — gira sulla macchina host e si connette ai container
+- Create `docker-compose.yml` in the project root (not inside `code/`)
+- Create `infrastructure/keycloak/realm-export.json` with the complete realm
+- The realm export must include: realm `smx`, clients `smx-frontend` and `smx-backend`, the two seed users, roles `ROLE_USER` and `ROLE_OPERATOR`
+- Elasticsearch in development does not require authentication — set `xpack.security.enabled=false`
+- Add a `healthcheck` on PostgreSQL in docker-compose to avoid race conditions on startup
+- The Spring Boot backend does not run inside Docker in development — it runs on the host machine and connects to the containers

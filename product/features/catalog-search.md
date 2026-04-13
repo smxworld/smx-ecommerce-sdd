@@ -1,33 +1,33 @@
 ---
-title: "Catalogo e Ricerca"
+title: "Catalog and Search"
 status: synced
 author: ""
 last-modified: "2026-04-10T00:00:00.000Z"
 version: "1.0"
 ---
 
-# Catalogo e Ricerca
+# Catalog and Search
 
 ## User Stories
 
-- Come acquirente, posso cercare prodotti per nome o descrizione
-- Come acquirente, posso filtrare per categoria e fascia di prezzo
-- Come acquirente, vedo i prodotti ordinati per rilevanza
-- Come acquirente, vedo la disponibilità in stock
-- Come acquirente, posso visualizzare il dettaglio di un prodotto
+- As a buyer, I can search for products by name or description
+- As a buyer, I can filter by category and price range
+- As a buyer, I see products sorted by relevance
+- As a buyer, I see stock availability
+- As a buyer, I can view the product detail page
 
-## Comportamento
+## Behavior
 
-- La ricerca usa Elasticsearch tramite il modulo catalog
-- Ogni ricerca pubblica un `SearchPerformedEvent` consumato da analytics
-- Il modulo analytics pubblica `SearchScoreUpdatedEvent`
-- Il modulo catalog consuma `SearchScoreUpdatedEvent` per aggiornare il ranking
-- Il modulo catalog consuma `ReviewCreatedEvent` per aggiornare il rating medio
-- La disponibilità stock viene letta da WarehouseApi on-demand
+- Search uses Elasticsearch via the catalog module
+- Each search publishes a `SearchPerformedEvent` consumed by analytics
+- The analytics module publishes `SearchScoreUpdatedEvent`
+- The catalog module consumes `SearchScoreUpdatedEvent` to update rankings
+- The catalog module consumes `ReviewCreatedEvent` to update the average rating
+- Stock availability is read from WarehouseApi on-demand
 
 ## Agent Notes
 
-- CatalogApi espone: `getProduct(UUID)`, `search(SearchQuery)`, `updateProductScore(UUID, double)`
-- SearchQuery contiene: `q`, `category`, `minPrice`, `maxPrice`, `page`, `size`
-- Il documento Elasticsearch rispecchia i campi di Product più `averageRating` e `score`
-- La disponibilità stock NON va nell'indice Elasticsearch
+- CatalogApi exposes: `getProduct(UUID)`, `search(SearchQuery)`, `updateProductScore(UUID, double)`
+- SearchQuery contains: `q`, `category`, `minPrice`, `maxPrice`, `page`, `size`
+- The Elasticsearch document mirrors the Product fields plus `averageRating` and `score`
+- Stock availability must NOT go into the Elasticsearch index

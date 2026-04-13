@@ -9,30 +9,30 @@ created-at: "2026-04-13T00:00:00.000Z"
 
 ## Error
 
-Il frontend mostra "Page not found" al caricamento perché Keycloak 
-non trova il realm `smxworld`. Il realm export non viene importato 
-automaticamente all'avvio del container.
+The frontend shows "Page not found" on load because Keycloak
+cannot find the `smxworld` realm. The realm export is not imported
+automatically on container startup.
 
 ## Expected behavior
 
-Chiunque cloni il repository e esegua `docker compose up -d` deve 
-avere Keycloak già configurato con:
+Anyone who clones the repository and runs `docker compose up -d` must
+have Keycloak already configured with:
 - Realm `smxworld`
-- Client `smxworld-frontend` (public) e `smxworld-backend` (confidential)
-- Utente `acquirente@smx.local` con password `password123` e ruolo `ROLE_USER`
-- Utente `operatore@smx.local` con password `password123` e ruolo `ROLE_OPERATOR`
+- Client `smxworld-frontend` (public) and `smxworld-backend` (confidential)
+- User `acquirente@smx.local` with password `password123` and role `ROLE_USER`
+- User `operatore@smx.local` with password `password123` and role `ROLE_OPERATOR`
 
 ## Root cause
 
-Il `docker-compose.yml` non monta il realm export e non passa 
-il flag `--import-realm` a Keycloak.
+The `docker-compose.yml` does not mount the realm export and does not pass
+the `--import-realm` flag to Keycloak.
 
 ## Fix
 
-1. Creare `infrastructure/keycloak/smxworld-realm.json` con il realm export completo
-2. Aggiornare `docker-compose.yml` per montare la cartella e passare `--import-realm`
-3. Aggiornare `application.yml` con `issuer-uri: http://localhost:8180/realms/smxworld`
-4. Aggiornare la configurazione Keycloak JS nel frontend con il realm `smxworld`
+1. Create `infrastructure/keycloak/smxworld-realm.json` with the complete realm export
+2. Update `docker-compose.yml` to mount the folder and pass `--import-realm`
+3. Update `application.yml` with `issuer-uri: http://localhost:8180/realms/smxworld`
+4. Update the Keycloak JS configuration in the frontend with realm `smxworld`
 
 ## Steps to reproduce
 

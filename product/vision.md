@@ -10,34 +10,34 @@ version: "1.0"
 
 ## Overview
 
-SmxECommerce è una piattaforma di e-commerce generica, progettata per vendere qualsiasi tipo di prodotto fisico. L'obiettivo è offrire un'esperienza di acquisto fluida per l'utente finale e strumenti di gestione efficaci per il back-office, mantenendo un'architettura modulare scalabile e manutenibile.
+SmxECommerce is a generic e-commerce platform designed to sell any type of physical product. The goal is to provide a smooth shopping experience for end users and effective management tools for the back-office, while maintaining a modular, scalable, and maintainable architecture.
 
-Il progetto nasce anche come riferimento didattico per team di sviluppo che vogliono imparare a costruire sistemi distribuiti moderni con Java e Spring Boot, usando un approccio modulith pronto a diventare microservizi.
+The project also serves as a reference for development teams who want to learn how to build modern distributed systems with Java and Spring Boot, using a modulith approach ready to evolve into microservices.
 
-## Utenti Target
+## Target Users
 
-- **Acquirente** — utente registrato che naviga il catalogo, aggiunge prodotti al carrello, completa acquisti e segue le spedizioni.
-- **Operatore di back-office** — gestisce il magazzino, monitora gli ordini e aggiorna il catalogo prodotti.
+- **Buyer** — a registered user who browses the catalog, adds products to the cart, completes purchases, and tracks shipments.
+- **Back-office Operator** — manages the warehouse, monitors orders, and updates the product catalog.
 
-## Problema
+## Problem
 
-Costruire un e-commerce realistico che copra l'intero flusso — dalla navigazione del catalogo alla notifica di spedizione — richiede l'integrazione di molti domini. La maggior parte degli esempi didattici coprono solo una parte. SmxECommerce copre tutto.
+Building a realistic e-commerce platform that covers the entire flow — from catalog browsing to shipment notification — requires integrating many domains. Most educational examples cover only a portion of this. SmxECommerce covers it all.
 
-## Soluzione
+## Solution
 
-Una piattaforma modulith dove ogni dominio di business è un modulo autonomo con il proprio schema database. I moduli comunicano tramite API pubbliche Java per le operazioni sincrone e tramite Spring Application Events per i flussi asincroni.
+A modulith platform where each business domain is an autonomous module with its own database schema. Modules communicate through public Java APIs for synchronous operations and through Spring Application Events for asynchronous flows.
 
 ## Goals
 
-- Flusso di acquisto completo: catalogo → carrello → checkout → pagamento → spedizione
-- Ricerca prodotti con ranking basato su review e analytics
-- Notifiche in tempo reale su eventi rilevanti
-- Autenticazione centralizzata tramite Keycloak
-- Back-office per gestione magazzino e ordini
+- Complete purchase flow: catalog → cart → checkout → payment → shipment
+- Product search with ranking based on reviews and analytics
+- Real-time notifications on relevant events
+- Centralized authentication via Keycloak
+- Back-office for warehouse and order management
 
 ## Non-Goals
 
-- Marketplace multi-venditore
-- App mobile nativa
-- Gestione resi e rimborsi
-- Internazionalizzazione e multi-valuta
+- Multi-vendor marketplace
+- Native mobile app
+- Returns and refunds management
+- Internationalization and multi-currency

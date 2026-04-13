@@ -1,35 +1,35 @@
 ---
-title: "Carrello"
+title: "Cart"
 status: synced
 author: ""
 last-modified: "2026-04-10T00:00:00.000Z"
 version: "1.0"
 ---
 
-# Carrello
+# Cart
 
 ## User Stories
 
-- Come acquirente, posso aggiungere un prodotto al carrello
-- Come acquirente, posso modificare la quantità
-- Come acquirente, posso rimuovere un prodotto
-- Come acquirente, vedo il totale aggiornato
-- Come acquirente, ritrovo il mio carrello alla prossima sessione
+- As a buyer, I can add a product to the cart
+- As a buyer, I can modify the quantity
+- As a buyer, I can remove a product
+- As a buyer, I see the updated total
+- As a buyer, I find my cart again in the next session
 
-## Comportamento
+## Behavior
 
-- Il modulo cart gestisce un carrello per utente identificato da `userId`
-- Aggiunta prodotto → pubblica `ProductBookedEvent` verso warehouse
-- Rimozione prodotto → pubblica `ProductUnbookedEvent`
-- Il prezzo viene snapshotted al momento dell'aggiunta
-- Il totale è calcolato lato server
+- The cart module manages one cart per user identified by `userId`
+- Adding a product → publishes `ProductBookedEvent` to warehouse
+- Removing a product → publishes `ProductUnbookedEvent`
+- The price is snapshotted at the time of addition
+- The total is calculated server-side
 
 ## Pending Changes
 
-- [ ] Gestione carrello anonimo con merge al login
+- [ ] Anonymous cart management with merge on login
 
 ## Agent Notes
 
-- CartApi espone: `getCart`, `addItem`, `updateItem`, `removeItem`, `clearCart`, `getCartItems`
-- Persistenza con Spring Data JPA su schema `smx_cart`
-- Tabelle: `carts` e `cart_items`
+- CartApi exposes: `getCart`, `addItem`, `updateItem`, `removeItem`, `clearCart`, `getCartItems`
+- Persistence with Spring Data JPA on schema `smx_cart`
+- Tables: `carts` and `cart_items`

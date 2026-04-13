@@ -6,40 +6,40 @@ last-modified: "2026-04-10T00:00:00.000Z"
 version: "1.0"
 ---
 
-# Utenti
+# Users
 
-## Acquirente
+## Buyer
 
-L'utente principale della piattaforma. Si registra, naviga il catalogo, acquista prodotti e traccia i propri ordini.
+The primary user of the platform. Registers, browses the catalog, purchases products, and tracks their orders.
 
-### Bisogni
+### Needs
 
-- Trovare prodotti rapidamente tramite ricerca e filtri
-- Aggiungere prodotti al carrello e modificarlo liberamente
-- Completare l'acquisto in pochi step con pagamento sicuro
-- Ricevere conferme e aggiornamenti sullo stato dell'ordine
-- Lasciare recensioni sui prodotti acquistati
+- Find products quickly through search and filters
+- Add products to the cart and modify it freely
+- Complete the purchase in a few steps with secure payment
+- Receive confirmations and updates on order status
+- Leave reviews on purchased products
 
-### Comportamento atteso
+### Expected behavior
 
-- Accede tramite login OAuth2 (Keycloak)
-- Il carrello persiste tra sessioni diverse
-- Può avere più ordini attivi contemporaneamente
-- Riceve notifiche via email per ogni cambio di stato dell'ordine
+- Authenticates via OAuth2 login (Keycloak)
+- The cart persists across sessions
+- Can have multiple active orders simultaneously
+- Receives email notifications for every order status change
 
-## Operatore di Back-Office
+## Back-Office Operator
 
-Utente interno con privilegi elevati. Gestisce il magazzino, monitora gli ordini e aggiorna il catalogo.
+Internal user with elevated privileges. Manages the warehouse, monitors orders, and updates the catalog.
 
-### Bisogni
+### Needs
 
-- Vedere tutti gli ordini e il loro stato corrente
-- Aggiornare la disponibilità dei prodotti in magazzino
-- Gestire il catalogo prodotti
-- Avviare manualmente il processo di spedizione
+- View all orders and their current status
+- Update product availability in the warehouse
+- Manage the product catalog
+- Manually trigger the shipment process
 
-### Comportamento atteso
+### Expected behavior
 
-- Accede con ruolo `ROLE_OPERATOR`
-- Ha accesso diretto a endpoint amministrativi dedicati via REST
-- Non interagisce con il frontend pubblico
+- Authenticates with role `ROLE_OPERATOR`
+- Has direct access to dedicated administrative endpoints via REST
+- Does not interact with the public frontend

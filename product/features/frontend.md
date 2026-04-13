@@ -8,104 +8,104 @@ version: "1.0"
 
 # Frontend React
 
-Applicazione React che implementa il flusso completo di acquisto: ricerca prodotto → dettaglio → carrello → checkout → conferma ordine.
+React application implementing the complete purchase flow: product search → detail → cart → checkout → order confirmation.
 
-## Stack Frontend
+## Frontend Stack
 
-- **React 18** con Vite come build tool
-- **React Router v6** per la navigazione
-- **React Query (TanStack Query)** per le chiamate API e il caching
-- **Tailwind CSS** per lo styling
-- **Axios** per le chiamate HTTP
-- **Keycloak JS** per l'autenticazione
+- **React 18** with Vite as build tool
+- **React Router v6** for navigation
+- **React Query (TanStack Query)** for API calls and caching
+- **Tailwind CSS** for styling
+- **Axios** for HTTP calls
+- **Keycloak JS** for authentication
 
-Il frontend sta in `code/frontend/` ed è un progetto Vite separato dal backend Spring Boot.
+The frontend lives in `code/frontend/` and is a Vite project separate from the Spring Boot backend.
 
-## Schermate
+## Screens
 
-### 1. Home / Ricerca (`/`)
+### 1. Home / Search (`/`)
 
-- Barra di ricerca testuale centrata nella pagina
-- Filtri: categoria (select) e fascia di prezzo (min/max)
-- Griglia di prodotti (3 colonne su desktop, 1 su mobile)
-- Ogni card prodotto mostra: immagine placeholder, nome, prezzo, rating medio (stelline), disponibilità stock (badge verde/rosso)
-- Paginazione in fondo
+- Centered text search bar
+- Filters: category (select) and price range (min/max)
+- Product grid (3 columns on desktop, 1 on mobile)
+- Each product card shows: placeholder image, name, price, average rating (stars), stock availability (green/red badge)
+- Pagination at the bottom
 
-### 2. Dettaglio Prodotto (`/products/:id`)
+### 2. Product Detail (`/products/:id`)
 
-- Immagine prodotto a sinistra, info a destra
-- Nome, categoria, prezzo, rating medio
-- Badge disponibilità stock
-- Descrizione estesa
-- Input quantità + bottone "Aggiungi al carrello"
-- Sezione recensioni in fondo (lista con rating e testo)
+- Product image on the left, info on the right
+- Name, category, price, average rating
+- Stock availability badge
+- Extended description
+- Quantity input + "Add to cart" button
+- Reviews section at the bottom (list with rating and text)
 
-### 3. Carrello (`/cart`)
+### 3. Cart (`/cart`)
 
-- Lista degli item nel carrello
-- Ogni riga: nome prodotto, prezzo unitario, input quantità modificabile, subtotale, bottone rimuovi
-- Totale in fondo a destra
-- Bottone "Procedi al checkout"
-- Se carrello vuoto: messaggio + link alla home
+- List of items in the cart
+- Each row: product name, unit price, editable quantity input, subtotal, remove button
+- Total at the bottom right
+- "Proceed to checkout" button
+- If cart is empty: message + link to home
 
 ### 4. Checkout (`/checkout`)
 
-- Form indirizzo di spedizione: nome, cognome, via, città, CAP, paese
-- Riepilogo ordine (readonly): lista item + totale
-- Bottone "Conferma ordine"
-- Redirect alla pagina di conferma dopo il POST /api/checkout
+- Shipping address form: first name, last name, street, city, ZIP, country
+- Order summary (readonly): item list + total
+- "Confirm order" button
+- Redirect to confirmation page after POST /api/checkout
 
-### 5. Conferma Ordine (`/orders/:orderId`)
+### 5. Order Confirmation (`/orders/:orderId`)
 
-- Messaggio di conferma con icona di successo
-- Numero ordine
-- Stato ordine (badge)
-- Lista item ordinati
-- Bottone "Continua a fare acquisti" → torna alla home
+- Confirmation message with success icon
+- Order number
+- Order status (badge)
+- List of ordered items
+- "Continue shopping" button → returns to home
 
-## Autenticazione
+## Authentication
 
-- Al caricamento dell'app, Keycloak JS verifica se l'utente è autenticato
-- Se non autenticato, redirect alla login page di Keycloak
-- Il token JWT viene allegato automaticamente a tutte le chiamate API tramite un Axios interceptor
-- Il token viene refreshato automaticamente prima della scadenza
+- On app load, Keycloak JS checks whether the user is authenticated
+- If not authenticated, redirect to Keycloak login page
+- The JWT token is automatically attached to all API calls via an Axios interceptor
+- The token is automatically refreshed before expiry
 
-## Chiamate API
+## API Calls
 
-Tutte le chiamate vanno verso `http://localhost:8080/api` (il backend Spring Boot).
+All calls go to `http://localhost:8080/api` (the Spring Boot backend).
 
-| Schermata | Metodo | Endpoint |
+| Screen | Method | Endpoint |
 |---|---|---|
 | Home/Search | GET | `/api/search?q=&category=&minPrice=&maxPrice=&page=&size=` |
-| Dettaglio | GET | `/api/products/:id` |
-| Carrello | GET | `/api/cart` |
-| Aggiungi item | POST | `/api/cart/items` |
-| Modifica quantità | PUT | `/api/cart/items/:productId` |
-| Rimuovi item | DELETE | `/api/cart/items/:productId` |
+| Detail | GET | `/api/products/:id` |
+| Cart | GET | `/api/cart` |
+| Add item | POST | `/api/cart/items` |
+| Update quantity | PUT | `/api/cart/items/:productId` |
+| Remove item | DELETE | `/api/cart/items/:productId` |
 | Checkout | POST | `/api/checkout` |
-| Stato ordine | GET | `/api/orders/:orderId` |
-| Recensioni | GET | `/api/reviews/:productId` |
+| Order status | GET | `/api/orders/:orderId` |
+| Reviews | GET | `/api/reviews/:productId` |
 
 ## Agent Notes
 
-- Il progetto frontend va in `code/frontend/` — separato da `code/src/` del backend
-- Inizializzare con `npm create vite@latest frontend -- --template react`
-- Configurare il proxy Vite in `vite.config.js` per redirigere `/api` verso `http://localhost:8080`
-- La struttura delle cartelle:
+- The frontend project goes in `code/frontend/` — separate from `code/src/` of the backend
+- Initialize with `npm create vite@latest frontend -- --template react`
+- Configure the Vite proxy in `vite.config.js` to redirect `/api` to `http://localhost:8080`
+- Folder structure:
   ```
   code/frontend/
     src/
-      components/     ← componenti riutilizzabili (ProductCard, CartItem, ecc.)
-      pages/          ← schermate (HomePage, ProductPage, CartPage, CheckoutPage, OrderPage)
-      hooks/          ← custom hooks React Query
-      api/            ← funzioni Axios per ogni endpoint
-      auth/           ← configurazione Keycloak
+      components/     ← reusable components (ProductCard, CartItem, etc.)
+      pages/          ← screens (HomePage, ProductPage, CartPage, CheckoutPage, OrderPage)
+      hooks/          ← custom React Query hooks
+      api/            ← Axios functions for each endpoint
+      auth/           ← Keycloak configuration
     public/
     index.html
     vite.config.js
     package.json
   ```
-- Usare immagini placeholder da `https://placehold.co/400x300` per i prodotti
-- Le stelline del rating: implementare con caratteri Unicode ★/☆ senza librerie esterne
-- Nessun componente UI library (no MUI, no Ant Design) — solo Tailwind
-- CORS già configurato nel backend Spring Boot per `http://localhost:5173`
+- Use placeholder images from `https://placehold.co/400x300` for products
+- Rating stars: implement with Unicode characters ★/☆ without external libraries
+- No UI component library (no MUI, no Ant Design) — Tailwind only
+- CORS already configured in the Spring Boot backend for `http://localhost:5173`

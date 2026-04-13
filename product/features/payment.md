@@ -1,32 +1,32 @@
 ---
-title: "Pagamento"
+title: "Payment"
 status: synced
 author: ""
 last-modified: "2026-04-10T00:00:00.000Z"
 version: "1.0"
 ---
 
-# Pagamento
+# Payment
 
 ## User Stories
 
-- Come acquirente, posso pagare con carta di credito
-- Come acquirente, ricevo conferma se il pagamento va a buon fine
-- Come acquirente, vengo notificato se il pagamento fallisce
+- As a buyer, I can pay by credit card
+- As a buyer, I receive confirmation if the payment succeeds
+- As a buyer, I am notified if the payment fails
 
-## Comportamento
+## Behavior
 
-- Viene chiamato da order tramite `PaymentApi.processPayment()`
-- Pubblica `PaymentSucceededEvent` o `PaymentFailedEvent`
-- Idempotente: se `orderId` già processato restituisce il risultato precedente
+- Called by order via `PaymentApi.processPayment()`
+- Publishes `PaymentSucceededEvent` or `PaymentFailedEvent`
+- Idempotent: if `orderId` has already been processed, returns the previous result
 
 ## Pending Changes
 
-- [ ] Supporto a metodi di pagamento multipli
-- [ ] Gestione rimborsi
+- [ ] Support for multiple payment methods
+- [ ] Refund management
 
 ## Agent Notes
 
-- Gateway simulato: accetta sempre pagamenti con importo < 10.000€
-- PaymentApi espone solo: `processPayment(UUID orderId, BigDecimal amount)`
-- Idempotenza garantita tramite `order_id` UNIQUE sulla tabella `payments`
+- Simulated gateway: always accepts payments with amount < 10,000€
+- PaymentApi exposes only: `processPayment(UUID orderId, BigDecimal amount)`
+- Idempotency guaranteed via `order_id` UNIQUE on the `payments` table

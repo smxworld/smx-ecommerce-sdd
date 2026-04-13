@@ -1,42 +1,42 @@
 ---
-title: "Recensioni e Notifiche"
+title: "Reviews and Notifications"
 status: synced
 author: ""
 last-modified: "2026-04-10T00:00:00.000Z"
 version: "1.0"
 ---
 
-# Recensioni e Notifiche
+# Reviews and Notifications
 
-## User Stories — Recensioni
+## User Stories — Reviews
 
-- Come acquirente, posso lasciare una recensione (voto 1-5 + testo) su un prodotto acquistato
-- Come acquirente, vedo le recensioni di altri utenti
-- Come acquirente, vedo il voto medio del prodotto
+- As a buyer, I can leave a review (rating 1-5 + text) on a purchased product
+- As a buyer, I can see other users' reviews
+- As a buyer, I can see the average rating for the product
 
-## Comportamento — Review
+## Behavior — Review
 
-- Accetta recensioni solo per prodotti in un ordine DELIVERED dell'utente
-- Verifica tramite `OrderApi.hasDeliveredOrderWithProduct(userId, productId)`
-- Pubblica `ReviewCreatedEvent` consumato da catalog per aggiornare il rating medio
-- ReviewApi espone: `getReviews(UUID productId)`, `createReview(...)`
+- Accepts reviews only for products in a DELIVERED order of the user
+- Verified via `OrderApi.hasDeliveredOrderWithProduct(userId, productId)`
+- Publishes `ReviewCreatedEvent` consumed by catalog to update the average rating
+- ReviewApi exposes: `getReviews(UUID productId)`, `createReview(...)`
 
-## User Stories — Notifiche
+## User Stories — Notifications
 
-- Come acquirente, ricevo email quando l'ordine è confermato
-- Come acquirente, ricevo email se il pagamento fallisce
-- Come acquirente, ricevo email quando l'ordine viene spedito
+- As a buyer, I receive an email when the order is confirmed
+- As a buyer, I receive an email if the payment fails
+- As a buyer, I receive an email when the order is shipped
 
-## Comportamento — Notification
+## Behavior — Notification
 
-Consuma:
-- `OrderConfirmedEvent` → email "Il tuo ordine è confermato"
-- `PaymentFailedEvent` → email "Problema con il pagamento"
-- `OrderShippedEvent` → email "Il tuo ordine è in viaggio"
+Consumes:
+- `OrderConfirmedEvent` → email "Your order is confirmed"
+- `PaymentFailedEvent` → email "Problem with your payment"
+- `OrderShippedEvent` → email "Your order is on its way"
 
 ## Agent Notes
 
-- Il modulo notification non espone API pubblica — solo eventi
-- Usare Spring Mail + Thymeleaf per i template email
-- Template in `resources/templates/mail/`
-- SMTP mockato con Mailhog in sviluppo
+- The notification module does not expose a public API — reacts to events only
+- Use Spring Mail + Thymeleaf for email templates
+- Templates in `resources/templates/mail/`
+- SMTP mocked with Mailhog in development

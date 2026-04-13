@@ -1,27 +1,27 @@
 ---
-title: "Checkout e Ordine"
+title: "Checkout and Order"
 status: synced
 author: ""
 last-modified: "2026-04-10T00:00:00.000Z"
 version: "1.0"
 ---
 
-# Checkout e Ordine
+# Checkout and Order
 
 ## User Stories
 
-- Come acquirente, posso avviare il checkout dal carrello
-- Come acquirente, inserisco l'indirizzo di spedizione
-- Come acquirente, confermo l'ordine e ricevo una notifica
-- Come acquirente, vedo lo stato del mio ordine
+- As a buyer, I can start the checkout from the cart
+- As a buyer, I enter the shipping address
+- As a buyer, I confirm the order and receive a notification
+- As a buyer, I can see the status of my order
 
-## Flusso di Checkout
+## Checkout Flow
 1. POST /api/checkout → OrderApi.createOrder()
-2. Order crea ordine in stato PENDING
-3. Order chiama WarehouseApi.reserveStock()
-4. Warehouse pubblica StockReservedEvent o StockReservationFailedEvent
-5. Se stock ok → Order chiama PaymentApi.processPayment()
-6. Payment pubblica PaymentSucceededEvent o PaymentFailedEvent
-7. Se pagamento ok → Order va in CONFIRMED, pubblica OrderConfirmedEvent
-8. Notification consuma OrderConfirmedEvent → invia email
-9. Se qualcosa fallisce → Order va in CANCELLED, pubblica OrderCancelledEvent
+2. Order creates the order in PENDING state
+3. Order calls WarehouseApi.reserveStock()
+4. Warehouse publishes StockReservedEvent or StockReservationFailedEvent
+5. If stock ok → Order calls PaymentApi.processPayment()
+6. Payment publishes PaymentSucceededEvent or PaymentFailedEvent
+7. If payment ok → Order goes to CONFIRMED, publishes OrderConfirmedEvent
+8. Notification consumes OrderConfirmedEvent → sends email
+9. If something fails → Order goes to CANCELLED, publishes OrderCancelledEvent

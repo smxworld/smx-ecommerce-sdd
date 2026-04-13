@@ -8,38 +8,38 @@ version: "2.0"
 
 # Interfaces
 
-Definizione dei contratti tra moduli: API pubbliche Java e eventi di dominio.
+Definition of contracts between modules: public Java APIs and domain events.
 
-L'unica API REST esposta verso l'esterno è quella del modulo `api` (porta 8080).
+The only REST API exposed to the outside is the one from the `api` module (port 8080).
 
 ---
 
-## API REST esterna (modulo `api` — porta 8080)
+## External REST API (`api` module — port 8080)
 
-Tutti gli endpoint richiedono JWT valido (`Authorization: Bearer <token>`).
+All endpoints require a valid JWT (`Authorization: Bearer <token>`).
 
-| Metodo | Path | Modulo delegato | Descrizione |
+| Method | Path | Delegated module | Description |
 |---|---|---|---|
-| `GET` | `/api/search` | `CatalogApi` | Ricerca prodotti |
-| `GET` | `/api/products/{id}` | `CatalogApi` + `WarehouseApi` | Dettaglio prodotto |
-| `GET` | `/api/cart` | `CartApi` | Carrello utente corrente |
-| `POST` | `/api/cart/items` | `CartApi` | Aggiungi item |
-| `PUT` | `/api/cart/items/{productId}` | `CartApi` | Modifica quantità |
-| `DELETE` | `/api/cart/items/{productId}` | `CartApi` | Rimuovi item |
-| `POST` | `/api/checkout` | `OrderApi` | Avvia checkout |
-| `GET` | `/api/orders` | `OrderApi` | Lista ordini utente |
-| `GET` | `/api/orders/{orderId}` | `OrderApi` | Dettaglio ordine |
-| `GET` | `/api/shipments/{orderId}` | `ShipmentApi` | Tracking spedizione |
-| `GET` | `/api/reviews/{productId}` | `ReviewApi` | Recensioni prodotto |
-| `POST` | `/api/reviews` | `ReviewApi` | Crea recensione |
-| `PUT` | `/api/orders/{orderId}/status` | `OrderApi` | Aggiorna stato (backoffice) |
-| `PUT` | `/api/warehouse/products/{id}/stock` | `WarehouseApi` | Aggiorna stock (backoffice) |
+| `GET` | `/api/search` | `CatalogApi` | Product search |
+| `GET` | `/api/products/{id}` | `CatalogApi` + `WarehouseApi` | Product detail |
+| `GET` | `/api/cart` | `CartApi` | Current user's cart |
+| `POST` | `/api/cart/items` | `CartApi` | Add item |
+| `PUT` | `/api/cart/items/{productId}` | `CartApi` | Update quantity |
+| `DELETE` | `/api/cart/items/{productId}` | `CartApi` | Remove item |
+| `POST` | `/api/checkout` | `OrderApi` | Start checkout |
+| `GET` | `/api/orders` | `OrderApi` | User order list |
+| `GET` | `/api/orders/{orderId}` | `OrderApi` | Order detail |
+| `GET` | `/api/shipments/{orderId}` | `ShipmentApi` | Shipment tracking |
+| `GET` | `/api/reviews/{productId}` | `ReviewApi` | Product reviews |
+| `POST` | `/api/reviews` | `ReviewApi` | Create review |
+| `PUT` | `/api/orders/{orderId}/status` | `OrderApi` | Update status (back-office) |
+| `PUT` | `/api/warehouse/products/{id}/stock` | `WarehouseApi` | Update stock (back-office) |
 
 ---
 
-## API Pubbliche Java tra moduli
+## Public Java APIs between modules
 
-Ogni modulo espone una sola interfaccia pubblica. Gli altri moduli (e il modulo `api`) chiamano solo questi metodi — mai le classi `internal/`.
+Each module exposes a single public interface. Other modules (and the `api` module) call only these methods — never `internal/` classes.
 
 ### CatalogApi
 
@@ -47,7 +47,7 @@ Ogni modulo espone una sola interfaccia pubblica. Gli altri moduli (e il modulo 
 public interface CatalogApi {
     ProductDetails getProduct(UUID productId);
     SearchResult search(SearchQuery query);
-    void updateProductScore(UUID productId, double score); // chiamato da analytics
+    void updateProductScore(UUID productId, double score); // called by analytics
 }
 ```
 
@@ -60,7 +60,7 @@ public interface CartApi {
     Cart updateItem(String userId, UUID productId, int quantity);
     Cart removeItem(String userId, UUID productId);
     void clearCart(String userId);
-    List<CartItem> getCartItems(String userId); // chiamato da order al checkout
+    List<CartItem> getCartItems(String userId); // called by order at checkout
 }
 ```
 
@@ -71,8 +71,8 @@ public interface OrderApi {
     OrderSummary createOrder(String userId, CreateOrderRequest request);
     OrderDetails getOrder(UUID orderId);
     List<OrderSummary> getOrdersByUser(String userId);
-    boolean hasDeliveredOrderWithProduct(String userId, UUID productId); // chiamato da review
-    void updateStatus(UUID orderId, OrderStatus status); // backoffice
+    boolean hasDeliveredOrderWithProduct(String userId, UUID productId); // called by review
+    void updateStatus(UUID orderId, OrderStatus status); // back-office
 }
 ```
 
@@ -91,7 +91,7 @@ public interface WarehouseApi {
     StockInfo getStock(UUID productId);
     ReservationResult reserveStock(UUID orderId, List<OrderItem> items);
     void releaseReservation(UUID orderId);
-    void updateStock(UUID productId, int quantity); // backoffice
+    void updateStock(UUID productId, int quantity); // back-office
 }
 ```
 
@@ -116,7 +116,7 @@ public interface ReviewApi {
 
 ```java
 public interface NotificationApi {
-    // Non espone metodi pubblici diretti — reagisce solo a eventi
+    // No direct public methods — reacts to events only
 }
 ```
 
@@ -124,17 +124,17 @@ public interface NotificationApi {
 
 ```java
 public interface AnalyticsApi {
-    // Non espone metodi pubblici diretti — reagisce solo a eventi
+    // No direct public methods — reacts to events only
 }
 ```
 
 ---
 
-## Eventi di dominio (Spring Application Events)
+## Domain events (Spring Application Events)
 
-Tutti gli eventi sono Java `record` immutabili. Vengono pubblicati con `ApplicationEventPublisher` e consumati con `@ApplicationModuleListener`.
+All events are immutable Java `record`s. They are published with `ApplicationEventPublisher` and consumed with `@ApplicationModuleListener`.
 
-| Evento | Produttore | Consumatori | Campi principali |
+| Event | Producer | Consumers | Main fields |
 |---|---|---|---|
 | `ProductBookedEvent` | `cart` | `warehouse` | `productId, userId, quantity` |
 | `ProductUnbookedEvent` | `cart` | `warehouse` | `productId, userId, quantity` |
@@ -150,24 +150,24 @@ Tutti gli eventi sono Java `record` immutabili. Vengono pubblicati con `Applicat
 | `ReviewCreatedEvent` | `review` | `catalog` | `productId, rating` |
 | `SearchScoreUpdatedEvent` | `analytics` | `catalog` | `productId, newScore` |
 
-### Nota sulla migrazione a Kafka
+### Note on migration to Kafka
 
-Quando un evento deve essere esternalizzato (es. al momento dell'estrazione di un modulo a microservizio), è sufficiente:
+When an event needs to be externalized (e.g., when extracting a module into a microservice), it is sufficient to:
 
 ```java
-@Externalized("smx.order-confirmed")  // aggiungere questa annotazione
+@Externalized("smx.order-confirmed")  // add this annotation
 public record OrderConfirmedEvent(UUID orderId, String userId, BigDecimal totalAmount) {}
 ```
 
-Produttori e consumatori non cambiano.
+Producers and consumers do not change.
 
 ---
 
 ## Agent Notes
 
-- Le interfacce `*Api.java` vanno nel package root del modulo, non in `internal/`
-- Gli eventi vanno nel package root del modulo in un file `<Module>Events.java` o come classi separate
-- I DTO di ritorno (es. `ProductDetails`, `OrderSummary`) vanno anch'essi nel package root — sono parte del contratto pubblico
-- Mai esporre entità JPA come tipo di ritorno delle API pubbliche — usare sempre DTO
-- `@ApplicationModuleListener` è l'annotazione di Spring Modulith per i consumer di eventi — gestisce automaticamente la transazionalità
-- La verifica dei confini si fa con: `ApplicationModules.of(SmxECommerceApplication.class).verify()`
+- The `*Api.java` interfaces go in the module's root package, not in `internal/`
+- Events go in the module's root package in a `<Module>Events.java` file or as separate classes
+- Return DTOs (e.g., `ProductDetails`, `OrderSummary`) also go in the root package — they are part of the public contract
+- Never expose JPA entities as return types of public APIs — always use DTOs
+- `@ApplicationModuleListener` is the Spring Modulith annotation for event consumers — handles transactionality automatically
+- Boundary verification is done with: `ApplicationModules.of(SmxECommerceApplication.class).verify()`

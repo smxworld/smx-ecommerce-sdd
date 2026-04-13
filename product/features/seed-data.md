@@ -1,55 +1,55 @@
 ---
-title: "Dati di Seed"
+title: "Seed Data"
 status: synced
 author: ""
 last-modified: "2026-04-12T00:00:00.000Z"
 version: "1.0"
 ---
 
-# Dati di Seed
+# Seed Data
 
-Script SQL e configurazione per popolare il database con dati di test realistici. I dati di seed permettono di testare il flusso completo senza dover inserire dati manualmente.
+SQL scripts and configuration to populate the database with realistic test data. Seed data allows testing the complete flow without having to enter data manually.
 
-## Prodotti
+## Products
 
-10 prodotti distribuiti in 3 categorie: Elettronica, Abbigliamento, Casa.
+10 products distributed across 3 categories: Electronics, Clothing, Home.
 
-| Nome | Categoria | Prezzo | Stock |
+| Name | Category | Price | Stock |
 |---|---|---|---|
-| Smartphone XPro | Elettronica | 699.00 | 50 |
-| Laptop UltraSlim | Elettronica | 1299.00 | 20 |
-| Cuffie Wireless | Elettronica | 149.00 | 100 |
-| Tastiera Meccanica | Elettronica | 89.00 | 75 |
-| T-Shirt Premium | Abbigliamento | 29.00 | 200 |
-| Jeans Slim Fit | Abbigliamento | 59.00 | 150 |
-| Giacca Invernale | Abbigliamento | 199.00 | 40 |
-| Lampada da Tavolo | Casa | 49.00 | 80 |
-| Set Cuscini | Casa | 39.00 | 120 |
-| Tappeto Moderno | Casa | 129.00 | 30 |
+| Smartphone XPro | Electronics | 699.00 | 50 |
+| Laptop UltraSlim | Electronics | 1299.00 | 20 |
+| Wireless Headphones | Electronics | 149.00 | 100 |
+| Mechanical Keyboard | Electronics | 89.00 | 75 |
+| Premium T-Shirt | Clothing | 29.00 | 200 |
+| Slim Fit Jeans | Clothing | 59.00 | 150 |
+| Winter Jacket | Clothing | 199.00 | 40 |
+| Desk Lamp | Home | 49.00 | 80 |
+| Cushion Set | Home | 39.00 | 120 |
+| Modern Rug | Home | 129.00 | 30 |
 
-## Utenti Keycloak
+## Keycloak Users
 
-| Username | Password | Ruolo | Descrizione |
+| Username | Password | Role | Description |
 |---|---|---|---|
-| `acquirente@smx.local` | `password123` | `ROLE_USER` | Utente normale per testare il flusso di acquisto |
-| `operatore@smx.local` | `password123` | `ROLE_OPERATOR` | Operatore backoffice |
+| `acquirente@smx.local` | `password123` | `ROLE_USER` | Standard user for testing the purchase flow |
+| `operatore@smx.local` | `password123` | `ROLE_OPERATOR` | Back-office operator |
 
-## Recensioni di esempio
+## Sample Reviews
 
-5 recensioni pre-caricate su Smartphone XPro e Laptop UltraSlim per mostrare il sistema di rating nella UI.
+5 pre-loaded reviews on Smartphone XPro and Laptop UltraSlim to showcase the rating system in the UI.
 
-## Come vengono caricati i dati
+## How data is loaded
 
-- I prodotti vengono inseriti tramite script Flyway in `smx_catalog` e `smx_warehouse`
-- Gli utenti Keycloak vengono creati tramite il realm export in `infrastructure/keycloak/`
-- Le recensioni vengono inserite tramite script Flyway in `smx_review`
-- I dati di seed sono attivi solo con il profilo Spring `dev`
+- Products are inserted via Flyway scripts in `smx_catalog` and `smx_warehouse`
+- Keycloak users are created via the realm export in `infrastructure/keycloak/`
+- Reviews are inserted via Flyway scripts in `smx_review`
+- Seed data is active only with the Spring `dev` profile
 
 ## Agent Notes
 
-- Creare `code/src/main/resources/db/migration/smx_catalog/V2__seed_products.sql`
-- Creare `code/src/main/resources/db/migration/smx_warehouse/V2__seed_stock.sql`
-- Creare `code/src/main/resources/db/migration/smx_review/V2__seed_reviews.sql`
-- I seed usano UUID fissi (hardcoded) così sono ripetibili e referenziabili tra script
-- Creare `infrastructure/keycloak/realm-export.json` con il realm `smx` configurato con i due utenti
-- Il profilo dev si attiva con `SPRING_PROFILES_ACTIVE=dev` nel docker-compose.yml
+- Create `code/src/main/resources/db/migration/smx_catalog/V2__seed_products.sql`
+- Create `code/src/main/resources/db/migration/smx_warehouse/V2__seed_stock.sql`
+- Create `code/src/main/resources/db/migration/smx_review/V2__seed_reviews.sql`
+- Seeds use fixed (hardcoded) UUIDs so they are repeatable and cross-referenceable between scripts
+- Create `infrastructure/keycloak/realm-export.json` with the `smx` realm configured with the two users
+- The dev profile is activated with `SPRING_PROFILES_ACTIVE=dev` in docker-compose.yml

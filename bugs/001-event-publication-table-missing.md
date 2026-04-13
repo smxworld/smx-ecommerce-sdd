@@ -13,11 +13,11 @@ Schema-validation: missing table [event_publication]
 
 ## Description
 
-L'applicazione non si avvia perché Spring Modulith richiede una tabella `event_publication` per il tracking degli eventi di dominio, ma la migration Flyway che la crea non è presente.
+The application fails to start because Spring Modulith requires an `event_publication` table for tracking domain events, but the Flyway migration that creates it is missing.
 
 ## Expected behavior
 
-L'applicazione si avvia correttamente e la tabella `event_publication` viene creata da Flyway prima che Hibernate validi lo schema.
+The application starts correctly and the `event_publication` table is created by Flyway before Hibernate validates the schema.
 
 ## Steps to reproduce
 

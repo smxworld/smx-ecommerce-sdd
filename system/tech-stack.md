@@ -10,16 +10,16 @@ version: "2.0"
 
 ## Runtime
 
-| Componente | Tecnologia | Versione |
+| Component | Technology | Version |
 |---|---|---|
-| Linguaggio | Java | 25 (LTS) |
+| Language | Java | 25 (LTS) |
 | Framework | Spring Boot | 3.x |
 | Modulith | Spring Modulith | 1.x |
 | Build | Maven | 3.9+ |
 
 ## Frontend
 
-| Componente | Tecnologia | Versione |
+| Component | Technology | Version |
 |---|---|---|
 | Framework | React | 18 |
 | Build tool | Vite | 5.x |
@@ -27,52 +27,51 @@ version: "2.0"
 | Data fetching | TanStack Query (React Query) | v5 |
 | Styling | Tailwind CSS | v3 |
 | HTTP client | Axios | 1.x |
-| Autenticazione | Keycloak JS | 24.x |
+| Authentication | Keycloak JS | 24.x |
 
-Il frontend sta in `code/frontend/` ed è un progetto Vite separato dal backend. In sviluppo gira su `http://localhost:5173` e punta al backend su `http://localhost:8080` tramite proxy Vite.
-
+The frontend lives in `code/frontend/` and is a Vite project separate from the backend. In development it runs on `http://localhost:5173` and points to the backend on `http://localhost:8080` via Vite proxy.
 
 ## Persistence
 
-Un singolo cluster PostgreSQL con schemi separati per modulo.
+A single PostgreSQL cluster with separate schemas per module.
 
-| Modulo | Schema PostgreSQL | Motivazione |
+| Module | PostgreSQL Schema | Rationale |
 |---|---|---|
-| `cart` | `smx_cart` | Struttura semplice, accesso frequente |
-| `order` | `smx_order` | Transazionalità, lifecycle complesso |
-| `payment` | `smx_payment` | Audit trail finanziario, idempotenza |
-| `warehouse` | `smx_warehouse` | Concorrenza su stock, optimistic locking |
-| `shipment` | `smx_shipment` | Tracking persistente |
-| `review` | `smx_review` | Dati relazionali |
-| `analytics` | `smx_analytics` | Aggregati |
-| `catalog` | `smx_catalog` | Prodotti e categorie |
+| `cart` | `smx_cart` | Simple structure, frequent access |
+| `order` | `smx_order` | Transactionality, complex lifecycle |
+| `payment` | `smx_payment` | Financial audit trail, idempotency |
+| `warehouse` | `smx_warehouse` | Stock concurrency, optimistic locking |
+| `shipment` | `smx_shipment` | Persistent tracking |
+| `review` | `smx_review` | Relational data |
+| `analytics` | `smx_analytics` | Aggregates |
+| `catalog` | `smx_catalog` | Products and categories |
 
-Ogni modulo configura il proprio `DataSource` puntando al proprio schema. Nessuna JOIN tra schemi diversi — i dati cross-modulo si ottengono tramite API pubblica.
+Each module configures its own `DataSource` pointing to its own schema. No JOINs across schemas — cross-module data is obtained via the public API.
 
-## Messaggistica
+## Messaging
 
-**Spring Application Events** per la comunicazione asincrona in-process tra moduli.
+**Spring Application Events** for asynchronous in-process communication between modules.
 
 ```java
-// Produttore (dentro un modulo)
+// Producer (inside a module)
 applicationEventPublisher.publishEvent(new OrderConfirmedEvent(orderId, userId));
 
-// Consumatore (in un altro modulo)
+// Consumer (in another module)
 @ApplicationModuleListener
 void on(OrderConfirmedEvent event) { ... }
 ```
 
-### Percorso di migrazione a Kafka
+### Migration path to Kafka
 
-Quando si vuole esternalizzare un evento su Kafka, il cambio è minimo:
+When an event needs to be externalized to Kafka, the change is minimal:
 
-1. Aggiungere dipendenza `spring-modulith-events-kafka`
-2. Annotare l'evento con `@Externalized("smx.order-confirmed")`
-3. Configurare il broker in `application.yml`
+1. Add dependency `spring-modulith-events-kafka`
+2. Annotate the event with `@Externalized("smx.order-confirmed")`
+3. Configure the broker in `application.yml`
 
-Produttori e consumatori non cambiano.
+Producers and consumers do not change.
 
-## Dipendenze Spring Boot
+## Spring Boot Dependencies
 
 ```xml
 <!-- Core -->
@@ -104,45 +103,45 @@ Produttori e consumatori non cambiano.
 <dependency>spring-modulith-starter-test</dependency>
 ```
 
-## Infrastruttura (Docker Compose — sviluppo)
+## Infrastructure (Docker Compose — development)
 
-Il Docker Compose in sviluppo è molto più snello rispetto a un'architettura a microservizi — un solo processo applicativo.
+The Docker Compose in development is much leaner than a microservices architecture — a single application process.
 
-| Componente | Immagine | Porta |
+| Component | Image | Port |
 |---|---|---|
-| Applicazione SmxECommerce | build locale | 8080 |
+| SmxECommerce Application | local build | 8080 |
 | Keycloak | `quay.io/keycloak/keycloak:latest` | 8180 |
 | PostgreSQL | `postgres:17` | 5432 |
 | Elasticsearch | `elasticsearch:8.x` | 9200 |
 | Mailhog (SMTP mock) | `mailhog/mailhog` | 1025 / 8025 |
 
-Niente Kafka, niente Zookeeper, niente service discovery, niente Redis — tutto eliminato rispetto all'architettura a microservizi.
+No Kafka, no Zookeeper, no service discovery, no Redis — all eliminated compared to the microservices architecture.
 
-## Struttura del progetto
+## Project Structure
 
 ```
 smx-ecommerce/
-  product/                  ← Story SDD (product docs)
-  system/                   ← Story SDD (system docs)
-  code/                     ← codice sorgente
+  product/                  ← SDD stories (product docs)
+  system/                   ← SDD stories (system docs)
+  code/                     ← source code
     src/
       main/
         java/com/smx/ecommerce/
           SmxECommerceApplication.java
-          api/              ← controller REST (BFF interno)
-          identity/         ← modulo identity
-          catalog/          ← modulo catalog
-          cart/             ← modulo cart
-          order/            ← modulo order
-          payment/          ← modulo payment
-          warehouse/        ← modulo warehouse
-          shipment/         ← modulo shipment
-          review/           ← modulo review
-          notification/     ← modulo notification
-          analytics/        ← modulo analytics
+          api/              ← REST controllers (internal BFF)
+          identity/         ← identity module
+          catalog/          ← catalog module
+          cart/             ← cart module
+          order/            ← order module
+          payment/          ← payment module
+          warehouse/        ← warehouse module
+          shipment/         ← shipment module
+          review/           ← review module
+          notification/     ← notification module
+          analytics/        ← analytics module
         resources/
           application.yml
-          db/migration/     ← script Flyway (suddivisi per schema)
+          db/migration/     ← Flyway scripts (split by schema)
       test/
     pom.xml
   docker-compose.yml
@@ -150,10 +149,10 @@ smx-ecommerce/
 
 ## Agent Notes
 
-- Un solo `pom.xml` nella cartella `code/`
+- A single `pom.xml` in the `code/` folder
 - Java 25, Spring Boot 3.x, Spring Modulith 1.x
-- Non usare `spring.jpa.hibernate.ddl-auto=create` — solo Flyway
-- Gli script Flyway vanno in `resources/db/migration/<schema>/` (es. `db/migration/smx_order/V1__init.sql`)
-- Ogni modulo ha il proprio `application.yml` fragment caricato via `@ConfigurationProperties`
-- Per i test di architettura: `ApplicationModules.of(SmxECommerceApplication.class).verify()` va eseguito come test base
-- Elasticsearch per la ricerca prodotti — usare Spring Data Elasticsearch
+- Do not use `spring.jpa.hibernate.ddl-auto=create` — Flyway only
+- Flyway scripts go in `resources/db/migration/<schema>/` (e.g., `db/migration/smx_order/V1__init.sql`)
+- Each module has its own `application.yml` fragment loaded via `@ConfigurationProperties`
+- For architecture tests: `ApplicationModules.of(SmxECommerceApplication.class).verify()` should be run as the base test
+- Elasticsearch for product search — use Spring Data Elasticsearch

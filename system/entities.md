@@ -8,21 +8,21 @@ version: "1.0"
 
 # Data Entities
 
-Entità principali del sistema, raggruppate per modulo di appartenenza. Ogni entità vive nello schema del modulo che la possiede. Le cross-reference tra moduli avvengono tramite UUID — mai foreign key tra schemi diversi.
+Main entities of the system, grouped by owning module. Each entity lives in the schema of the module that owns it. Cross-module references use UUIDs — never foreign keys across schemas.
 
 ## Agent Notes
 
-- Primary key: UUID generato lato applicazione con `@UuidGenerator`
-- Tutte le tabelle hanno `created_at` e `updated_at` di tipo `TIMESTAMPTZ`
-- Mai esporre entità JPA fuori dal package `internal/` — usare sempre DTO
+- Primary key: UUID generated on the application side with `@UuidGenerator`
+- All tables have `created_at` and `updated_at` of type `TIMESTAMPTZ`
+- Never expose JPA entities outside the `internal/` package — always use DTOs
 
 ---
 
 ### Product
 
-**Modulo: catalog** — schema `smx_catalog`
+**Module: catalog** — schema `smx_catalog`
 
-| Campo | Tipo | Note |
+| Field | Type | Notes |
 |---|---|---|
 | `id` | UUID | PK |
 | `name` | VARCHAR(255) | |
@@ -30,25 +30,25 @@ Entità principali del sistema, raggruppate per modulo di appartenenza. Ogni ent
 | `price` | DECIMAL(10,2) | |
 | `category` | VARCHAR(100) | |
 | `image_url` | VARCHAR(500) | |
-| `average_rating` | DECIMAL(3,2) | Aggiornato da ReviewCreatedEvent |
+| `average_rating` | DECIMAL(3,2) | Updated by ReviewCreatedEvent |
 | `created_at` | TIMESTAMPTZ | |
 | `updated_at` | TIMESTAMPTZ | |
 
-Documento Elasticsearch (indice `products`): tutti i campi sopra più `score` (float, per il ranking analytics).
+Elasticsearch document (index `products`): all fields above plus `score` (float, for analytics ranking).
 
 ---
 
 ### Stock
 
-**Modulo: warehouse** — schema `smx_warehouse`
+**Module: warehouse** — schema `smx_warehouse`
 
-| Campo | Tipo | Note |
+| Field | Type | Notes |
 |---|---|---|
 | `id` | UUID | PK |
-| `product_id` | UUID | Riferimento a Product (no FK cross-schema) |
-| `quantity_total` | INTEGER | Stock fisico totale |
-| `quantity_reserved` | INTEGER | Prenotato da carrelli e ordini in corso |
-| `version` | INTEGER | Per optimistic locking (`@Version`) |
+| `product_id` | UUID | Reference to Product (no cross-schema FK) |
+| `quantity_total` | INTEGER | Total physical stock |
+| `quantity_reserved` | INTEGER | Reserved by carts and ongoing orders |
+| `version` | INTEGER | For optimistic locking (`@Version`) |
 | `updated_at` | TIMESTAMPTZ | |
 
 `quantity_available = quantity_total - quantity_reserved`
@@ -57,40 +57,40 @@ Documento Elasticsearch (indice `products`): tutti i campi sopra più `score` (f
 
 ### Cart / CartItem
 
-**Modulo: cart** — schema `smx_cart`
+**Module: cart** — schema `smx_cart`
 
 **carts**
 
-| Campo | Tipo | Note |
+| Field | Type | Notes |
 |---|---|---|
 | `id` | UUID | PK |
-| `user_id` | VARCHAR(255) | ID utente da JWT |
+| `user_id` | VARCHAR(255) | User ID from JWT |
 | `created_at` | TIMESTAMPTZ | |
 | `updated_at` | TIMESTAMPTZ | |
 
 **cart_items**
 
-| Campo | Tipo | Note |
+| Field | Type | Notes |
 |---|---|---|
 | `id` | UUID | PK |
 | `cart_id` | UUID | FK → carts.id |
-| `product_id` | UUID | Riferimento a Product |
+| `product_id` | UUID | Reference to Product |
 | `quantity` | INTEGER | |
-| `unit_price` | DECIMAL(10,2) | Snapshotted all'aggiunta |
+| `unit_price` | DECIMAL(10,2) | Snapshotted on addition |
 | `added_at` | TIMESTAMPTZ | |
 
 ---
 
 ### Order / OrderItem
 
-**Modulo: order** — schema `smx_order`
+**Module: order** — schema `smx_order`
 
 **orders**
 
-| Campo | Tipo | Note |
+| Field | Type | Notes |
 |---|---|---|
 | `id` | UUID | PK |
-| `user_id` | VARCHAR(255) | ID utente da Keycloak |
+| `user_id` | VARCHAR(255) | User ID from Keycloak |
 | `status` | VARCHAR(50) | PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED |
 | `total_amount` | DECIMAL(10,2) | |
 | `shipping_address` | JSONB | |
@@ -99,11 +99,11 @@ Documento Elasticsearch (indice `products`): tutti i campi sopra più `score` (f
 
 **order_items**
 
-| Campo | Tipo | Note |
+| Field | Type | Notes |
 |---|---|---|
 | `id` | UUID | PK |
 | `order_id` | UUID | FK → orders.id |
-| `product_id` | UUID | Riferimento a Product |
+| `product_id` | UUID | Reference to Product |
 | `product_name` | VARCHAR(255) | Snapshotted |
 | `unit_price` | DECIMAL(10,2) | Snapshotted |
 | `quantity` | INTEGER | |
@@ -112,9 +112,9 @@ Documento Elasticsearch (indice `products`): tutti i campi sopra più `score` (f
 
 ### Payment
 
-**Modulo: payment** — schema `smx_payment`
+**Module: payment** — schema `smx_payment`
 
-| Campo | Tipo | Note |
+| Field | Type | Notes |
 |---|---|---|
 | `id` | UUID | PK |
 | `order_id` | UUID | UNIQUE — idempotency key |
@@ -128,14 +128,14 @@ Documento Elasticsearch (indice `products`): tutti i campi sopra più `score` (f
 
 ### Shipment
 
-**Modulo: shipment** — schema `smx_shipment`
+**Module: shipment** — schema `smx_shipment`
 
-| Campo | Tipo | Note |
+| Field | Type | Notes |
 |---|---|---|
 | `id` | UUID | PK |
 | `order_id` | UUID | UNIQUE |
 | `tracking_number` | VARCHAR(100) | |
-| `carrier` | VARCHAR(100) | Simulato |
+| `carrier` | VARCHAR(100) | Simulated |
 | `status` | VARCHAR(50) | PENDING, SHIPPED, DELIVERED |
 | `shipped_at` | TIMESTAMPTZ | Nullable |
 | `estimated_delivery` | DATE | Nullable |
@@ -145,14 +145,14 @@ Documento Elasticsearch (indice `products`): tutti i campi sopra più `score` (f
 
 ### Review
 
-**Modulo: review** — schema `smx_review`
+**Module: review** — schema `smx_review`
 
-| Campo | Tipo | Note |
+| Field | Type | Notes |
 |---|---|---|
 | `id` | UUID | PK |
-| `product_id` | UUID | Riferimento a Product |
+| `product_id` | UUID | Reference to Product |
 | `user_id` | VARCHAR(255) | |
-| `order_id` | UUID | Riferimento all'ordine che giustifica la recensione |
+| `order_id` | UUID | Reference to the order that justifies the review |
 | `rating` | INTEGER | 1-5 |
 | `text` | TEXT | |
 | `created_at` | TIMESTAMPTZ | |
