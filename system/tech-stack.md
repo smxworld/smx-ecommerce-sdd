@@ -17,6 +17,21 @@ version: "2.0"
 | Modulith | Spring Modulith | 1.x |
 | Build | Maven | 3.9+ |
 
+## Frontend
+
+| Componente | Tecnologia | Versione |
+|---|---|---|
+| Framework | React | 18 |
+| Build tool | Vite | 5.x |
+| Routing | React Router | v6 |
+| Data fetching | TanStack Query (React Query) | v5 |
+| Styling | Tailwind CSS | v3 |
+| HTTP client | Axios | 1.x |
+| Autenticazione | Keycloak JS | 24.x |
+
+Il frontend sta in `code/frontend/` ed è un progetto Vite separato dal backend. In sviluppo gira su `http://localhost:5173` e punta al backend su `http://localhost:8080` tramite proxy Vite.
+
+
 ## Persistence
 
 Un singolo cluster PostgreSQL con schemi separati per modulo.
