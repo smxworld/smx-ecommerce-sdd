@@ -1,7 +1,7 @@
 package com.smxworld.ecommerce.catalog.internal.application;
 
-import com.smxworld.ecommerce.analytics.SearchScoreUpdatedEvent;
 import com.smxworld.ecommerce.catalog.CatalogApi;
+import com.smxworld.ecommerce.catalog.SearchScoreUpdatedEvent;
 import com.smxworld.ecommerce.catalog.ProductDetails;
 import com.smxworld.ecommerce.catalog.SearchPerformedEvent;
 import com.smxworld.ecommerce.catalog.SearchQuery;

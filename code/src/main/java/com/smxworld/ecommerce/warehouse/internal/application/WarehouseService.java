@@ -2,8 +2,7 @@ package com.smxworld.ecommerce.warehouse.internal.application;
 
 import com.smxworld.ecommerce.cart.ProductBookedEvent;
 import com.smxworld.ecommerce.cart.ProductUnbookedEvent;
-import com.smxworld.ecommerce.order.OrderCancelledEvent;
-import com.smxworld.ecommerce.order.OrderItem;
+import com.smxworld.ecommerce.warehouse.ReservationItem;
 import com.smxworld.ecommerce.warehouse.ReservationResult;
 import com.smxworld.ecommerce.warehouse.StockInfo;
 import com.smxworld.ecommerce.warehouse.StockReservationFailedEvent;
@@ -40,8 +39,8 @@ class WarehouseService implements WarehouseApi {
     }
 
     @Override
-    public ReservationResult reserveStock(UUID orderId, List<OrderItem> items) {
-        for (OrderItem item : items) {
+    public ReservationResult reserveStock(UUID orderId, List<ReservationItem> items) {
+        for (ReservationItem item : items) {
             StockEntity stock = stockRepo.findByProductId(item.productId())
                     .orElse(null);
             if (stock == null || !stock.reserve(item.quantity())) {
@@ -90,10 +89,4 @@ class WarehouseService implements WarehouseApi {
         });
     }
 
-    @ApplicationModuleListener
-    void on(OrderCancelledEvent event) {
-        // Release reservations on order cancellation.
-        // In a production system this would use a reservation ledger.
-        // Here it's a signal that future orders may use the previously reserved stock.
-    }
 }

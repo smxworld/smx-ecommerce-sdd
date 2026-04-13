@@ -1,7 +1,5 @@
 package com.smxworld.ecommerce.warehouse;
 
-import com.smxworld.ecommerce.order.OrderItem;
-
 import java.util.List;
 import java.util.UUID;
 
@@ -12,7 +10,7 @@ public interface WarehouseApi {
 
     StockInfo getStock(UUID productId);
 
-    ReservationResult reserveStock(UUID orderId, List<OrderItem> items);
+    ReservationResult reserveStock(UUID orderId, List<ReservationItem> items);
 
     void releaseReservation(UUID orderId);
 

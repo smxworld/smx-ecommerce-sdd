@@ -60,7 +60,6 @@ com/smxworld/ecommerce/catalog/SearchResult.class
 com/smxworld/ecommerce/api/rest/ECommerceController.class
 com/smxworld/ecommerce/analytics/AnalyticsApi.class
 com/smxworld/ecommerce/analytics/internal/domain/SearchLogEntity.class
-com/smxworld/ecommerce/analytics/SearchScoreUpdatedEvent.class
 com/smxworld/ecommerce/order/OrderItem.class
 com/smxworld/ecommerce/SmxECommerceApplication.class
 com/smxworld/ecommerce/shipment/internal/application/ShipmentService.class
@@ -88,4 +87,3 @@ com/smxworld/ecommerce/shipment/internal/infrastructure/ShipmentRepository.class
 com/smxworld/ecommerce/order/internal/domain/OrderItemEntity.class
 com/smxworld/ecommerce/identity/internal/package-info.class
 com/smxworld/ecommerce/order/internal/domain/OrderEntity.class
-com/smxworld/ecommerce/catalog/internal/application/CatalogService.class

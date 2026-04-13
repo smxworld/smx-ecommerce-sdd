@@ -15,6 +15,7 @@ import com.smxworld.ecommerce.order.internal.domain.OrderEntity;
 import com.smxworld.ecommerce.order.internal.domain.OrderItemEntity;
 import com.smxworld.ecommerce.order.internal.infrastructure.OrderRepository;
 import com.smxworld.ecommerce.payment.PaymentApi;
+import com.smxworld.ecommerce.warehouse.ReservationItem;
 import com.smxworld.ecommerce.warehouse.ReservationResult;
 import com.smxworld.ecommerce.warehouse.WarehouseApi;
 import org.springframework.context.ApplicationEventPublisher;
@@ -62,8 +63,11 @@ class OrderService implements OrderApi {
         orderRepo.save(order);
         events.publishEvent(new OrderCreatedEvent(order.getId(), userId, order.getTotalAmount()));
 
-        // 2. Reserve stock
-        ReservationResult reservation = warehouseApi.reserveStock(order.getId(), request.items());
+        // 2. Reserve stock — map to warehouse-owned DTO to avoid a module cycle
+        List<ReservationItem> reservationItems = orderItems.stream()
+                .map(i -> new ReservationItem(i.productId(), i.quantity()))
+                .toList();
+        ReservationResult reservation = warehouseApi.reserveStock(order.getId(), reservationItems);
         if (!reservation.successful()) {
             order.transitionTo(OrderStatus.CANCELLED);
             orderRepo.save(order);

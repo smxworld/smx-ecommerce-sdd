@@ -1,0 +1,24 @@
+@startuml
+set separator none
+title Order
+
+top to bottom direction
+
+!include <C4/C4>
+!include <C4/C4_Context>
+!include <C4/C4_Component>
+
+Container_Boundary("SmxECommerceApplication.SmxECommerceApplication_boundary", "SmxECommerceApplication", $tags="") {
+  Component(SmxECommerceApplication.SmxECommerceApplication.Payment, "Payment", $techn="Module", $descr="", $tags="", $link="")
+  Component(SmxECommerceApplication.SmxECommerceApplication.Warehouse, "Warehouse", $techn="Module", $descr="", $tags="", $link="")
+  Component(SmxECommerceApplication.SmxECommerceApplication.Cart, "Cart", $techn="Module", $descr="", $tags="", $link="")
+  Component(SmxECommerceApplication.SmxECommerceApplication.Order, "Order", $techn="Module", $descr="", $tags="", $link="")
+}
+
+Rel(SmxECommerceApplication.SmxECommerceApplication.Warehouse, SmxECommerceApplication.SmxECommerceApplication.Cart, "listens to", $techn="", $tags="", $link="")
+Rel(SmxECommerceApplication.SmxECommerceApplication.Order, SmxECommerceApplication.SmxECommerceApplication.Cart, "uses", $techn="", $tags="", $link="")
+Rel(SmxECommerceApplication.SmxECommerceApplication.Order, SmxECommerceApplication.SmxECommerceApplication.Warehouse, "uses", $techn="", $tags="", $link="")
+Rel(SmxECommerceApplication.SmxECommerceApplication.Order, SmxECommerceApplication.SmxECommerceApplication.Payment, "uses", $techn="", $tags="", $link="")
+
+SHOW_LEGEND(true)
+@enduml

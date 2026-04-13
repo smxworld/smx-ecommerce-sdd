@@ -1,10 +1,10 @@
 package com.smxworld.ecommerce.analytics.internal.application;
 
 import com.smxworld.ecommerce.analytics.AnalyticsApi;
-import com.smxworld.ecommerce.analytics.SearchScoreUpdatedEvent;
 import com.smxworld.ecommerce.analytics.internal.domain.SearchLogEntity;
 import com.smxworld.ecommerce.analytics.internal.infrastructure.SearchLogRepository;
 import com.smxworld.ecommerce.catalog.SearchPerformedEvent;
+import com.smxworld.ecommerce.catalog.SearchScoreUpdatedEvent;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;

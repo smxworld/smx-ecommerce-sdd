@@ -1,1 +1,1 @@
-[]
+[{"name":"com.smxworld.ecommerce.catalog.internal.application.CatalogService","methods":[{"name":"on","signature":"on(null)","comment":"Aggiorna il rating medio quando viene pubblicata una nuova recensione."},{"name":"on","signature":"on(com.smxworld.ecommerce.catalog.SearchScoreUpdatedEvent)","comment":"Aggiorna lo score di ricerca quando analytics pubblica un nuovo punteggio."}]}]
