@@ -4,3 +4,4 @@ code/frontend/.env
 code/frontend/.env.local
 
 code/target/
+build/
