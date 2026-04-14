@@ -43,7 +43,7 @@ SQL scripts and configuration to populate the database with realistic test data.
 - Products are inserted via Flyway scripts in `smx_catalog` and `smx_warehouse`
 - Keycloak users are created via `infrastructure/keycloak/smxworld-realm.json`, imported automatically when Keycloak starts with `--import-realm`
 - Reviews are inserted via Flyway scripts in `smx_review`
-- Seed data is active only with the Spring `dev` profile
+- Seed migrations run as part of the normal application startup against the configured local database
 
 ## Agent Notes
 
@@ -52,4 +52,4 @@ SQL scripts and configuration to populate the database with realistic test data.
 - Create `code/src/main/resources/db/migration/smx_review/V2__seed_reviews.sql`
 - Seeds use fixed (hardcoded) UUIDs so they are repeatable and cross-referenceable between scripts
 - Create `infrastructure/keycloak/smxworld-realm.json` with the `smxworld` realm configured with the two users
-- The dev profile is activated with `SPRING_PROFILES_ACTIVE=dev` in docker-compose.yml
+- No dedicated Spring profile is required for the current local seed setup

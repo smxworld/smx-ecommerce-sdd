@@ -13,18 +13,17 @@ version: "1.0"
 - As a buyer, I can see whether a product is available
 - As a buyer, I receive a notification when the order is shipped
 - As an operator, I can update the available quantity
-- As an operator, I can manually trigger a shipment
 
 ## Behavior — Warehouse
 
 - Consumes `ProductBookedEvent` and `ProductUnbookedEvent` from cart
-- When called by order via `reserveStock()`: decrements stock and publishes `StockReservedEvent` or `StockReservationFailedEvent`
-- Consumes `OrderCancelledEvent` to release reservations
+- When called by order via `reserveStock()`: reserves stock synchronously, returns `ReservationResult`, and also publishes `StockReservedEvent` or `StockReservationFailedEvent`
+- `releaseReservation(orderId)` currently exists as a placeholder API but is a no-op because there is no per-order reservation ledger yet
 - `quantity_available = quantity_total - quantity_reserved`
 
 ## Behavior — Shipment
 
-- Consumes events from warehouse to register the shipment
+- Consumes `OrderConfirmedEvent` from the order module to register the shipment
 - Generates a simulated tracking number
 - Publishes `OrderShippedEvent` consumed by notification
 - ShipmentApi exposes: `getShipment(UUID orderId)`

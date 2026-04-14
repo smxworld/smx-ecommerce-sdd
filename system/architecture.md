@@ -23,21 +23,21 @@ The explicit architectural goal is: **ready to become microservices with minimal
 
 | Module | Package | Responsibility |
 |---|---|---|
-| `identity` | `com.smx.identity` | Keycloak integration, JWT validation |
-| `catalog` | `com.smx.catalog` | Products, categories, search |
-| `cart` | `com.smx.cart` | User cart |
-| `order` | `com.smx.order` | Order lifecycle, state machine |
-| `payment` | `com.smx.payment` | Payment processing |
-| `warehouse` | `com.smx.warehouse` | Stock, reservations |
-| `shipment` | `com.smx.shipment` | Shipments and tracking |
-| `review` | `com.smx.review` | Product reviews |
-| `notification` | `com.smx.notification` | Email to users |
-| `analytics` | `com.smx.analytics` | Search analytics |
+| `identity` | `com.smxworld.ecommerce.identity` | JWT validation and identity integration |
+| `catalog` | `com.smxworld.ecommerce.catalog` | Products, categories, search |
+| `cart` | `com.smxworld.ecommerce.cart` | User cart |
+| `order` | `com.smxworld.ecommerce.order` | Order lifecycle orchestration |
+| `payment` | `com.smxworld.ecommerce.payment` | Payment processing |
+| `warehouse` | `com.smxworld.ecommerce.warehouse` | Stock and reservations |
+| `shipment` | `com.smxworld.ecommerce.shipment` | Shipments and tracking |
+| `review` | `com.smxworld.ecommerce.review` | Product reviews |
+| `notification` | `com.smxworld.ecommerce.notification` | Email to users |
+| `analytics` | `com.smxworld.ecommerce.analytics` | Search analytics |
 
 ## Structure of each module
 
 ```
-com.smx.<module>/
+com.smxworld.ecommerce.<module>/
   <Module>Api.java          ← public interface (the only entry point from outside)
   <Module>Events.java       ← domain events published by the module (record classes)
   internal/
@@ -61,7 +61,7 @@ When a module needs to become a standalone service, the path is:
 The application exposes a single REST API to the outside through the `api` module (internal BFF):
 
 ```
-com.smx.api/
+com.smxworld.ecommerce.api/
   rest/                     ← REST controllers exposed to the frontend
 ```
 
@@ -74,8 +74,8 @@ Keycloak manages authentication. The `identity` module validates the JWT on ever
 ## Agent Notes
 
 - The project is a single Maven module with Spring Boot 3.x and Spring Modulith
-- Root package: `com.smx.ecommerce`
+- Root package: `com.smxworld.ecommerce`
 - Each module is a Java package, not a separate Maven project
-- Use `@ApplicationModuleTest` to verify the boundaries of each module
-- Spring Modulith automatically generates architecture documentation with `ApplicationModules.of(SmxApplication.class).verify()`
+- Use `ApplicationModules.of(SmxECommerceApplication.class).verify()` for the cross-module boundary check and `@ApplicationModuleTest` for focused module tests
+- Spring Modulith documentation is generated from `ApplicationModules.of(SmxECommerceApplication.class)` in `ApplicationModulesTest`
 - Code goes in `code/` at the project root

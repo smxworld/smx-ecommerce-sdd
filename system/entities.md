@@ -25,16 +25,17 @@ Main entities of the system, grouped by owning module. Each entity lives in the 
 | Field | Type | Notes |
 |---|---|---|
 | `id` | UUID | PK |
-| `name` | VARCHAR(255) | |
+| `name` | VARCHAR(500) | |
 | `description` | TEXT | |
-| `price` | DECIMAL(10,2) | |
-| `category` | VARCHAR(100) | |
-| `image_url` | VARCHAR(500) | |
+| `price` | NUMERIC(19,4) | |
+| `category` | VARCHAR(255) | |
 | `average_rating` | DECIMAL(3,2) | Updated by ReviewCreatedEvent |
+| `review_count` | INTEGER | Incremental counter used to recalculate `average_rating` |
+| `search_score` | DOUBLE PRECISION | Updated by analytics |
 | `created_at` | TIMESTAMPTZ | |
 | `updated_at` | TIMESTAMPTZ | |
 
-Elasticsearch document (index `products`): all fields above plus `score` (float, for analytics ranking).
+Elasticsearch document (index `products`): mirrors the searchable product data used for ranking (`id`, `name`, `description`, `price`, `category`, `averageRating`, `searchScore`).
 
 ---
 
@@ -76,7 +77,7 @@ Elasticsearch document (index `products`): all fields above plus `score` (float,
 | `cart_id` | UUID | FK → carts.id |
 | `product_id` | UUID | Reference to Product |
 | `quantity` | INTEGER | |
-| `unit_price` | DECIMAL(10,2) | Snapshotted on addition |
+| `unit_price` | NUMERIC(19,4) | Snapshotted on addition |
 | `added_at` | TIMESTAMPTZ | |
 
 ---
@@ -91,9 +92,9 @@ Elasticsearch document (index `products`): all fields above plus `score` (float,
 |---|---|---|
 | `id` | UUID | PK |
 | `user_id` | VARCHAR(255) | User ID from Keycloak |
-| `status` | VARCHAR(50) | PENDING, CONFIRMED, PROCESSING, SHIPPED, DELIVERED, CANCELLED |
-| `total_amount` | DECIMAL(10,2) | |
-| `shipping_address` | JSONB | |
+| `status` | VARCHAR(50) | PENDING, CONFIRMED, PAYMENT_PENDING, PAYMENT_FAILED, PREPARING, SHIPPED, DELIVERED, CANCELLED |
+| `total_amount` | NUMERIC(19,4) | |
+| `shipping_address` | TEXT | Formatted shipping address string |
 | `created_at` | TIMESTAMPTZ | |
 | `updated_at` | TIMESTAMPTZ | |
 
@@ -104,8 +105,8 @@ Elasticsearch document (index `products`): all fields above plus `score` (float,
 | `id` | UUID | PK |
 | `order_id` | UUID | FK → orders.id |
 | `product_id` | UUID | Reference to Product |
-| `product_name` | VARCHAR(255) | Snapshotted |
-| `unit_price` | DECIMAL(10,2) | Snapshotted |
+| `product_name` | VARCHAR(500) | Snapshotted |
+| `unit_price` | NUMERIC(19,4) | Snapshotted |
 | `quantity` | INTEGER | |
 
 ---
@@ -118,7 +119,7 @@ Elasticsearch document (index `products`): all fields above plus `score` (float,
 |---|---|---|
 | `id` | UUID | PK |
 | `order_id` | UUID | UNIQUE — idempotency key |
-| `amount` | DECIMAL(10,2) | |
+| `amount` | NUMERIC(19,4) | |
 | `status` | VARCHAR(50) | PENDING, SUCCESS, FAILED |
 | `transaction_id` | VARCHAR(255) | Nullable |
 | `failure_reason` | VARCHAR(255) | Nullable |
@@ -134,11 +135,12 @@ Elasticsearch document (index `products`): all fields above plus `score` (float,
 |---|---|---|
 | `id` | UUID | PK |
 | `order_id` | UUID | UNIQUE |
+| `user_id` | VARCHAR(255) | User ID used for notification/tracking |
 | `tracking_number` | VARCHAR(100) | |
 | `carrier` | VARCHAR(100) | Simulated |
-| `status` | VARCHAR(50) | PENDING, SHIPPED, DELIVERED |
+| `status` | VARCHAR(50) | PENDING, PICKED_UP, IN_TRANSIT, OUT_FOR_DELIVERY, DELIVERED, FAILED |
 | `shipped_at` | TIMESTAMPTZ | Nullable |
-| `estimated_delivery` | DATE | Nullable |
+| `estimated_delivery` | TIMESTAMPTZ | Nullable |
 | `created_at` | TIMESTAMPTZ | |
 
 ---

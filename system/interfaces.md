@@ -89,7 +89,7 @@ public interface PaymentApi {
 ```java
 public interface WarehouseApi {
     StockInfo getStock(UUID productId);
-    ReservationResult reserveStock(UUID orderId, List<OrderItem> items);
+    ReservationResult reserveStock(UUID orderId, List<ReservationItem> items);
     void releaseReservation(UUID orderId);
     void updateStock(UUID productId, int quantity); // back-office
 }
@@ -139,16 +139,18 @@ All events are immutable Java `record`s. They are published with `ApplicationEve
 | `ProductBookedEvent` | `cart` | `warehouse` | `productId, userId, quantity` |
 | `ProductUnbookedEvent` | `cart` | `warehouse` | `productId, userId, quantity` |
 | `SearchPerformedEvent` | `catalog` | `analytics` | `userId, query, resultsCount` |
-| `OrderCreatedEvent` | `order` | `notification` | `orderId, userId, totalAmount` |
-| `OrderConfirmedEvent` | `order` | `notification` | `orderId, userId, totalAmount` |
-| `OrderCancelledEvent` | `order` | `warehouse`, `notification` | `orderId, userId, reason` |
-| `PaymentSucceededEvent` | `payment` | `order` | `orderId, transactionId, amount` |
-| `PaymentFailedEvent` | `payment` | `order`, `notification` | `orderId, reason` |
-| `StockReservedEvent` | `warehouse` | `order` | `orderId, confirmed: true` |
-| `StockReservationFailedEvent` | `warehouse` | `order` | `orderId, reason` |
+| `OrderCreatedEvent` | `order` | none currently | `orderId, userId, totalAmount` |
+| `OrderConfirmedEvent` | `order` | `shipment`, `notification` | `orderId, userId, totalAmount` |
+| `OrderCancelledEvent` | `order` | none currently | `orderId, userId, reason` |
+| `PaymentSucceededEvent` | `payment` | none currently | `orderId, transactionId, amount` |
+| `PaymentFailedEvent` | `payment` | `notification` | `orderId, reason` |
+| `StockReservedEvent` | `warehouse` | none currently | `orderId, confirmed: true` |
+| `StockReservationFailedEvent` | `warehouse` | none currently | `orderId, reason` |
 | `OrderShippedEvent` | `shipment` | `notification` | `orderId, userId, trackingNumber` |
 | `ReviewCreatedEvent` | `review` | `catalog` | `productId, rating` |
 | `SearchScoreUpdatedEvent` | `analytics` | `catalog` | `productId, newScore` |
+
+The current order workflow is orchestrated synchronously through `WarehouseApi` and `PaymentApi`; some events are emitted for downstream observers and future extensions rather than being consumed by the order module itself.
 
 ### Note on migration to Kafka
 

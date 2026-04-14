@@ -39,16 +39,16 @@ SmxECommerce is a **modulith** — a single Spring Boot application structured i
 
 | Module | Package | Responsibility |
 |---|---|---|
-| `catalog` | `com.smxworld.catalog` | Products, search, Elasticsearch indexing |
-| `cart` | `com.smxworld.cart` | Shopping cart per user |
-| `order` | `com.smxworld.order` | Order lifecycle, state machine |
-| `payment` | `com.smxworld.payment` | Payment processing |
-| `warehouse` | `com.smxworld.warehouse` | Stock management, reservations |
-| `shipment` | `com.smxworld.shipment` | Shipment tracking |
-| `review` | `com.smxworld.review` | Product reviews |
-| `notification` | `com.smxworld.notification` | Email notifications |
-| `analytics` | `com.smxworld.analytics` | Search analytics and ranking |
-| `identity` | `com.smxworld.identity` | Keycloak JWT integration |
+| `catalog` | `com.smxworld.ecommerce.catalog` | Products, search, Elasticsearch indexing |
+| `cart` | `com.smxworld.ecommerce.cart` | Shopping cart per user |
+| `order` | `com.smxworld.ecommerce.order` | Order lifecycle orchestration |
+| `payment` | `com.smxworld.ecommerce.payment` | Payment processing |
+| `warehouse` | `com.smxworld.ecommerce.warehouse` | Stock management and reservations |
+| `shipment` | `com.smxworld.ecommerce.shipment` | Shipment tracking |
+| `review` | `com.smxworld.ecommerce.review` | Product reviews |
+| `notification` | `com.smxworld.ecommerce.notification` | Email notifications |
+| `analytics` | `com.smxworld.ecommerce.analytics` | Search analytics and ranking |
+| `identity` | `com.smxworld.ecommerce.identity` | JWT identity integration |
 
 ### Communication
 
@@ -85,7 +85,7 @@ Every module exposes only DTOs through its public API. JPA entities live exclusi
 - Elasticsearch 8.x (product search)
 - Spring Security + Keycloak (OAuth2/JWT)
 - Flyway (database migrations)
-- Spring State Machine (order lifecycle)
+- Spring State Machine dependency (present in the build; the current order flow is orchestrated in service code)
 - Spring Mail + Thymeleaf (email templates)
 
 **Frontend**
@@ -111,7 +111,7 @@ smx-ecommerce/
       checkout-order.md
       payment.md
       warehouse-shipment.md
-      reviews-notifications.md
+      reviews-notification.md
       frontend.md
       seed-data.md
   system/                     # SDD Story — system documentation
@@ -128,7 +128,6 @@ smx-ecommerce/
     frontend/                 # React application
     pom.xml
   docker-compose.yml
-  CLAUDE.md                   # Instructions for Claude Code
   README.md
 ```
 
@@ -156,11 +155,10 @@ This starts Keycloak 26.0.8 and imports the `smxworld` realm automatically from
 
 ```bash
 cd code
-mvn spring-boot:run -Dspring-boot.run.profiles=dev
+mvn spring-boot:run
 ```
 
 Backend available at `http://localhost:8080`
-Swagger UI at `http://localhost:8080/swagger-ui.html`
 
 ### Start the frontend
 

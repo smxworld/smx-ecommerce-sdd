@@ -39,7 +39,7 @@ The `docker-compose.yml` file is in the project root.
 ### Elasticsearch
 
 - Security disabled in development (`xpack.security.enabled=false`)
-- `products` index created automatically by Spring Data Elasticsearch on startup
+- `CatalogIndexInitializer` ensures the `products` index exists and repopulates it from PostgreSQL on startup
 
 ### Mailpit
 
@@ -69,10 +69,6 @@ spring:
   mail:
     host: localhost
     port: 1025
-
-keycloak:
-  realm: smxworld
-  auth-server-url: http://localhost:8180
 ```
 
 ## CORS
@@ -92,7 +88,7 @@ Configure a `CorsConfigurationSource` bean that allows:
 docker compose up -d
 
 # 2. Start the Spring Boot backend
-cd code && mvn spring-boot:run -Dspring-boot.run.profiles=dev
+cd code && mvn spring-boot:run
 
 # 3. Start the React frontend
 cd code/frontend && npm install && npm run dev

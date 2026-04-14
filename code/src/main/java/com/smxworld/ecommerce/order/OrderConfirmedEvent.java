@@ -5,7 +5,7 @@ import java.util.UUID;
 
 /**
  * Domain event published by Order when an order is confirmed.
- * Consumed by Notification.
+ * Consumed by Shipment and Notification.
  *
  * <p>To externalize on Kafka: add {@code @Externalized("smx.order-confirmed")}.
  */

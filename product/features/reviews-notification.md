@@ -30,8 +30,8 @@ version: "1.0"
 ## Behavior — Notification
 
 Consumes:
-- `OrderConfirmedEvent` → email "Your order is confirmed"
-- `PaymentFailedEvent` → email "Problem with your payment"
+- `OrderConfirmedEvent` → email "Your order has been confirmed"
+- `PaymentFailedEvent` → email "There was a problem with your payment"
 - `OrderShippedEvent` → email "Your order is on its way"
 
 ## Agent Notes

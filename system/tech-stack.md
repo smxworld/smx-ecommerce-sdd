@@ -13,8 +13,8 @@ version: "2.0"
 | Component | Technology | Version |
 |---|---|---|
 | Language | Java | 25 (LTS) |
-| Framework | Spring Boot | 3.x |
-| Modulith | Spring Modulith | 1.x |
+| Framework | Spring Boot | 3.4.4 |
+| Modulith | Spring Modulith | 1.3.4 |
 | Build | Maven | 3.9+ |
 
 ## Frontend
@@ -27,7 +27,7 @@ version: "2.0"
 | Data fetching | TanStack Query (React Query) | v5 |
 | Styling | Tailwind CSS | v3 |
 | HTTP client | Axios | 1.x |
-| Authentication | Keycloak JS | 26.x |
+| Authentication | Keycloak JS | 24.x |
 
 The frontend lives in `code/frontend/` and is a Vite project separate from the backend. In development it runs on `http://localhost:5173` and points to the backend on `http://localhost:8080` via Vite proxy.
 
@@ -46,7 +46,7 @@ A single PostgreSQL cluster with separate schemas per module.
 | `analytics` | `smx_analytics` | Aggregates |
 | `catalog` | `smx_catalog` | Products and categories |
 
-Each module configures its own `DataSource` pointing to its own schema. No JOINs across schemas — cross-module data is obtained via the public API.
+The application uses one PostgreSQL cluster with schema-qualified tables per module. No JOINs across schemas — cross-module data is obtained via the public API.
 
 ## Messaging
 
@@ -79,6 +79,7 @@ Producers and consumers do not change.
 <dependency>spring-boot-starter-data-jpa</dependency>
 <dependency>spring-boot-starter-security</dependency>
 <dependency>spring-boot-starter-oauth2-resource-server</dependency>
+<dependency>spring-boot-starter-validation</dependency>
 
 <!-- Modulith -->
 <dependency>spring-modulith-starter-core</dependency>
@@ -86,7 +87,8 @@ Producers and consumers do not change.
 <dependency>spring-modulith-events-api</dependency>
 
 <!-- Database -->
-<dependency>spring-boot-starter-flyway</dependency>
+<dependency>flyway-core</dependency>
+<dependency>flyway-database-postgresql</dependency>
 <dependency>postgresql (driver)</dependency>
 
 <!-- Search -->
@@ -96,7 +98,7 @@ Producers and consumers do not change.
 <dependency>spring-boot-starter-mail</dependency>
 <dependency>spring-boot-starter-thymeleaf</dependency>
 
-<!-- State Machine (Order module) -->
+<!-- Optional workflow tooling currently present in the build -->
 <dependency>spring-statemachine-core</dependency>
 
 <!-- Testing -->
@@ -126,7 +128,7 @@ smx-ecommerce/
   code/                     ← source code
     src/
       main/
-        java/com/smx/ecommerce/
+        java/com/smxworld/ecommerce/
           SmxECommerceApplication.java
           api/              ← REST controllers (internal BFF)
           identity/         ← identity module
@@ -153,6 +155,6 @@ smx-ecommerce/
 - Java 25, Spring Boot 3.x, Spring Modulith 1.x
 - Do not use `spring.jpa.hibernate.ddl-auto=create` — Flyway only
 - Flyway scripts go in `resources/db/migration/<schema>/` (e.g., `db/migration/smx_order/V1__init.sql`)
-- Each module has its own `application.yml` fragment loaded via `@ConfigurationProperties`
+- Runtime isolation is implemented through schema-qualified entities and per-schema Flyway migration configuration
 - For architecture tests: `ApplicationModules.of(SmxECommerceApplication.class).verify()` should be run as the base test
 - Elasticsearch for product search — use Spring Data Elasticsearch
