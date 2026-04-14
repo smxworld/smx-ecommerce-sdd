@@ -10,24 +10,33 @@ export default function HomePage() {
   const [minPrice, setMinPrice] = useState('')
   const [maxPrice, setMaxPrice] = useState('')
   const [page, setPage] = useState(0)
+  const [searchParams, setSearchParams] = useState({
+    q: '',
+    category: undefined,
+    minPrice: undefined,
+    maxPrice: undefined,
+  })
 
   const params = {
-    q: query,
-    category: category || undefined,
-    minPrice: minPrice || undefined,
-    maxPrice: maxPrice || undefined,
+    ...searchParams,
     page,
     size: 9,
   }
 
   const { data, isLoading, isError } = useProductSearch(params)
 
-  const products = data?.content ?? []
+  const products = data?.items ?? []
   const totalPages = data?.totalPages ?? 0
 
   const handleSearch = (e) => {
     e.preventDefault()
     setPage(0)
+    setSearchParams({
+      q: query,
+      category: category || undefined,
+      minPrice: minPrice || undefined,
+      maxPrice: maxPrice || undefined,
+    })
   }
 
   return (
@@ -44,7 +53,7 @@ export default function HomePage() {
         />
         <select
           value={category}
-          onChange={(e) => { setCategory(e.target.value); setPage(0) }}
+          onChange={(e) => setCategory(e.target.value)}
           className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           {CATEGORIES.map((c) => (
