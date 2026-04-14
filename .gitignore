@@ -1,0 +1,6 @@
+code/frontend/node_modules/
+code/frontend/dist/
+code/frontend/.env
+code/frontend/.env.local
+
+code/target/

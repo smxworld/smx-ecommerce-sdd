@@ -28,7 +28,7 @@ services:
     ports:
       - "8180:8080"
     volumes:
-      - ./infrastructure/keycloak:/opt/keycloak/data/import
+      - ./infrastructure/keycloak:/opt/keycloak/conf/import
     depends_on:
       postgres:
         condition: service_healthy
