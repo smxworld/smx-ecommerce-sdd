@@ -1,5 +1,6 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { useCart, useUpdateCartItem, useRemoveCartItem } from '../hooks/useCart'
+import { getCartItemImageUrl } from '../utils/productImages'
 
 export default function CartPage() {
   const { data: cart, isLoading } = useCart()
@@ -30,7 +31,7 @@ export default function CartPage() {
       <div className="space-y-4 mb-8">
         {items.map((item) => (
           <div key={item.productId} className="bg-white border border-gray-200 rounded-lg p-4 flex items-center gap-4">
-            <img src="https://placehold.co/80x60" alt={item.productName} className="w-20 h-16 object-cover rounded" />
+            <img src={getCartItemImageUrl(item)} alt={item.productName} className="w-20 h-16 object-cover rounded" />
             <div className="flex-1">
               <p className="font-semibold text-gray-900">{item.productName}</p>
               <p className="text-gray-500 text-sm">€{Number(item.unitPrice).toFixed(2)} each</p>

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { useProductSearch } from '../hooks/useProducts'
 import ProductCard from '../components/ProductCard'
 
-const CATEGORIES = ['', 'Elettronica', 'Abbigliamento', 'Casa']
+const CATEGORIES = ['', 'Electronics', 'Clothing', 'Home']
 
 export default function HomePage() {
   const [query, setQuery] = useState('')

@@ -54,21 +54,24 @@ class ECommerceController {
     // ─── Catalog ──────────────────────────────────────────────────────────────
 
     @GetMapping("/search")
-    ResponseEntity<SearchResult> search(
+    ResponseEntity<SearchResultView> search(
             @RequestParam(required = false) String q,
             @RequestParam(required = false) String category,
             @RequestParam(required = false) java.math.BigDecimal minPrice,
             @RequestParam(required = false) java.math.BigDecimal maxPrice,
             @RequestParam(defaultValue = "0") int page,
             @RequestParam(defaultValue = "20") int size) {
-        return ResponseEntity.ok(catalogApi.search(new SearchQuery(q, category, minPrice, maxPrice, page, size)));
+        SearchResult result = catalogApi.search(new SearchQuery(q, category, minPrice, maxPrice, page, size));
+        return ResponseEntity.ok(new SearchResultView(
+                result.items().stream().map(this::toProductView).toList(),
+                result.totalElements(),
+                result.totalPages()));
     }
 
     @GetMapping("/products/{id}")
-    ResponseEntity<ProductWithStock> getProduct(@PathVariable UUID id) {
+    ResponseEntity<ProductView> getProduct(@PathVariable UUID id) {
         ProductDetails product = catalogApi.getProduct(id);
-        StockInfo stock = warehouseApi.getStock(id);
-        return ResponseEntity.ok(new ProductWithStock(product, stock));
+        return ResponseEntity.ok(toProductView(product));
     }
 
     // ─── Cart ─────────────────────────────────────────────────────────────────
@@ -158,5 +161,29 @@ class ECommerceController {
 
     // ─── Internal response wrappers ───────────────────────────────────────────
 
-    record ProductWithStock(ProductDetails product, StockInfo stock) {}
+    private ProductView toProductView(ProductDetails product) {
+        StockInfo stock = warehouseApi.getStock(product.id());
+        return new ProductView(
+                product.id(),
+                product.name(),
+                product.description(),
+                product.price(),
+                product.category(),
+                product.averageRating(),
+                product.searchScore(),
+                stock.availableQuantity());
+    }
+
+    record SearchResultView(List<ProductView> items, long totalElements, int totalPages) {}
+
+    record ProductView(
+            UUID id,
+            String name,
+            String description,
+            java.math.BigDecimal price,
+            String category,
+            double averageRating,
+            double searchScore,
+            int stockAvailable
+    ) {}
 }

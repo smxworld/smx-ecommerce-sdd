@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom'
 import { useProduct, useReviews } from '../hooks/useProducts'
 import { useAddToCart } from '../hooks/useCart'
 import StarRating from '../components/StarRating'
+import { getProductImageUrl } from '../utils/productImages'
 
 export default function ProductPage() {
   const { id } = useParams()
@@ -28,7 +29,7 @@ export default function ProductPage() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <div>
           <img
-            src="https://placehold.co/400x300"
+            src={getProductImageUrl(product)}
             alt={product.name}
             className="w-full rounded-lg shadow"
           />
@@ -38,7 +39,7 @@ export default function ProductPage() {
           <h1 className="text-2xl font-bold text-gray-900 mb-3">{product.name}</h1>
           <div className="flex items-center gap-2 mb-4">
             <StarRating rating={product.averageRating} />
-            <span className="text-sm text-gray-500">({product.reviewCount} reviews)</span>
+            <span className="text-sm text-gray-500">({reviews.length} reviews)</span>
           </div>
           <p className="text-3xl font-bold text-indigo-600 mb-4">€{Number(product.price).toFixed(2)}</p>
           <span
