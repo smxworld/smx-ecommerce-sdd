@@ -34,7 +34,7 @@ export default function CheckoutPage() {
       const order = await checkout(address)
       navigate(`/orders/${order.orderId}`)
     } catch (err) {
-      setError(err.response?.data?.message ?? 'Errore durante il checkout. Riprova.')
+      setError(err.response?.data?.message ?? 'Checkout failed. Please try again.')
       setLoading(false)
     }
   }
@@ -45,11 +45,11 @@ export default function CheckoutPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
         <form onSubmit={handleSubmit} className="space-y-4">
-          <h2 className="text-lg font-semibold text-gray-800 mb-2">Indirizzo di spedizione</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-2">Shipping address</h2>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Nome</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">First name</label>
               <input
                 name="firstName"
                 required
@@ -59,7 +59,7 @@ export default function CheckoutPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Cognome</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Last name</label>
               <input
                 name="lastName"
                 required
@@ -71,7 +71,7 @@ export default function CheckoutPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Via</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Street</label>
             <input
               name="street"
               required
@@ -83,7 +83,7 @@ export default function CheckoutPage() {
 
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Città</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">City</label>
               <input
                 name="city"
                 required
@@ -93,7 +93,7 @@ export default function CheckoutPage() {
               />
             </div>
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">CAP</label>
+              <label className="block text-sm font-medium text-gray-700 mb-1">ZIP code</label>
               <input
                 name="postalCode"
                 required
@@ -105,7 +105,7 @@ export default function CheckoutPage() {
           </div>
 
           <div>
-            <label className="block text-sm font-medium text-gray-700 mb-1">Paese</label>
+            <label className="block text-sm font-medium text-gray-700 mb-1">Country</label>
             <input
               name="country"
               required
@@ -122,12 +122,12 @@ export default function CheckoutPage() {
             disabled={loading || items.length === 0}
             className="w-full bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-medium disabled:opacity-50 mt-2"
           >
-            {loading ? 'Conferma in corso...' : 'Conferma ordine'}
+            {loading ? 'Confirming...' : 'Confirm order'}
           </button>
         </form>
 
         <div>
-          <h2 className="text-lg font-semibold text-gray-800 mb-4">Riepilogo ordine</h2>
+          <h2 className="text-lg font-semibold text-gray-800 mb-4">Order summary</h2>
           <div className="bg-gray-50 rounded-lg border border-gray-200 p-4 space-y-3">
             {items.map((item) => (
               <div key={item.productId} className="flex justify-between text-sm">
@@ -136,7 +136,7 @@ export default function CheckoutPage() {
               </div>
             ))}
             <div className="border-t border-gray-300 pt-3 flex justify-between font-bold">
-              <span>Totale</span>
+              <span>Total</span>
               <span>€{total.toFixed(2)}</span>
             </div>
           </div>

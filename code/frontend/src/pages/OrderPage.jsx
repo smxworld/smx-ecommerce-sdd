@@ -3,11 +3,11 @@ import { useQuery } from '@tanstack/react-query'
 import { getOrder } from '../api/orders'
 
 const STATUS_LABELS = {
-  PENDING: 'In attesa',
-  CONFIRMED: 'Confermato',
-  CANCELLED: 'Annullato',
-  SHIPPED: 'Spedito',
-  DELIVERED: 'Consegnato',
+  PENDING: 'Pending',
+  CONFIRMED: 'Confirmed',
+  CANCELLED: 'Cancelled',
+  SHIPPED: 'Shipped',
+  DELIVERED: 'Delivered',
 }
 
 const STATUS_COLORS = {
@@ -27,21 +27,21 @@ export default function OrderPage() {
     enabled: !!orderId,
   })
 
-  if (isLoading) return <div className="max-w-2xl mx-auto px-4 py-8 text-gray-500">Caricamento...</div>
-  if (isError || !order) return <div className="max-w-2xl mx-auto px-4 py-8 text-red-600">Ordine non trovato.</div>
+  if (isLoading) return <div className="max-w-2xl mx-auto px-4 py-8 text-gray-500">Loading...</div>
+  if (isError || !order) return <div className="max-w-2xl mx-auto px-4 py-8 text-red-600">Order not found.</div>
 
   const total = (order.items ?? []).reduce((sum, i) => sum + i.unitPrice * i.quantity, 0)
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-12 text-center">
       <div className="text-green-500 text-6xl mb-4">✓</div>
-      <h1 className="text-2xl font-bold text-gray-900 mb-2">Ordine confermato!</h1>
-      <p className="text-gray-500 mb-6">Grazie per il tuo acquisto.</p>
+      <h1 className="text-2xl font-bold text-gray-900 mb-2">Order confirmed!</h1>
+      <p className="text-gray-500 mb-6">Thank you for your purchase.</p>
 
       <div className="bg-white border border-gray-200 rounded-lg p-6 text-left mb-8">
         <div className="flex items-center justify-between mb-4">
           <div>
-            <p className="text-xs text-gray-500 uppercase tracking-wide">Numero ordine</p>
+             <p className="text-xs text-gray-500 uppercase tracking-wide">Order number</p>
             <p className="font-mono text-sm text-gray-800">{order.orderId}</p>
           </div>
           <span
@@ -63,7 +63,7 @@ export default function OrderPage() {
         </div>
 
         <div className="border-t border-gray-200 pt-3 flex justify-between font-bold">
-          <span>Totale</span>
+           <span>Total</span>
           <span>€{total.toFixed(2)}</span>
         </div>
       </div>
@@ -72,7 +72,7 @@ export default function OrderPage() {
         to="/"
         className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 font-medium"
       >
-        Continua a fare acquisti
+        Continue shopping
       </Link>
     </div>
   )

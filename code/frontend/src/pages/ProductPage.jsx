@@ -13,8 +13,8 @@ export default function ProductPage() {
   const { data: reviews = [] } = useReviews(id)
   const addToCart = useAddToCart()
 
-  if (isLoading) return <div className="max-w-4xl mx-auto px-4 py-8 text-gray-500">Caricamento...</div>
-  if (isError || !product) return <div className="max-w-4xl mx-auto px-4 py-8 text-red-600">Prodotto non trovato.</div>
+  if (isLoading) return <div className="max-w-4xl mx-auto px-4 py-8 text-gray-500">Loading...</div>
+  if (isError || !product) return <div className="max-w-4xl mx-auto px-4 py-8 text-red-600">Product not found.</div>
 
   const inStock = product.stockAvailable > 0
 
@@ -38,7 +38,7 @@ export default function ProductPage() {
           <h1 className="text-2xl font-bold text-gray-900 mb-3">{product.name}</h1>
           <div className="flex items-center gap-2 mb-4">
             <StarRating rating={product.averageRating} />
-            <span className="text-sm text-gray-500">({product.reviewCount} recensioni)</span>
+            <span className="text-sm text-gray-500">({product.reviewCount} reviews)</span>
           </div>
           <p className="text-3xl font-bold text-indigo-600 mb-4">€{Number(product.price).toFixed(2)}</p>
           <span
@@ -46,7 +46,7 @@ export default function ProductPage() {
               inStock ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700'
             }`}
           >
-            {inStock ? `Disponibile (${product.stockAvailable} pz)` : 'Esaurito'}
+            {inStock ? `In stock (${product.stockAvailable} pcs)` : 'Out of stock'}
           </span>
 
           {product.description && (
@@ -68,7 +68,7 @@ export default function ProductPage() {
                 disabled={addToCart.isPending}
                 className="flex-1 bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-medium disabled:opacity-50"
               >
-                {addToCart.isPending ? 'Aggiunta...' : 'Aggiungi al carrello'}
+                {addToCart.isPending ? 'Adding...' : 'Add to cart'}
               </button>
             </div>
           )}
@@ -77,7 +77,7 @@ export default function ProductPage() {
 
       {reviews.length > 0 && (
         <div className="mt-12">
-          <h2 className="text-xl font-bold text-gray-900 mb-6">Recensioni</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-6">Reviews</h2>
           <div className="space-y-4">
             {reviews.map((r) => (
               <div key={r.id} className="bg-white rounded-lg border border-gray-200 p-4">

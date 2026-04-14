@@ -32,7 +32,7 @@ export default function ProductCard({ product }) {
                 : 'bg-red-100 text-red-700'
             }`}
           >
-            {inStock ? 'Disponibile' : 'Esaurito'}
+            {inStock ? 'In stock' : 'Out of stock'}
           </span>
         </div>
       </div>

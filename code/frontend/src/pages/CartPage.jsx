@@ -7,7 +7,7 @@ export default function CartPage() {
   const removeItem = useRemoveCartItem()
   const navigate = useNavigate()
 
-  if (isLoading) return <div className="max-w-3xl mx-auto px-4 py-8 text-gray-500">Caricamento...</div>
+  if (isLoading) return <div className="max-w-3xl mx-auto px-4 py-8 text-gray-500">Loading...</div>
 
   const items = cart?.items ?? []
   const total = items.reduce((sum, i) => sum + i.unitPrice * i.quantity, 0)
@@ -15,9 +15,9 @@ export default function CartPage() {
   if (items.length === 0) {
     return (
       <div className="max-w-3xl mx-auto px-4 py-16 text-center">
-        <p className="text-gray-500 text-lg mb-6">Il tuo carrello è vuoto.</p>
+        <p className="text-gray-500 text-lg mb-6">Your cart is empty.</p>
         <Link to="/" className="bg-indigo-600 text-white px-6 py-3 rounded-lg hover:bg-indigo-700 font-medium">
-          Continua a fare acquisti
+          Continue shopping
         </Link>
       </div>
     )
@@ -25,7 +25,7 @@ export default function CartPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-8">
-      <h1 className="text-2xl font-bold text-gray-900 mb-8">Carrello</h1>
+      <h1 className="text-2xl font-bold text-gray-900 mb-8">Cart</h1>
 
       <div className="space-y-4 mb-8">
         {items.map((item) => (
@@ -33,7 +33,7 @@ export default function CartPage() {
             <img src="https://placehold.co/80x60" alt={item.productName} className="w-20 h-16 object-cover rounded" />
             <div className="flex-1">
               <p className="font-semibold text-gray-900">{item.productName}</p>
-              <p className="text-gray-500 text-sm">€{Number(item.unitPrice).toFixed(2)} cad.</p>
+              <p className="text-gray-500 text-sm">€{Number(item.unitPrice).toFixed(2)} each</p>
             </div>
             <div className="flex items-center gap-2">
               <input
@@ -53,19 +53,19 @@ export default function CartPage() {
               onClick={() => removeItem.mutate(item.productId)}
               className="text-red-500 hover:text-red-700 text-sm"
             >
-              Rimuovi
+              Remove
             </button>
           </div>
         ))}
       </div>
 
       <div className="flex items-center justify-between">
-        <span className="text-xl font-bold text-gray-900">Totale: €{total.toFixed(2)}</span>
+        <span className="text-xl font-bold text-gray-900">Total: €{total.toFixed(2)}</span>
         <button
           onClick={() => navigate('/checkout')}
           className="bg-indigo-600 text-white px-8 py-3 rounded-lg hover:bg-indigo-700 font-medium"
         >
-          Procedi al checkout
+          Proceed to checkout
         </button>
       </div>
     </div>

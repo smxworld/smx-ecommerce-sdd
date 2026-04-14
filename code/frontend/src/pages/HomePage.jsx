@@ -41,12 +41,12 @@ export default function HomePage() {
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Scopri i nostri prodotti</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8 text-center">Discover our products</h1>
 
       <form onSubmit={handleSearch} className="mb-8 flex flex-col sm:flex-row gap-3">
         <input
           type="text"
-          placeholder="Cerca prodotti..."
+          placeholder="Search products..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           className="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -57,19 +57,19 @@ export default function HomePage() {
           className="border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         >
           {CATEGORIES.map((c) => (
-            <option key={c} value={c}>{c || 'Tutte le categorie'}</option>
+            <option key={c} value={c}>{c || 'All categories'}</option>
           ))}
         </select>
         <input
           type="number"
-          placeholder="Prezzo min"
+          placeholder="Min price"
           value={minPrice}
           onChange={(e) => setMinPrice(e.target.value)}
           className="w-28 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
         />
         <input
           type="number"
-          placeholder="Prezzo max"
+          placeholder="Max price"
           value={maxPrice}
           onChange={(e) => setMaxPrice(e.target.value)}
           className="w-28 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -78,15 +78,15 @@ export default function HomePage() {
           type="submit"
           className="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 font-medium"
         >
-          Cerca
+          Search
         </button>
       </form>
 
-      {isLoading && <p className="text-center text-gray-500">Caricamento...</p>}
-      {isError && <p className="text-center text-red-600">Errore nel caricamento dei prodotti.</p>}
+      {isLoading && <p className="text-center text-gray-500">Loading...</p>}
+      {isError && <p className="text-center text-red-600">Error loading products.</p>}
 
       {!isLoading && !isError && products.length === 0 && (
-        <p className="text-center text-gray-500">Nessun prodotto trovato.</p>
+        <p className="text-center text-gray-500">No products found.</p>
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -102,7 +102,7 @@ export default function HomePage() {
             disabled={page === 0}
             className="px-4 py-2 border rounded-lg disabled:opacity-40 hover:bg-gray-50"
           >
-            Precedente
+            Previous
           </button>
           <span className="px-4 py-2 text-gray-600">{page + 1} / {totalPages}</span>
           <button
@@ -110,7 +110,7 @@ export default function HomePage() {
             disabled={page === totalPages - 1}
             className="px-4 py-2 border rounded-lg disabled:opacity-40 hover:bg-gray-50"
           >
-            Successivo
+            Next
           </button>
         </div>
       )}

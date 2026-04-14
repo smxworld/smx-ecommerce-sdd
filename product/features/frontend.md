@@ -109,3 +109,10 @@ All calls go to `http://localhost:8080/api` (the Spring Boot backend).
 - Rating stars: implement with Unicode characters ★/☆ without external libraries
 - No UI component library (no MUI, no Ant Design) — Tailwind only
 - CORS already configured in the Spring Boot backend for `http://localhost:5173`
+- All user-facing frontend text must be in English, including placeholders,
+  labels, buttons, loading/error states, empty states, badges, and navigation
+  links across pages and reusable components
+- Use English UI copy such as "Search products...", "All categories",
+  "Min price", "Search", "Loading...", "No products found.",
+  "Discover our products", "Add to cart", "Proceed to checkout",
+  "Confirm order", and "Continue shopping"

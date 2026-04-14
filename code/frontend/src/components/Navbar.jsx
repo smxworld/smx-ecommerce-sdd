@@ -8,13 +8,13 @@ export default function Navbar() {
         <Link to="/" className="text-xl font-bold text-indigo-600">SMX Store</Link>
         <div className="flex items-center gap-4">
           <Link to="/cart" className="text-gray-600 hover:text-indigo-600 font-medium">
-            Carrello
+            Cart
           </Link>
           <button
             onClick={() => keycloak.logout()}
             className="text-sm text-gray-500 hover:text-red-600"
           >
-            Esci
+            Sign out
           </button>
         </div>
       </div>
