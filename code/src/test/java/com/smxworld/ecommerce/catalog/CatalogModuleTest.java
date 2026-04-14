@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Primary;
 import org.springframework.core.task.SyncTaskExecutor;
 import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.IndexOperations;
 import org.springframework.data.elasticsearch.core.SearchHit;
 import org.springframework.data.elasticsearch.core.SearchHits;
 import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
@@ -67,8 +68,17 @@ class CatalogModuleTest {
         }
 
         @Bean
-        ElasticsearchOperations elasticsearchOperations() {
-            return mock(ElasticsearchOperations.class);
+        IndexOperations productIndexOperations() {
+            IndexOperations indexOperations = mock(IndexOperations.class);
+            when(indexOperations.exists()).thenReturn(true);
+            return indexOperations;
+        }
+
+        @Bean
+        ElasticsearchOperations elasticsearchOperations(IndexOperations productIndexOperations) {
+            ElasticsearchOperations operations = mock(ElasticsearchOperations.class);
+            when(operations.indexOps(ProductDocument.class)).thenReturn(productIndexOperations);
+            return operations;
         }
 
         @Bean
@@ -77,6 +87,7 @@ class CatalogModuleTest {
             // findById è chiamato da syncRatingToEs/syncScoreToEs:
             // ritornare Optional.empty() fa sì che ifPresent() sia no-op.
             when(repo.findById(any())).thenReturn(Optional.empty());
+            when(repo.saveAll(any(Iterable.class))).thenAnswer(invocation -> invocation.getArgument(0));
             return repo;
         }
     }
@@ -85,6 +96,8 @@ class CatalogModuleTest {
     @Autowired ApplicationEventPublisher publisher;
     @Autowired TransactionTemplate txTemplate;
     @Autowired ElasticsearchOperations elasticsearchOperations;
+    @Autowired IndexOperations productIndexOperations;
+    @Autowired ProductElasticsearchRepository productElasticsearchRepository;
     @PersistenceContext EntityManager em;
 
     @BeforeEach
@@ -98,7 +111,11 @@ class CatalogModuleTest {
         // doReturn bypassa la verifica dei tipi generici a compile-time, necessaria
         // perché Mockito non riesce a inferire <T> di SearchHits<T> in presenza
         // di overload ambigui su ElasticsearchOperations.search().
-        reset(elasticsearchOperations);
+        reset(elasticsearchOperations, productIndexOperations, productElasticsearchRepository);
+        when(elasticsearchOperations.indexOps(ProductDocument.class)).thenReturn(productIndexOperations);
+        when(productIndexOperations.exists()).thenReturn(true);
+        when(productElasticsearchRepository.findById(any())).thenReturn(Optional.empty());
+        when(productElasticsearchRepository.saveAll(any(Iterable.class))).thenAnswer(invocation -> invocation.getArgument(0));
         doReturn(emptySearchHits())
                 .when(elasticsearchOperations)
                 .search(any(CriteriaQuery.class), eq(ProductDocument.class));
