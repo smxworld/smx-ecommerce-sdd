@@ -27,7 +27,7 @@ version: "2.0"
 | Data fetching | TanStack Query (React Query) | v5 |
 | Styling | Tailwind CSS | v3 |
 | HTTP client | Axios | 1.x |
-| Authentication | Keycloak JS | 24.x |
+| Authentication | Keycloak JS | 26.x |
 
 The frontend lives in `code/frontend/` and is a Vite project separate from the backend. In development it runs on `http://localhost:5173` and points to the backend on `http://localhost:8080` via Vite proxy.
 
@@ -110,10 +110,10 @@ The Docker Compose in development is much leaner than a microservices architectu
 | Component | Image | Port |
 |---|---|---|
 | SmxECommerce Application | local build | 8080 |
-| Keycloak | `quay.io/keycloak/keycloak:latest` | 8180 |
+| Keycloak | `quay.io/keycloak/keycloak:26.0.8` | 8180 |
 | PostgreSQL | `postgres:17` | 5432 |
 | Elasticsearch | `elasticsearch:8.x` | 9200 |
-| Mailhog (SMTP mock) | `mailhog/mailhog` | 1025 / 8025 |
+| Mailpit (SMTP mock) | `axllent/mailpit` | 1025 / 8025 |
 
 No Kafka, no Zookeeper, no service discovery, no Redis — all eliminated compared to the microservices architecture.
 

@@ -15,9 +15,9 @@ Complete configuration of the local development environment via Docker Compose.
 | Component | Image | Port | Purpose |
 |---|---|---|---|
 | PostgreSQL | `postgres:17` | 5432 | Main database (all schemas) |
-| Keycloak | `quay.io/keycloak/keycloak:24` | 8180 | Authentication and authorization |
+| Keycloak | `quay.io/keycloak/keycloak:26.0.8` | 8180 | Authentication and authorization |
 | Elasticsearch | `elasticsearch:8.13.0` | 9200 | Product search index |
-| Mailhog | `mailhog/mailhog` | 1025 (SMTP), 8025 (UI) | Mock SMTP for emails |
+| Mailpit | `axllent/mailpit` | 1025 (SMTP), 8025 (UI) | Mock SMTP for emails |
 
 ## Docker Compose
 
@@ -31,9 +31,9 @@ The `docker-compose.yml` file is in the project root.
 
 ### Keycloak
 
-- Realm: `smx`
-- Client: `smx-frontend` (public client, for React) and `smx-backend` (confidential, for Spring Boot)
-- The realm is imported automatically on startup from `infrastructure/keycloak/realm-export.json`
+- Realm: `smxworld`
+- Client: `smxworld-frontend` (public client, for React) and `smxworld-backend` (bearer-only, for Spring Boot)
+- On startup Keycloak imports `infrastructure/keycloak/smxworld-realm.json` via the `/opt/keycloak/data/import` mount and `start-dev --import-realm`
 - Admin URL: `http://localhost:8180/admin` — credentials: `admin/admin`
 
 ### Elasticsearch
@@ -41,7 +41,7 @@ The `docker-compose.yml` file is in the project root.
 - Security disabled in development (`xpack.security.enabled=false`)
 - `products` index created automatically by Spring Data Elasticsearch on startup
 
-### Mailhog
+### Mailpit
 
 - All emails sent by the application end up here
 - Web UI to view emails: `http://localhost:8025`
@@ -61,7 +61,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: http://localhost:8180/realms/smx
+          issuer-uri: http://localhost:8180/realms/smxworld
 
   elasticsearch:
     uris: http://localhost:9200
@@ -71,7 +71,7 @@ spring:
     port: 1025
 
 keycloak:
-  realm: smx
+  realm: smxworld
   auth-server-url: http://localhost:8180
 ```
 
@@ -104,8 +104,9 @@ Frontend available at `http://localhost:5173`
 ## Agent Notes
 
 - Create `docker-compose.yml` in the project root (not inside `code/`)
-- Create `infrastructure/keycloak/realm-export.json` with the complete realm
-- The realm export must include: realm `smx`, clients `smx-frontend` and `smx-backend`, the two seed users, roles `ROLE_USER` and `ROLE_OPERATOR`
+- Create `infrastructure/keycloak/smxworld-realm.json` with the complete realm
+- The realm export must include: realm `smxworld`, clients `smxworld-frontend` and `smxworld-backend`, the two seed users, roles `ROLE_USER` and `ROLE_OPERATOR`
+- Mount `infrastructure/keycloak/` to `/opt/keycloak/data/import` and start Keycloak with `start-dev --import-realm`
 - Elasticsearch in development does not require authentication — set `xpack.security.enabled=false`
 - Add a `healthcheck` on PostgreSQL in docker-compose to avoid race conditions on startup
 - The Spring Boot backend does not run inside Docker in development — it runs on the host machine and connects to the containers

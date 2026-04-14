@@ -30,7 +30,7 @@ spring:
   elasticsearch:
     uris: http://localhost:9200
 
-  # ─── Mail (Mailhog in development) ────────────────────────────────────────
+  # ─── Mail (Mailpit in development) ────────────────────────────────────────
   mail:
     host: localhost
     port: 1025

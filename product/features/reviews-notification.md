@@ -39,4 +39,4 @@ Consumes:
 - The notification module does not expose a public API — reacts to events only
 - Use Spring Mail + Thymeleaf for email templates
 - Templates in `resources/templates/mail/`
-- SMTP mocked with Mailhog in development
+- SMTP mocked with Mailpit in development

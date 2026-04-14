@@ -12,23 +12,22 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U smx -d smx_ecommerce"]
+      test: [ "CMD-SHELL", "pg_isready -U smx -d smx_ecommerce" ]
       interval: 10s
       timeout: 5s
       retries: 5
 
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0
-    container_name: smx-keycloak
+    image: quay.io/keycloak/keycloak:26.0.8
     command: start-dev --import-realm
     environment:
-      KEYCLOAK_ADMIN: admin
-      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_BOOTSTRAP_ADMIN_USERNAME: admin
+      KC_BOOTSTRAP_ADMIN_PASSWORD: admin
       KC_DB: dev-mem
     ports:
       - "8180:8080"
     volumes:
-      - ./infrastructure/keycloak:/opt/keycloak/conf/import
+      - ./infrastructure/keycloak:/opt/keycloak/data/import:ro
     depends_on:
       postgres:
         condition: service_healthy
@@ -45,9 +44,9 @@ services:
     volumes:
       - es_data:/usr/share/elasticsearch/data
 
-  mailhog:
-    image: mailhog/mailhog
-    container_name: smx-mailhog
+  mailpit:
+    image: axllent/mailpit
+    container_name: smx-mailpit
     ports:
       - "1025:1025"
       - "8025:8025"
