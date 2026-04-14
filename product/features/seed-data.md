@@ -31,8 +31,8 @@ SQL scripts and configuration to populate the database with realistic test data.
 
 | Username | Password | Role | Description |
 |---|---|---|---|
-| `acquirente@smx.local` | `password123` | `ROLE_USER` | Standard user for testing the purchase flow |
-| `operatore@smx.local` | `password123` | `ROLE_OPERATOR` | Back-office operator |
+| `buyer@smxworld.local` | `password123` | `ROLE_USER` | Standard user for testing the purchase flow |
+| `operator@smxworld.local` | `password123` | `ROLE_OPERATOR` | Back-office operator |
 
 ## Sample Reviews
 
@@ -41,7 +41,7 @@ SQL scripts and configuration to populate the database with realistic test data.
 ## How data is loaded
 
 - Products are inserted via Flyway scripts in `smx_catalog` and `smx_warehouse`
-- Keycloak users are created via the realm export in `infrastructure/keycloak/`
+- Keycloak users are created via `infrastructure/keycloak/smxworld-realm.json`, imported automatically when Keycloak starts with `--import-realm`
 - Reviews are inserted via Flyway scripts in `smx_review`
 - Seed data is active only with the Spring `dev` profile
 
@@ -51,5 +51,5 @@ SQL scripts and configuration to populate the database with realistic test data.
 - Create `code/src/main/resources/db/migration/smx_warehouse/V2__seed_stock.sql`
 - Create `code/src/main/resources/db/migration/smx_review/V2__seed_reviews.sql`
 - Seeds use fixed (hardcoded) UUIDs so they are repeatable and cross-referenceable between scripts
-- Create `infrastructure/keycloak/realm-export.json` with the `smx` realm configured with the two users
+- Create `infrastructure/keycloak/smxworld-realm.json` with the `smxworld` realm configured with the two users
 - The dev profile is activated with `SPRING_PROFILES_ACTIVE=dev` in docker-compose.yml

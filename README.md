@@ -94,7 +94,7 @@ Every module exposes only DTOs through its public API. JPA entities live exclusi
 - Tailwind CSS, Axios, Keycloak JS
 
 **Infrastructure (local development)**
-- Docker Compose: PostgreSQL, Keycloak, Elasticsearch, Mailhog
+- Docker Compose: PostgreSQL, Keycloak, Elasticsearch, Mailpit
 
 ---
 
@@ -122,7 +122,7 @@ smx-ecommerce/
     infrastructure.md
   infrastructure/
     keycloak/
-      realm-export.json
+      smxworld-realm.json
   code/
     src/                      # Spring Boot application
     frontend/                 # React application
@@ -149,6 +149,9 @@ smx-ecommerce/
 docker compose up -d
 ```
 
+This starts Keycloak 26.0.8 and imports the `smxworld` realm automatically from
+`infrastructure/keycloak/smxworld-realm.json`.
+
 ### Start the backend
 
 ```bash
@@ -173,8 +176,8 @@ Frontend available at `http://localhost:5173`
 
 | Username | Password | Role |
 |---|---|---|
-| `acquirente@smx.local` | `password123` | User |
-| `operatore@smx.local` | `password123` | Operator |
+| `buyer@smxworld.local` | `password123` | User |
+| `operator@smxworld.local` | `password123` | Operator |
 
 ### Useful URLs
 
@@ -183,7 +186,8 @@ Frontend available at `http://localhost:5173`
 | Frontend | http://localhost:5173 |
 | Backend API | http://localhost:8080 |
 | Keycloak Admin | http://localhost:8180/admin (admin/admin) |
-| Mailhog | http://localhost:8025 |
+| Keycloak Realm | http://localhost:8180/realms/smxworld |
+| Mailpit | http://localhost:8025 |
 | Elasticsearch | http://localhost:9200 |
 
 ---
