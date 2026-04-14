@@ -87,7 +87,13 @@ class ECommerceController {
     @PostMapping("/cart/items")
     ResponseEntity<Cart> addItem(@AuthenticationPrincipal Jwt jwt,
                                  @Valid @RequestBody AddCartItemRequest request) {
-        return ResponseEntity.ok(cartApi.addItem(jwt.getSubject(), request.productId(), request.quantity()));
+        ProductDetails product = catalogApi.getProduct(request.productId());
+        return ResponseEntity.ok(cartApi.addItem(
+                jwt.getSubject(),
+                request.productId(),
+                product.name(),
+                product.price(),
+                request.quantity()));
     }
 
     @PutMapping("/cart/items/{productId}")

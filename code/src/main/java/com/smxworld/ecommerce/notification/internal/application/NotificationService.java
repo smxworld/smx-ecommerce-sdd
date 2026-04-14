@@ -33,7 +33,7 @@ class NotificationService {
         Context ctx = new Context();
         ctx.setVariable("orderId", event.orderId());
         ctx.setVariable("totalAmount", event.totalAmount());
-        sendHtml(event.userId(), "Il tuo ordine è confermato", "mail/order-confirmed", ctx);
+        sendHtml(event.userId(), "Your order has been confirmed", "mail/order-confirmed", ctx);
     }
 
     @ApplicationModuleListener
@@ -42,7 +42,7 @@ class NotificationService {
         ctx.setVariable("orderId", event.orderId());
         ctx.setVariable("reason", event.reason());
         sendHtml(/* userId not in PaymentFailedEvent — use orderId as fallback address key */
-                event.orderId().toString(), "Problema con il pagamento", "mail/payment-failed", ctx);
+                event.orderId().toString(), "There was a problem with your payment", "mail/payment-failed", ctx);
     }
 
     @ApplicationModuleListener
@@ -50,7 +50,7 @@ class NotificationService {
         Context ctx = new Context();
         ctx.setVariable("orderId", event.orderId());
         ctx.setVariable("trackingNumber", event.trackingNumber());
-        sendHtml(event.userId(), "Il tuo ordine è in viaggio", "mail/order-shipped", ctx);
+        sendHtml(event.userId(), "Your order is on its way", "mail/order-shipped", ctx);
     }
 
     // ─── Private helpers ──────────────────────────────────────────────────────

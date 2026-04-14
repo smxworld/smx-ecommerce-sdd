@@ -1,1 +1,1 @@
-[{"name":"com.smxworld.ecommerce.SharedFlywayConfig","comment":"Esegue le migration Flyway per lo schema public (condiviso). Crea la tabella event_publication richiesta da Spring Modulith prima che Hibernate validi lo schema con ddl-auto=validate."}]
+[]
