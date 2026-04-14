@@ -38,8 +38,12 @@ class CartService implements CartApi {
 
     @Override
     public Cart addItem(String userId, UUID productId, int quantity) {
+        validateQuantity(quantity);
         CartEntity cart = cartRepo.findByUserId(userId)
                 .orElseGet(() -> cartRepo.save(new CartEntity(userId)));
+        if (productId == null) {
+            throw new IllegalArgumentException("productId must be provided");
+        }
 
         cart.getItems().stream()
                 .filter(i -> i.getProductId().equals(productId))
@@ -56,6 +60,7 @@ class CartService implements CartApi {
 
     @Override
     public Cart updateItem(String userId, UUID productId, int quantity) {
+        validateQuantity(quantity);
         CartEntity cart = getCartEntity(userId);
 
         CartItemEntity item = cart.getItems().stream()
@@ -129,5 +134,11 @@ class CartService implements CartApi {
 
     private CartItem toItemDto(CartItemEntity item) {
         return new CartItem(item.getProductId(), item.getProductName(), item.getQuantity(), item.getUnitPrice());
+    }
+
+    private void validateQuantity(int quantity) {
+        if (quantity < 1) {
+            throw new IllegalArgumentException("Quantity must be greater than 0");
+        }
     }
 }

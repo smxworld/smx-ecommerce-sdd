@@ -1,5 +1,8 @@
 package com.smxworld.ecommerce.api.rest;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
 import com.smxworld.ecommerce.catalog.CatalogApi;
 import com.smxworld.ecommerce.catalog.ProductDetails;
 import com.smxworld.ecommerce.catalog.SearchQuery;
@@ -83,16 +86,15 @@ class ECommerceController {
 
     @PostMapping("/cart/items")
     ResponseEntity<Cart> addItem(@AuthenticationPrincipal Jwt jwt,
-                                 @RequestParam UUID productId,
-                                 @RequestParam int quantity) {
-        return ResponseEntity.ok(cartApi.addItem(jwt.getSubject(), productId, quantity));
+                                 @Valid @RequestBody AddCartItemRequest request) {
+        return ResponseEntity.ok(cartApi.addItem(jwt.getSubject(), request.productId(), request.quantity()));
     }
 
     @PutMapping("/cart/items/{productId}")
     ResponseEntity<Cart> updateItem(@AuthenticationPrincipal Jwt jwt,
-                                    @PathVariable UUID productId,
-                                    @RequestParam int quantity) {
-        return ResponseEntity.ok(cartApi.updateItem(jwt.getSubject(), productId, quantity));
+                                     @PathVariable UUID productId,
+                                     @Valid @RequestBody UpdateCartItemRequest request) {
+        return ResponseEntity.ok(cartApi.updateItem(jwt.getSubject(), productId, request.quantity()));
     }
 
     @DeleteMapping("/cart/items/{productId}")
@@ -185,5 +187,14 @@ class ECommerceController {
             double averageRating,
             double searchScore,
             int stockAvailable
+    ) {}
+
+    record AddCartItemRequest(
+            @NotNull(message = "must be provided") UUID productId,
+            @Min(value = 1, message = "must be greater than 0") int quantity
+    ) {}
+
+    record UpdateCartItemRequest(
+            @Min(value = 1, message = "must be greater than 0") int quantity
     ) {}
 }
