@@ -56,7 +56,7 @@ public interface CatalogApi {
 ```java
 public interface CartApi {
     Cart getCart(String userId);
-    Cart addItem(String userId, UUID productId, int quantity);
+    Cart addItem(String userId, UUID productId, String productName, BigDecimal unitPrice, int quantity);
     Cart updateItem(String userId, UUID productId, int quantity);
     Cart removeItem(String userId, UUID productId);
     void clearCart(String userId);

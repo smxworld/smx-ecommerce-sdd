@@ -1,5 +1,6 @@
 package com.smxworld.ecommerce.cart;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
@@ -10,7 +11,7 @@ public interface CartApi {
 
     Cart getCart(String userId);
 
-    Cart addItem(String userId, UUID productId, int quantity);
+    Cart addItem(String userId, UUID productId, String productName, BigDecimal unitPrice, int quantity);
 
     Cart updateItem(String userId, UUID productId, int quantity);
 

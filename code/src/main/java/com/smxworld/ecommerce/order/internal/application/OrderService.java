@@ -49,6 +49,10 @@ class OrderService implements OrderApi {
 
     @Override
     public OrderSummary createOrder(String userId, CreateOrderRequest request) {
+        if (request.shippingAddress() == null) {
+            throw new IllegalArgumentException("shippingAddress must be provided");
+        }
+
         // 1. Resolve items from cart if not provided in the request
         List<OrderItem> orderItems = resolveItems(userId, request);
         if (orderItems.isEmpty()) {
@@ -56,7 +60,7 @@ class OrderService implements OrderApi {
         }
 
         // 2. Create order in PENDING
-        OrderEntity order = new OrderEntity(userId, request.shippingAddress());
+        OrderEntity order = new OrderEntity(userId, request.shippingAddress().format());
         orderItems.forEach(item ->
                 order.addItem(new OrderItemEntity(
                         item.productId(), item.productName(), item.unitPrice(), item.quantity())));
