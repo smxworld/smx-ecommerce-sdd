@@ -7,27 +7,31 @@ created-at: "2026-04-14T00:00:00.000Z"
 
 # Review usernames and email templates are in Italian
 
-## Bug 1: Review usernames are in Italian
+## Description
 
-The seed reviews use Italian-style usernames like `utente4@smx.local` 
-and `acquirente@smx.local`. 
+Two residual Italian-language issues found after the main translation
+pass.
 
-Update the seed migration `V2__seed_reviews.sql` to use English-style 
-usernames consistent with the Keycloak realm users:
-- `acquirente@smx.local` → `buyer@smxworld.local`
-- `utente4@smx.local` → `user4@smxworld.local`
+The first issue is that the seed reviews use Italian-style usernames
+such as `utente4@smx.local` and `acquirente@smx.local`. These should
+match the Keycloak realm users: `buyer@smxworld.local` and
+`user4@smxworld.local`. The same mismatch exists in the Keycloak realm
+export where `acquirente@smx.local` and `operatore@smx.local` should be
+`buyer@smxworld.local` and `operator@smxworld.local`. The `README.md`
+default users table must also be updated.
 
-Also update the Keycloak realm export `smxworld-realm.json` to use 
-the same usernames:
-- `acquirente@smx.local` → `buyer@smxworld.local`
-- `operatore@smx.local` → `operator@smxworld.local`
+The second issue is that all Thymeleaf email templates in
+`resources/templates/mail/` contain Italian text. The order confirmation,
+payment failed, and order shipped templates need to be translated to
+English.
 
-Update `README.md` default users table accordingly.
+## Steps to reproduce
 
-## Bug 2: Email templates are in Italian
+1. Navigate to a product with seed reviews — reviewer names are in
+   Italian
+2. Complete a purchase — the confirmation email body is in Italian
 
-All Thymeleaf email templates in `code/src/main/resources/templates/mail/` 
-contain Italian text. Translate all templates to English:
-- Order confirmation email
-- Payment failed email
-- Order shipped email
+## Expected behavior
+
+Seed review usernames match the Keycloak realm users and use the
+`@smxworld.local` domain. All email templates are in English.

@@ -1,33 +1,37 @@
 ---
-title: "Add to cart returns 400 and reviews are in Italian"
+title: "Add to cart returns 400 and seed reviews are in Italian"
 status: resolved
 author: ""
 created-at: "2026-04-14T00:00:00.000Z"
 ---
 
-# Add to cart returns 400 and reviews are in Italian
+# Add to cart returns 400 and seed reviews are in Italian
 
-## Bug 1: POST /api/cart/items returns 400 Bad Request
+## Description
 
-Adding a product to the cart fails with 400.
+Two issues found during purchase flow testing.
 
-Request payload:
-```json
-{
-  "productId": "aaaaaaaa-0002-0000-0000-000000000002",
-  "quantity": 1
-}
-```
+The first issue is that POST `/api/cart/items` returns 400 Bad Request
+with no detail message. The request payload matches the documented API
+contract in `system/interfaces.md` (`productId` as UUID, `quantity` as
+integer), but the backend rejects it. The actual validation error is not
+exposed, making diagnosis difficult without inspecting the controller
+and service code.
 
-Response: 400 Bad Request with no details.
+The second issue is that the seed reviews in `smx_review` contain Italian
+text. The review content needs to be translated to English in the Flyway
+migration `V2__seed_reviews.sql` for consistency with the rest of the
+project.
 
-Investigate the CartController and CartService to understand what 
-validation is failing. The payload matches the documented API in 
-system/interfaces.md. Enable detailed error messages to expose 
-the actual validation error.
+## Steps to reproduce
 
-## Bug 2: Product reviews are in Italian
+1. Log in as `buyer@smxworld.local`
+2. Navigate to any product detail page
+3. Click "Add to cart"
+4. The API returns 400 Bad Request
+5. Navigate to a product with reviews — review text is in Italian
 
-The seed data in `smx_review` contains Italian text for review content.
-Translate all review text to English in the Flyway seed migration 
-`V2__seed_reviews.sql`.
+## Expected behavior
+
+Adding a product to the cart succeeds and returns the updated cart. Seed
+review content is in English.

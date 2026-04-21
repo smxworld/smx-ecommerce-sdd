@@ -1,43 +1,38 @@
 ---
-title: "Checkout: wrong item price and order creation fails"
+title: "Cart item price defaults to 1.00 and checkout request fails"
 status: resolved
 author: ""
 created-at: "2026-04-14T00:00:00.000Z"
 ---
 
-# Checkout: wrong item price and order creation fails
+# Cart item price defaults to 1.00 and checkout request fails
 
-## Bug 1: Cart item price shows as 1.00 instead of actual product price
+## Description
 
-When a product is added to the cart, the unit price is stored as 1.00 
-instead of the actual product price. The price should be snapshotted 
-from the catalog at the moment of adding to cart.
+Two issues block the checkout flow.
 
-Investigate `CartService.addItem()` — it is likely not fetching the 
-actual price from `CatalogApi` and defaulting to 1.00.
+The first issue is that when a product is added to the cart, the unit
+price is stored as 1.00 instead of the actual product price. The
+`CartService.addItem()` method does not fetch the current price from
+`CatalogApi` and defaults to a hardcoded value. The price should be
+snapshotted from the catalog at the moment of addition.
 
-## Bug 2: POST /api/checkout returns "Request body is missing or malformed"
+The second issue is that POST `/api/checkout` returns the error "Request
+body is missing or malformed" even with a valid shipping address payload.
+The `CreateOrderRequest` structure expected by the backend does not match
+what the frontend sends, or the `@RequestBody` annotation is missing on
+the controller method. The checkout endpoint should accept a shipping
+address and resolve cart items internally from `CartApi` when line items
+are not included in the request body.
 
-The checkout request fails with a misleading error message.
+## Steps to reproduce
 
-Request payload:
-```json
-{
-  "shippingAddress": {
-    "firstName": "Steve",
-    "lastName": "Rogers",
-    "street": "4 Liberty Street",
-    "city": "Brooklyn",
-    "postalCode": "11201",
-    "country": "US"
-  }
-}
-```
+1. Add a product to the cart — the cart shows unit price 1.00
+2. Proceed to checkout, fill in the shipping address, and confirm
+3. The API returns an error: "Request body is missing or malformed"
 
-Response: `{"message":"Request body is missing or malformed"}`
+## Expected behavior
 
-Investigate `CheckoutController` and `CreateOrderRequest` — the request 
-body structure expected by the backend likely does not match what the 
-frontend is sending. Check if `CreateOrderRequest` expects the cart items 
-to be included in the payload or reads them from `CartApi` internally.
-Also verify that `@RequestBody` is present on the controller method.
+The cart stores the actual product price from the catalog. The checkout
+endpoint accepts a shipping address, reads cart items from `CartApi`,
+and creates the order.

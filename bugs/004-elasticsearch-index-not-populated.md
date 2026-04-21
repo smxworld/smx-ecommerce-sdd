@@ -1,36 +1,33 @@
 ---
-title: "Elasticsearch index not populated"
+title: "Elasticsearch index not populated on startup"
 status: resolved
 author: ""
-created-at: "2026-04-14T20:18:02.630Z"
+created-at: "2026-04-14T00:00:00.000Z"
 ---
 
-# Elasticsearch index not populated
+# Elasticsearch index not populated on startup
 
-## Error
+## Description
 
 The catalog search relies on the Elasticsearch `products` index, but the
-application never creates or populates that index from the catalog data stored
-in PostgreSQL.
+application never creates or populates it. The catalog module defines a
+`ProductDocument` and uses Elasticsearch for search queries, yet there is
+no startup synchronization that creates the index, applies the mapping, and
+reindexes the products already present in the relational database.
+
+As a result, the search returns zero results even though products exist in
+the PostgreSQL `smx_catalog` schema.
+
+## Steps to reproduce
+
+1. Start the infrastructure with `docker compose up -d`
+2. Start the application
+3. Open the frontend and perform a search
+4. No products are returned despite seed data being present in PostgreSQL
 
 ## Expected behavior
 
-When the application starts, the `products` index exists and contains the
-catalog products already loaded in the relational database, including seed
-data used in development.
-
-## Root cause
-
-The catalog module defines `ProductDocument` and uses Elasticsearch for search,
-but there is no startup synchronization that creates the index and reindexes
-the current catalog products.
-
-## Fix
-
-Add a catalog startup initializer that:
-
-```text
-1. creates the Elasticsearch index and mapping if missing
-2. reads all products from ProductJpaRepository
-3. writes them to the products index
-```
+On startup, the catalog module creates the Elasticsearch `products` index
+if it does not exist, reads all products from the relational database, and
+writes them to the index. Search returns results immediately after
+application startup.

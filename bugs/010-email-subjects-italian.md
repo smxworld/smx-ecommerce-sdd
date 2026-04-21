@@ -9,12 +9,20 @@ created-at: "2026-04-14T00:00:00.000Z"
 
 ## Description
 
-The email subject lines are still in Italian despite the email 
-body templates being translated to English.
+After translating the email body templates to English (see bug 009), the
+email subject lines in `NotificationService` remain in Italian. The
+subjects "Il tuo ordine è confermato", "Problema con il pagamento", and
+"Il tuo ordine è in viaggio" need to be translated to "Your order has
+been confirmed", "There was a problem with your payment", and "Your order
+is on its way".
 
-## Fix
+## Steps to reproduce
 
-Translate all email subjects in `NotificationService` to English:
-- "Il tuo ordine è confermato" → "Your order has been confirmed"
-- "Problema con il pagamento" → "There was a problem with your payment"
-- "Il tuo ordine è in viaggio" → "Your order is on its way"
+1. Complete a purchase as `buyer@smxworld.local`
+2. Open Mailpit at `http://localhost:8025`
+3. The confirmation email arrives with an Italian subject line
+
+## Expected behavior
+
+All email subjects are in English, consistent with the translated body
+templates.

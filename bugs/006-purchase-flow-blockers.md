@@ -1,45 +1,45 @@
 ---
-title: "Frontend and data issues blocking complete purchase flow"
+title: "Frontend and seed data issues blocking the purchase flow"
 status: resolved
 author: ""
 created-at: "2026-04-14T00:00:00.000Z"
 ---
 
-# Frontend and data issues blocking complete purchase flow
+# Frontend and seed data issues blocking the purchase flow
 
-## Bug 1: Product thumbnails show placeholder instead of real image
+## Description
 
-All products display `https://placehold.co/400x300` because the seed data 
-does not include real image URLs. Either use a consistent placeholder 
-service or assign realistic placeholder URLs per product category.
+Four issues in the frontend and seed data prevent the complete purchase
+flow (search → product detail → add to cart → checkout → order confirmed)
+from working.
 
-## Bug 2: Product names are in Italian
+The first issue is that the product detail page displays NaN for the
+price. The frontend reads a field name that does not match the API
+response from `/api/products/:id`.
 
-The seed data in `smx_catalog` has Italian product names (e.g. "Smartphone XPro", 
-"Cuffie Wireless", "Giacca Invernale"). Translate all product names, 
-descriptions and categories to English in the Flyway seed migration 
-`V2__seed_products.sql`.
+The second issue is that all products appear as out of stock. The seed
+migration in `smx_warehouse` sets `quantity_reserved` equal to
+`quantity_total`, resulting in `quantity_available = 0` for every product.
 
-Categories must also be translated:
-- "Elettronica" → "Electronics"
-- "Abbigliamento" → "Clothing"  
-- "Casa" → "Home"
+The third issue is that product names, descriptions, and categories in
+the seed data are in Italian (e.g. "Cuffie Wireless", "Giacca Invernale",
+"Elettronica"). They need to be translated to English for consistency
+with the rest of the project.
 
-## Bug 3: Product detail page shows NaN for price
+The fourth issue is that product thumbnails show a generic placeholder.
+The seed data does not include image URLs — all products display the
+same `https://placehold.co/400x300` placeholder.
 
-The product detail page displays NaN instead of the price. 
-The API response field name for price must be verified — 
-the frontend is likely reading a field that does not exist 
-or has a different name in the `/api/products/:id` response.
+## Steps to reproduce
 
-## Bug 4: All products show as out of stock
+1. Open the frontend and navigate to any product detail page
+2. The price shows as NaN
+3. All products show an "out of stock" badge
+4. Product names and categories are in Italian
+5. All product images are identical placeholders
 
-The seed data in `smx_warehouse` sets `quantity_reserved` equal to 
-`quantity_total`, resulting in `quantity_available = 0` for all products. 
-Fix the seed migration `V2__seed_stock.sql` to set `quantity_reserved = 0` 
-so products are available for purchase.
+## Expected behavior
 
-## Impact
-
-These issues block the complete purchase flow: 
-search → product detail → add to cart → checkout → order confirmed.
+Product detail pages show the correct price. Products with available
+stock show as in stock. All seed data text is in English. Product images
+use category-appropriate placeholders or realistic URLs.

@@ -1,35 +1,35 @@
 ---
-title: "Frontend search: wrong response field and no refetch on submit"
+title: "Frontend search does not display products and does not refetch on submit"
 status: resolved
 author: ""
 created-at: "2026-04-14T00:00:00.000Z"
 ---
 
-# Frontend search: wrong response field and no refetch on submit
+# Frontend search does not display products and does not refetch on submit
 
-## Bug 1: Products not displayed
+## Description
 
-The frontend reads `data.content` but the backend returns `data.items`.
+Two issues in the search page prevent products from being displayed.
 
-File: `code/frontend/src/pages/HomePage.jsx`
+The first issue is a field name mismatch. The frontend reads
+`data.content` from the search API response, but the backend returns
+results in `data.items`. No products are rendered even though the API
+call succeeds.
 
-```js
-// wrong
-const products = data?.content ?? []
-// correct
-const products = data?.items ?? []
-```
-
-## Bug 2: Cerca button does not trigger a new search
-
-`handleSearch` calls `setPage(0)` but if page is already 0, 
-React detects no state change and React Query does not refetch.
-
-Fix: introduce a separate `searchParams` state that is only 
-updated on form submit, so React Query detects the change and refetches.
+The second issue is that the search button does not trigger a new API
+call. The `handleSearch` function calls `setPage(0)`, but if the page
+is already 0, React detects no state change and React Query does not
+refetch. Typing a new query and clicking the button has no effect.
 
 ## Steps to reproduce
 
-1. Open http://localhost:5173
-2. Products are not shown despite a successful API response
-3. Type something in the search box and click Cerca — no new API call is made
+1. Open `http://localhost:5173`
+2. The product grid is empty despite a successful API response visible
+   in the browser network tab
+3. Type a search term and click the search button
+4. No new API call is made
+
+## Expected behavior
+
+Products appear in the grid on page load. Submitting a new search query
+triggers a new API call and updates the results.
