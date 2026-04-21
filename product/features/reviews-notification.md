@@ -2,41 +2,72 @@
 title: "Reviews and Notifications"
 status: synced
 author: ""
-last-modified: "2026-04-10T00:00:00.000Z"
-version: "1.0"
+last-modified: "2026-04-21T00:00:00.000Z"
+version: "1.1"
 ---
 
 # Reviews and Notifications
 
-## User Stories — Reviews
+The review module lets buyers rate and comment on products they have
+received. The notification module sends transactional emails in response to
+order lifecycle events. They are grouped because both are post-purchase
+behaviors, but they operate as independent modules.
 
-- As a buyer, I can leave a review (rating 1-5 + text) on a purchased product
-- As a buyer, I can see other users' reviews
-- As a buyer, I can see the average rating for the product
+## Behavior — Reviews
 
-## Behavior — Review
+### Submitting a review
 
-- Accepts reviews only for products in a DELIVERED order of the user
-- Verified via `OrderApi.hasDeliveredOrderWithProduct(userId, productId)`
-- Publishes `ReviewCreatedEvent` consumed by catalog to update the average rating
-- ReviewApi exposes: `getReviews(UUID productId)`, `createReview(...)`
+The buyer submits a rating (integer 1–5) and a text comment for a
+[[Product]]. Before accepting the review, the system verifies that the buyer
+has at least one [[Order]] in `DELIVERED` status containing that product. The
+check is performed via
+`OrderApi.hasDeliveredOrderWithProduct(userId, productId)`.
 
-## User Stories — Notifications
+If the buyer has not received the product, the system rejects the review
+and returns an error. A buyer who has received the product can submit only
+one review per product.
 
-- As a buyer, I receive an email when the order is confirmed
-- As a buyer, I receive an email if the payment fails
-- As a buyer, I receive an email when the order is shipped
+On success the system persists the [[Review]] and publishes a
+`ReviewCreatedEvent` containing `productId` and `rating`. The catalog
+module consumes this event to recalculate the product's average rating.
 
-## Behavior — Notification
+### Viewing reviews
 
-Consumes:
-- `OrderConfirmedEvent` → email "Your order has been confirmed"
-- `PaymentFailedEvent` → email "There was a problem with your payment"
-- `OrderShippedEvent` → email "Your order is on its way"
+Any user retrieves the list of reviews for a [[Product]] via
+`ReviewApi.getReviews(productId)`. The system returns all reviews ordered
+by creation date descending. Each review includes the rating, text, author
+identifier, and timestamp.
+
+If the product has no reviews, the system returns an empty list.
+
+## Behavior — Notifications
+
+The notification module is event-driven and does not expose a public API.
+It consumes order lifecycle events and sends transactional emails.
+
+### Order confirmed
+
+On `OrderConfirmedEvent`, the system sends an email to the buyer with
+subject "Your order has been confirmed" containing the order number and a
+summary of the purchased items.
+
+### Payment failed
+
+On `PaymentFailedEvent`, the system sends an email to the buyer with
+subject "There was a problem with your payment" containing the order
+number and a prompt to retry or contact support.
+
+### Order shipped
+
+On `OrderShippedEvent`, the system sends an email to the buyer with subject
+"Your order is on its way" containing the order number and the tracking
+number.
 
 ## Agent Notes
 
-- The notification module does not expose a public API — reacts to events only
+- ReviewApi exposes: `getReviews(UUID productId)`, `createReview(...)`
+- The notification module does not expose a public API — it reacts to
+  events only
 - Use Spring Mail + Thymeleaf for email templates
 - Templates in `resources/templates/mail/`
-- SMTP mocked with Mailpit in development
+- SMTP is mocked with Mailpit in development

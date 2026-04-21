@@ -2,17 +2,21 @@
 title: "Seed Data"
 status: synced
 author: ""
-last-modified: "2026-04-12T00:00:00.000Z"
-version: "1.0"
+last-modified: "2026-04-21T00:00:00.000Z"
+version: "1.1"
 ---
 
 # Seed Data
 
-SQL scripts and configuration to populate the database with realistic test data. Seed data allows testing the complete flow without having to enter data manually.
+Seed data populates the database with realistic test data so the complete
+purchase flow can be tested without manual data entry. Seeds are loaded
+automatically at application startup and are fully repeatable.
 
-## Products
+## Behavior
 
-10 products distributed across 3 categories: Electronics, Clothing, Home.
+### Products
+
+The system loads 10 products distributed across 3 categories:
 
 | Name | Category | Price | Stock |
 |---|---|---|---|
@@ -27,29 +31,41 @@ SQL scripts and configuration to populate the database with realistic test data.
 | Cushion Set | Home | 39.00 | 120 |
 | Modern Rug | Home | 129.00 | 30 |
 
-## Keycloak Users
+Products are inserted via Flyway migration scripts into both `smx_catalog`
+(product records) and `smx_warehouse` (stock records). All seeds use fixed
+hardcoded UUIDs so they are repeatable and cross-referenceable across
+scripts.
 
-| Username | Password | Role | Description |
+### Users
+
+Keycloak is configured with a `smxworld` realm containing two users:
+
+| Username | Password | Role | Purpose |
 |---|---|---|---|
-| `buyer@smxworld.local` | `password123` | `ROLE_USER` | Standard user for testing the purchase flow |
-| `operator@smxworld.local` | `password123` | `ROLE_OPERATOR` | Back-office operator |
+| `buyer@smxworld.local` | `password123` | `ROLE_USER` | Testing the purchase flow |
+| `operator@smxworld.local` | `password123` | `ROLE_OPERATOR` | Back-office operations |
 
-## Sample Reviews
+Users are created via `infrastructure/keycloak/smxworld-realm.json`,
+imported automatically when Keycloak starts with the `--import-realm` flag.
 
-5 pre-loaded reviews on Smartphone XPro and Laptop UltraSlim to showcase the rating system in the UI.
+### Reviews
 
-## How data is loaded
+5 pre-loaded reviews are inserted on Smartphone XPro and Laptop UltraSlim
+via Flyway migration scripts in `smx_review`. These reviews provide sample
+data for the rating system in the product detail page.
 
-- Products are inserted via Flyway scripts in `smx_catalog` and `smx_warehouse`
-- Keycloak users are created via `infrastructure/keycloak/smxworld-realm.json`, imported automatically when Keycloak starts with `--import-realm`
-- Reviews are inserted via Flyway scripts in `smx_review`
-- Seed migrations run as part of the normal application startup against the configured local database
+### How data is loaded
+
+All seed migrations run as part of the normal application startup against
+the configured local database. No dedicated Spring profile is required.
 
 ## Agent Notes
 
 - Create `code/src/main/resources/db/migration/smx_catalog/V2__seed_products.sql`
 - Create `code/src/main/resources/db/migration/smx_warehouse/V2__seed_stock.sql`
 - Create `code/src/main/resources/db/migration/smx_review/V2__seed_reviews.sql`
-- Seeds use fixed (hardcoded) UUIDs so they are repeatable and cross-referenceable between scripts
-- Create `infrastructure/keycloak/smxworld-realm.json` with the `smxworld` realm configured with the two users
+- Seeds use fixed UUIDs so IDs are consistent across catalog, warehouse,
+  and review scripts
+- Create `infrastructure/keycloak/smxworld-realm.json` with the `smxworld`
+  realm and the two users listed above
 - No dedicated Spring profile is required for the current local seed setup
