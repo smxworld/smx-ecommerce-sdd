@@ -1,8 +1,8 @@
 package com.smxworld.ecommerce.catalog;
 
-import com.smxworld.ecommerce.catalog.internal.domain.Product;
-import com.smxworld.ecommerce.catalog.internal.infrastructure.ProductDocument;
-import com.smxworld.ecommerce.catalog.internal.infrastructure.ProductElasticsearchRepository;
+import com.smxworld.ecommerce.catalog.internal.model.Product;
+import com.smxworld.ecommerce.catalog.internal.model.ProductDocument;
+import com.smxworld.ecommerce.catalog.internal.repository.ProductElasticsearchRepository;
 import com.smxworld.ecommerce.review.ReviewCreatedEvent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;

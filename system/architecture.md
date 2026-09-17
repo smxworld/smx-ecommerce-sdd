@@ -2,8 +2,8 @@
 title: "Architecture"
 status: synced
 author: ""
-last-modified: "2026-04-10T00:00:00.000Z"
-version: "2.0"
+last-modified: "2026-09-17T00:00:00.000Z"
+version: "2.1"
 ---
 
 # Architecture
@@ -41,10 +41,19 @@ com.smxworld.ecommerce.<module>/
   <Module>Api.java          ← public interface (the only entry point from outside)
   <Module>Events.java       ← domain events published by the module (record classes)
   internal/
-    domain/                 ← entities, value objects
-    application/            ← use cases, service
-    infrastructure/         ← repositories, external adapters
+    controller/             ← module-local REST controllers, when present
+    service/                ← application services, orchestration, external adapters
+    repository/             ← database access, repositories, Flyway configuration
+    model/                  ← entities, records, value objects, search documents
 ```
+
+The previous `application` / `domain` / `infrastructure` layout was abandoned because it made navigation harder without consistently delivering the intended separation. The simpler layout groups classes by their concrete role.
+
+Move application classes to `service`, domain classes to `model`, and infrastructure classes according to their role: controllers to `controller`, repositories and database configuration to `repository`, and filters, clients and other configuration to `service`. Elasticsearch document models belong in `model`. Create packages only when there are classes to place in them.
+
+This reorganisation changes only file locations, package declarations and imports. Method bodies, dependencies and behaviour remain unchanged; extracting queries from services is outside its scope. Preserve existing public APIs, DTOs and events at module roots, all `package-info.java` annotations, and the existing `api/rest` BFF entry point.
+
+Verification requires a clean compilation, the existing Maven test suite and `ApplicationModules.of(SmxECommerceApplication.class).verify()`. Tests retain all existing methods and assertions; only package declarations, imports and file locations may follow relocated production classes. No legacy internal packages may remain, and a source comparison must confirm that no method body changed.
 
 Packages under `internal/` are invisible to other modules. Spring Modulith verifies this automatically with `@ApplicationModuleTest`.
 
