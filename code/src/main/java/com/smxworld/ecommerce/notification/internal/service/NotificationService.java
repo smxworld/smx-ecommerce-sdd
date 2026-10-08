@@ -24,7 +24,7 @@ class NotificationService {
     private final TemplateEngine templateEngine;
 
     NotificationService(JavaMailSender mailSender, TemplateEngine templateEngine) {
-        this.mailSender     = mailSender;
+        this.mailSender = mailSender;
         this.templateEngine = templateEngine;
     }
 
@@ -41,7 +41,8 @@ class NotificationService {
         Context ctx = new Context();
         ctx.setVariable("orderId", event.orderId());
         ctx.setVariable("reason", event.reason());
-        sendHtml(/* userId not in PaymentFailedEvent — use orderId as fallback address key */
+        sendHtml(
+                /* userId not in PaymentFailedEvent — use orderId as fallback address key */
                 event.orderId().toString(), "There was a problem with your payment", "mail/payment-failed", ctx);
     }
 

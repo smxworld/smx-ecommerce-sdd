@@ -8,13 +8,12 @@ import com.smxworld.ecommerce.cart.ProductUnbookedEvent;
 import com.smxworld.ecommerce.cart.internal.model.CartEntity;
 import com.smxworld.ecommerce.cart.internal.model.CartItemEntity;
 import com.smxworld.ecommerce.cart.internal.repository.CartRepository;
-import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
+import org.springframework.context.ApplicationEventPublisher;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @Transactional
@@ -23,8 +22,7 @@ class CartService implements CartApi {
     private final CartRepository cartRepo;
     private final ApplicationEventPublisher events;
 
-    CartService(CartRepository cartRepo,
-                ApplicationEventPublisher events) {
+    CartService(CartRepository cartRepo, ApplicationEventPublisher events) {
         this.cartRepo = cartRepo;
         this.events = events;
     }
@@ -32,9 +30,7 @@ class CartService implements CartApi {
     @Override
     @Transactional(readOnly = true)
     public Cart getCart(String userId) {
-        return cartRepo.findByUserId(userId)
-                .map(this::toDto)
-                .orElse(new Cart(userId, List.of(), BigDecimal.ZERO));
+        return cartRepo.findByUserId(userId).map(this::toDto).orElse(new Cart(userId, List.of(), BigDecimal.ZERO));
     }
 
     @Override
@@ -48,16 +44,14 @@ class CartService implements CartApi {
             throw new IllegalArgumentException("unitPrice must be zero or positive");
         }
 
-        CartEntity cart = cartRepo.findByUserId(userId)
-                .orElseGet(() -> cartRepo.save(new CartEntity(userId)));
+        CartEntity cart = cartRepo.findByUserId(userId).orElseGet(() -> cartRepo.save(new CartEntity(userId)));
 
         cart.getItems().stream()
                 .filter(i -> i.getProductId().equals(productId))
                 .findFirst()
                 .ifPresentOrElse(
                         existing -> existing.setQuantity(existing.getQuantity() + quantity),
-                        () -> cart.addItem(new CartItemEntity(productId, productName, quantity, unitPrice))
-                );
+                        () -> cart.addItem(new CartItemEntity(productId, productName, quantity, unitPrice)));
 
         CartEntity saved = cartRepo.save(cart);
         events.publishEvent(new ProductBookedEvent(productId, userId, quantity));
@@ -110,8 +104,9 @@ class CartService implements CartApi {
     @Override
     public void clearCart(String userId) {
         cartRepo.findByUserId(userId).ifPresent(cart -> {
-            cart.getItems().forEach(item ->
-                    events.publishEvent(new ProductUnbookedEvent(item.getProductId(), userId, item.getQuantity())));
+            cart.getItems()
+                    .forEach(item -> events.publishEvent(
+                            new ProductUnbookedEvent(item.getProductId(), userId, item.getQuantity())));
             cart.getItems().clear();
             cartRepo.save(cart);
         });

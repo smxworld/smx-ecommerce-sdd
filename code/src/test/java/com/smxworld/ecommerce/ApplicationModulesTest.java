@@ -6,8 +6,7 @@ import org.springframework.modulith.docs.Documenter;
 
 class ApplicationModulesTest {
 
-    static final ApplicationModules modules =
-            ApplicationModules.of(SmxECommerceApplication.class);
+    static final ApplicationModules modules = ApplicationModules.of(SmxECommerceApplication.class);
 
     @Test
     void verifiesModularStructure() {
@@ -16,8 +15,6 @@ class ApplicationModulesTest {
 
     @Test
     void generateDocumentation() {
-        new Documenter(modules)
-                .writeModulesAsPlantUml()
-                .writeIndividualModulesAsPlantUml();
+        new Documenter(modules).writeModulesAsPlantUml().writeIndividualModulesAsPlantUml();
     }
 }

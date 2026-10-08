@@ -11,5 +11,4 @@ public record ProductDetails(
         BigDecimal price,
         String category,
         double averageRating,
-        double searchScore
-) {}
+        double searchScore) {}

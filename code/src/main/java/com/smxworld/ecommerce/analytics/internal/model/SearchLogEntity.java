@@ -1,10 +1,9 @@
 package com.smxworld.ecommerce.analytics.internal.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-
 import java.time.Instant;
 import java.util.UUID;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Table(name = "search_logs", schema = "smx_analytics")
@@ -29,10 +28,10 @@ public class SearchLogEntity {
     protected SearchLogEntity() {}
 
     public SearchLogEntity(String userId, String queryText, long resultsCount) {
-        this.userId       = userId;
-        this.queryText    = queryText;
+        this.userId = userId;
+        this.queryText = queryText;
         this.resultsCount = resultsCount;
-        this.searchedAt   = Instant.now();
+        this.searchedAt = Instant.now();
     }
 
     @PrePersist
@@ -40,9 +39,23 @@ public class SearchLogEntity {
         if (this.searchedAt == null) this.searchedAt = Instant.now();
     }
 
-    public UUID getId()            { return id; }
-    public String getUserId()      { return userId; }
-    public String getQueryText()   { return queryText; }
-    public long getResultsCount()  { return resultsCount; }
-    public Instant getSearchedAt() { return searchedAt; }
+    public UUID getId() {
+        return id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getQueryText() {
+        return queryText;
+    }
+
+    public long getResultsCount() {
+        return resultsCount;
+    }
+
+    public Instant getSearchedAt() {
+        return searchedAt;
+    }
 }

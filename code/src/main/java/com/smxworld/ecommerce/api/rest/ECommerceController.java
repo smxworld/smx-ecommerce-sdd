@@ -1,14 +1,11 @@
 package com.smxworld.ecommerce.api.rest;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotNull;
+import com.smxworld.ecommerce.cart.Cart;
+import com.smxworld.ecommerce.cart.CartApi;
 import com.smxworld.ecommerce.catalog.CatalogApi;
 import com.smxworld.ecommerce.catalog.ProductDetails;
 import com.smxworld.ecommerce.catalog.SearchQuery;
 import com.smxworld.ecommerce.catalog.SearchResult;
-import com.smxworld.ecommerce.cart.Cart;
-import com.smxworld.ecommerce.cart.CartApi;
 import com.smxworld.ecommerce.order.CreateOrderRequest;
 import com.smxworld.ecommerce.order.OrderApi;
 import com.smxworld.ecommerce.order.OrderDetails;
@@ -20,13 +17,15 @@ import com.smxworld.ecommerce.shipment.ShipmentApi;
 import com.smxworld.ecommerce.shipment.ShipmentInfo;
 import com.smxworld.ecommerce.warehouse.StockInfo;
 import com.smxworld.ecommerce.warehouse.WarehouseApi;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotNull;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api")
@@ -85,35 +84,29 @@ class ECommerceController {
     }
 
     @PostMapping("/cart/items")
-    ResponseEntity<Cart> addItem(@AuthenticationPrincipal Jwt jwt,
-                                 @Valid @RequestBody AddCartItemRequest request) {
+    ResponseEntity<Cart> addItem(@AuthenticationPrincipal Jwt jwt, @Valid @RequestBody AddCartItemRequest request) {
         ProductDetails product = catalogApi.getProduct(request.productId());
         return ResponseEntity.ok(cartApi.addItem(
-                jwt.getSubject(),
-                request.productId(),
-                product.name(),
-                product.price(),
-                request.quantity()));
+                jwt.getSubject(), request.productId(), product.name(), product.price(), request.quantity()));
     }
 
     @PutMapping("/cart/items/{productId}")
-    ResponseEntity<Cart> updateItem(@AuthenticationPrincipal Jwt jwt,
-                                     @PathVariable UUID productId,
-                                     @Valid @RequestBody UpdateCartItemRequest request) {
+    ResponseEntity<Cart> updateItem(
+            @AuthenticationPrincipal Jwt jwt,
+            @PathVariable UUID productId,
+            @Valid @RequestBody UpdateCartItemRequest request) {
         return ResponseEntity.ok(cartApi.updateItem(jwt.getSubject(), productId, request.quantity()));
     }
 
     @DeleteMapping("/cart/items/{productId}")
-    ResponseEntity<Cart> removeItem(@AuthenticationPrincipal Jwt jwt,
-                                    @PathVariable UUID productId) {
+    ResponseEntity<Cart> removeItem(@AuthenticationPrincipal Jwt jwt, @PathVariable UUID productId) {
         return ResponseEntity.ok(cartApi.removeItem(jwt.getSubject(), productId));
     }
 
     // ─── Order ────────────────────────────────────────────────────────────────
 
     @PostMapping("/checkout")
-    ResponseEntity<OrderSummary> checkout(@AuthenticationPrincipal Jwt jwt,
-                                          @RequestBody CreateOrderRequest request) {
+    ResponseEntity<OrderSummary> checkout(@AuthenticationPrincipal Jwt jwt, @RequestBody CreateOrderRequest request) {
         return ResponseEntity.ok(orderApi.createOrder(jwt.getSubject(), request));
     }
 
@@ -128,8 +121,7 @@ class ECommerceController {
     }
 
     @PutMapping("/orders/{orderId}/status")
-    ResponseEntity<Void> updateOrderStatus(@PathVariable UUID orderId,
-                                           @RequestBody OrderStatus status) {
+    ResponseEntity<Void> updateOrderStatus(@PathVariable UUID orderId, @RequestBody OrderStatus status) {
         orderApi.updateStatus(orderId, status);
         return ResponseEntity.noContent().build();
     }
@@ -149,20 +141,19 @@ class ECommerceController {
     }
 
     @PostMapping("/reviews")
-    ResponseEntity<Review> createReview(@AuthenticationPrincipal Jwt jwt,
-                                        @RequestParam UUID productId,
-                                        @RequestParam UUID orderId,
-                                        @RequestParam int rating,
-                                        @RequestParam String text) {
-        return ResponseEntity.ok(
-                reviewApi.createReview(jwt.getSubject(), productId, orderId, rating, text));
+    ResponseEntity<Review> createReview(
+            @AuthenticationPrincipal Jwt jwt,
+            @RequestParam UUID productId,
+            @RequestParam UUID orderId,
+            @RequestParam int rating,
+            @RequestParam String text) {
+        return ResponseEntity.ok(reviewApi.createReview(jwt.getSubject(), productId, orderId, rating, text));
     }
 
     // ─── Backoffice ───────────────────────────────────────────────────────────
 
     @PutMapping("/warehouse/products/{id}/stock")
-    ResponseEntity<Void> updateStock(@PathVariable UUID id,
-                                     @RequestParam int quantity) {
+    ResponseEntity<Void> updateStock(@PathVariable UUID id, @RequestParam int quantity) {
         warehouseApi.updateStock(id, quantity);
         return ResponseEntity.noContent().build();
     }
@@ -192,15 +183,15 @@ class ECommerceController {
             String category,
             double averageRating,
             double searchScore,
-            int stockAvailable
-    ) {}
+            int stockAvailable) {}
 
     record AddCartItemRequest(
             @NotNull(message = "must be provided") UUID productId,
-            @Min(value = 1, message = "must be greater than 0") int quantity
-    ) {}
+
+            @Min(value = 1, message = "must be greater than 0")
+            int quantity) {}
 
     record UpdateCartItemRequest(
-            @Min(value = 1, message = "must be greater than 0") int quantity
-    ) {}
+            @Min(value = 1, message = "must be greater than 0")
+            int quantity) {}
 }

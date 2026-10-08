@@ -5,13 +5,12 @@ import com.smxworld.ecommerce.analytics.internal.model.SearchLogEntity;
 import com.smxworld.ecommerce.analytics.internal.repository.SearchLogRepository;
 import com.smxworld.ecommerce.catalog.SearchPerformedEvent;
 import com.smxworld.ecommerce.catalog.SearchScoreUpdatedEvent;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -22,7 +21,7 @@ class AnalyticsService implements AnalyticsApi {
 
     AnalyticsService(SearchLogRepository logRepo, ApplicationEventPublisher events) {
         this.logRepo = logRepo;
-        this.events  = events;
+        this.events = events;
     }
 
     @ApplicationModuleListener
@@ -44,18 +43,16 @@ class AnalyticsService implements AnalyticsApi {
         List<Object[]> topQueries = logRepo.findTopQueries();
         long maxCount = topQueries.isEmpty() ? 1L : ((Number) topQueries.get(0)[1]).longValue();
 
-        topQueries.stream()
-                .limit(50)
-                .forEach(row -> {
-                    String query = (String) row[0];
-                    long count   = ((Number) row[1]).longValue();
-                    double score = (double) count / maxCount * 10.0;
+        topQueries.stream().limit(50).forEach(row -> {
+            String query = (String) row[0];
+            long count = ((Number) row[1]).longValue();
+            double score = (double) count / maxCount * 10.0;
 
-                    // Emit a synthetic product score update.
-                    // In a real system, we'd link queries to product IDs via click logs.
-                    // Here we use a deterministic UUID derived from the query string as a placeholder.
-                    UUID productId = UUID.nameUUIDFromBytes(query.getBytes());
-                    events.publishEvent(new SearchScoreUpdatedEvent(productId, score));
-                });
+            // Emit a synthetic product score update.
+            // In a real system, we'd link queries to product IDs via click logs.
+            // Here we use a deterministic UUID derived from the query string as a placeholder.
+            UUID productId = UUID.nameUUIDFromBytes(query.getBytes());
+            events.publishEvent(new SearchScoreUpdatedEvent(productId, score));
+        });
     }
 }

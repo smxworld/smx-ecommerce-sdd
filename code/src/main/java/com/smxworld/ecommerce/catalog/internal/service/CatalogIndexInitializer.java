@@ -17,9 +17,8 @@ class CatalogIndexInitializer {
     private final ProductElasticsearchRepository esRepo;
     private final ElasticsearchOperations esOps;
 
-    CatalogIndexInitializer(ProductJpaRepository productRepo,
-                            ProductElasticsearchRepository esRepo,
-                            ElasticsearchOperations esOps) {
+    CatalogIndexInitializer(
+            ProductJpaRepository productRepo, ProductElasticsearchRepository esRepo, ElasticsearchOperations esOps) {
         this.productRepo = productRepo;
         this.esRepo = esRepo;
         this.esOps = esOps;
@@ -34,9 +33,7 @@ class CatalogIndexInitializer {
             indexOps.putMapping(indexOps.createMapping());
         }
 
-        var documents = productRepo.findAll().stream()
-                .map(this::toDocument)
-                .toList();
+        var documents = productRepo.findAll().stream().map(this::toDocument).toList();
 
         if (!documents.isEmpty()) {
             esRepo.saveAll(documents);

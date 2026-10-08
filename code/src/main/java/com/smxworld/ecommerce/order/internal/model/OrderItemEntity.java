@@ -1,10 +1,9 @@
 package com.smxworld.ecommerce.order.internal.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-
 import java.math.BigDecimal;
 import java.util.UUID;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Table(name = "order_items", schema = "smx_order")
@@ -33,17 +32,37 @@ public class OrderItemEntity {
     protected OrderItemEntity() {}
 
     public OrderItemEntity(UUID productId, String productName, BigDecimal unitPrice, int quantity) {
-        this.productId   = productId;
+        this.productId = productId;
         this.productName = productName;
-        this.unitPrice   = unitPrice;
-        this.quantity    = quantity;
+        this.unitPrice = unitPrice;
+        this.quantity = quantity;
     }
 
-    public UUID getId()              { return id; }
-    public OrderEntity getOrder()    { return order; }
-    public void setOrder(OrderEntity o) { this.order = o; }
-    public UUID getProductId()       { return productId; }
-    public String getProductName()   { return productName; }
-    public BigDecimal getUnitPrice() { return unitPrice; }
-    public int getQuantity()         { return quantity; }
+    public UUID getId() {
+        return id;
+    }
+
+    public OrderEntity getOrder() {
+        return order;
+    }
+
+    public void setOrder(OrderEntity o) {
+        this.order = o;
+    }
+
+    public UUID getProductId() {
+        return productId;
+    }
+
+    public String getProductName() {
+        return productName;
+    }
+
+    public BigDecimal getUnitPrice() {
+        return unitPrice;
+    }
+
+    public int getQuantity() {
+        return quantity;
+    }
 }

@@ -2,15 +2,12 @@ package com.smxworld.ecommerce.order.internal.model;
 
 import com.smxworld.ecommerce.order.OrderStatus;
 import jakarta.persistence.*;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.annotations.UuidGenerator;
-import org.hibernate.type.SqlTypes;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Table(name = "orders", schema = "smx_order")
@@ -45,10 +42,10 @@ public class OrderEntity {
     protected OrderEntity() {}
 
     public OrderEntity(String userId, String shippingAddress) {
-        this.userId          = userId;
+        this.userId = userId;
         this.shippingAddress = shippingAddress;
-        this.status          = OrderStatus.PENDING;
-        this.totalAmount     = BigDecimal.ZERO;
+        this.status = OrderStatus.PENDING;
+        this.totalAmount = BigDecimal.ZERO;
     }
 
     @PrePersist
@@ -69,7 +66,7 @@ public class OrderEntity {
     }
 
     public void transitionTo(OrderStatus newStatus) {
-        this.status    = newStatus;
+        this.status = newStatus;
         this.updatedAt = Instant.now();
     }
 
@@ -79,12 +76,35 @@ public class OrderEntity {
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 
-    public UUID getId()                       { return id; }
-    public String getUserId()                 { return userId; }
-    public OrderStatus getStatus()            { return status; }
-    public BigDecimal getTotalAmount()         { return totalAmount; }
-    public String getShippingAddress()         { return shippingAddress; }
-    public List<OrderItemEntity> getItems()   { return items; }
-    public Instant getCreatedAt()             { return createdAt; }
-    public Instant getUpdatedAt()             { return updatedAt; }
+    public UUID getId() {
+        return id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public OrderStatus getStatus() {
+        return status;
+    }
+
+    public BigDecimal getTotalAmount() {
+        return totalAmount;
+    }
+
+    public String getShippingAddress() {
+        return shippingAddress;
+    }
+
+    public List<OrderItemEntity> getItems() {
+        return items;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
 }

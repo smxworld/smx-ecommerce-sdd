@@ -1,11 +1,10 @@
 package com.smxworld.ecommerce.payment.internal.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Table(name = "payments", schema = "smx_payment")
@@ -36,29 +35,49 @@ public class PaymentEntity {
     protected PaymentEntity() {}
 
     public PaymentEntity(UUID orderId, BigDecimal amount) {
-        this.orderId     = orderId;
-        this.amount      = amount;
-        this.status      = "PENDING";
+        this.orderId = orderId;
+        this.amount = amount;
+        this.status = "PENDING";
         this.processedAt = Instant.now();
     }
 
     public void markSuccess(String transactionId) {
-        this.status        = "SUCCESS";
+        this.status = "SUCCESS";
         this.transactionId = transactionId;
-        this.processedAt   = Instant.now();
+        this.processedAt = Instant.now();
     }
 
     public void markFailed(String reason) {
-        this.status        = "FAILED";
+        this.status = "FAILED";
         this.failureReason = reason;
-        this.processedAt   = Instant.now();
+        this.processedAt = Instant.now();
     }
 
-    public UUID getId()              { return id; }
-    public UUID getOrderId()         { return orderId; }
-    public BigDecimal getAmount()    { return amount; }
-    public String getStatus()        { return status; }
-    public String getTransactionId() { return transactionId; }
-    public String getFailureReason() { return failureReason; }
-    public Instant getProcessedAt()  { return processedAt; }
+    public UUID getId() {
+        return id;
+    }
+
+    public UUID getOrderId() {
+        return orderId;
+    }
+
+    public BigDecimal getAmount() {
+        return amount;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public String getTransactionId() {
+        return transactionId;
+    }
+
+    public String getFailureReason() {
+        return failureReason;
+    }
+
+    public Instant getProcessedAt() {
+        return processedAt;
+    }
 }

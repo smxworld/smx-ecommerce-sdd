@@ -6,12 +6,11 @@ import com.smxworld.ecommerce.review.ReviewApi;
 import com.smxworld.ecommerce.review.ReviewCreatedEvent;
 import com.smxworld.ecommerce.review.internal.model.ReviewEntity;
 import com.smxworld.ecommerce.review.internal.repository.ReviewRepository;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -23,15 +22,16 @@ class ReviewService implements ReviewApi {
 
     ReviewService(ReviewRepository reviewRepo, OrderApi orderApi, ApplicationEventPublisher events) {
         this.reviewRepo = reviewRepo;
-        this.orderApi   = orderApi;
-        this.events     = events;
+        this.orderApi = orderApi;
+        this.events = events;
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<Review> getReviews(UUID productId) {
-        return reviewRepo.findByProductIdOrderByCreatedAtDesc(productId)
-                .stream().map(this::toDto).toList();
+        return reviewRepo.findByProductIdOrderByCreatedAtDesc(productId).stream()
+                .map(this::toDto)
+                .toList();
     }
 
     @Override
@@ -44,7 +44,7 @@ class ReviewService implements ReviewApi {
         }
 
         ReviewEntity review = new ReviewEntity(productId, userId, orderId, rating, text);
-        ReviewEntity saved  = reviewRepo.save(review);
+        ReviewEntity saved = reviewRepo.save(review);
         events.publishEvent(new ReviewCreatedEvent(productId, rating));
         return toDto(saved);
     }

@@ -13,5 +13,4 @@ public record OrderDetails(
         List<OrderItem> items,
         BigDecimal totalAmount,
         Instant createdAt,
-        Instant updatedAt
-) {}
+        Instant updatedAt) {}

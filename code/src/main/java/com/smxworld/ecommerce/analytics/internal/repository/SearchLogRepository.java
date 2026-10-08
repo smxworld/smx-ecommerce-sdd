@@ -1,11 +1,10 @@
 package com.smxworld.ecommerce.analytics.internal.repository;
 
 import com.smxworld.ecommerce.analytics.internal.model.SearchLogEntity;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
-
 import java.util.List;
 import java.util.UUID;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 public interface SearchLogRepository extends JpaRepository<SearchLogEntity, UUID> {
 

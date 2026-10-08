@@ -1,11 +1,10 @@
 package com.smxworld.ecommerce.catalog.internal.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Table(name = "products", schema = "smx_catalog")
@@ -75,14 +74,43 @@ public class Product {
         this.searchScore = score;
     }
 
-    public UUID getId()              { return id; }
-    public String getName()          { return name; }
-    public String getDescription()   { return description; }
-    public BigDecimal getPrice()     { return price; }
-    public String getCategory()      { return category; }
-    public double getAverageRating() { return averageRating; }
-    public int getReviewCount()      { return reviewCount; }
-    public double getSearchScore()   { return searchScore; }
-    public Instant getCreatedAt()    { return createdAt; }
-    public Instant getUpdatedAt()    { return updatedAt; }
+    public UUID getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    public int getReviewCount() {
+        return reviewCount;
+    }
+
+    public double getSearchScore() {
+        return searchScore;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
 }

@@ -1,7 +1,6 @@
 package com.smxworld.ecommerce.order.internal.service;
 
 import com.smxworld.ecommerce.cart.CartApi;
-import com.smxworld.ecommerce.cart.CartItem;
 import com.smxworld.ecommerce.order.CreateOrderRequest;
 import com.smxworld.ecommerce.order.OrderApi;
 import com.smxworld.ecommerce.order.OrderCancelledEvent;
@@ -18,33 +17,33 @@ import com.smxworld.ecommerce.payment.PaymentApi;
 import com.smxworld.ecommerce.warehouse.ReservationItem;
 import com.smxworld.ecommerce.warehouse.ReservationResult;
 import com.smxworld.ecommerce.warehouse.WarehouseApi;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional
 class OrderService implements OrderApi {
 
-    private final OrderRepository      orderRepo;
-    private final CartApi              cartApi;
-    private final WarehouseApi         warehouseApi;
-    private final PaymentApi           paymentApi;
+    private final OrderRepository orderRepo;
+    private final CartApi cartApi;
+    private final WarehouseApi warehouseApi;
+    private final PaymentApi paymentApi;
     private final ApplicationEventPublisher events;
 
-    OrderService(OrderRepository orderRepo,
-                 CartApi cartApi,
-                 WarehouseApi warehouseApi,
-                 PaymentApi paymentApi,
-                 ApplicationEventPublisher events) {
-        this.orderRepo    = orderRepo;
-        this.cartApi      = cartApi;
+    OrderService(
+            OrderRepository orderRepo,
+            CartApi cartApi,
+            WarehouseApi warehouseApi,
+            PaymentApi paymentApi,
+            ApplicationEventPublisher events) {
+        this.orderRepo = orderRepo;
+        this.cartApi = cartApi;
         this.warehouseApi = warehouseApi;
-        this.paymentApi   = paymentApi;
-        this.events       = events;
+        this.paymentApi = paymentApi;
+        this.events = events;
     }
 
     @Override
@@ -61,9 +60,8 @@ class OrderService implements OrderApi {
 
         // 2. Create order in PENDING
         OrderEntity order = new OrderEntity(userId, request.shippingAddress().format());
-        orderItems.forEach(item ->
-                order.addItem(new OrderItemEntity(
-                        item.productId(), item.productName(), item.unitPrice(), item.quantity())));
+        orderItems.forEach(item -> order.addItem(
+                new OrderItemEntity(item.productId(), item.productName(), item.unitPrice(), item.quantity())));
         orderRepo.save(order);
         events.publishEvent(new OrderCreatedEvent(order.getId(), userId, order.getTotalAmount()));
 
@@ -75,8 +73,8 @@ class OrderService implements OrderApi {
         if (!reservation.successful()) {
             order.transitionTo(OrderStatus.CANCELLED);
             orderRepo.save(order);
-            events.publishEvent(new OrderCancelledEvent(order.getId(), userId,
-                    "Stock reservation failed: " + reservation.failureReason()));
+            events.publishEvent(new OrderCancelledEvent(
+                    order.getId(), userId, "Stock reservation failed: " + reservation.failureReason()));
             return toSummary(order);
         }
 
@@ -86,8 +84,8 @@ class OrderService implements OrderApi {
             warehouseApi.releaseReservation(order.getId());
             order.transitionTo(OrderStatus.CANCELLED);
             orderRepo.save(order);
-            events.publishEvent(new OrderCancelledEvent(order.getId(), userId,
-                    "Payment failed: " + paymentResult.failureReason()));
+            events.publishEvent(
+                    new OrderCancelledEvent(order.getId(), userId, "Payment failed: " + paymentResult.failureReason()));
             return toSummary(order);
         }
 
@@ -120,8 +118,9 @@ class OrderService implements OrderApi {
     @Override
     @Transactional(readOnly = true)
     public List<OrderSummary> getOrdersByUser(String userId) {
-        return orderRepo.findByUserIdOrderByCreatedAtDesc(userId)
-                .stream().map(this::toSummary).toList();
+        return orderRepo.findByUserIdOrderByCreatedAtDesc(userId).stream()
+                .map(this::toSummary)
+                .toList();
     }
 
     @Override
@@ -140,7 +139,8 @@ class OrderService implements OrderApi {
     // ─── Private helpers ──────────────────────────────────────────────────────
 
     private OrderEntity findOrder(UUID orderId) {
-        return orderRepo.findById(orderId)
+        return orderRepo
+                .findById(orderId)
                 .orElseThrow(() -> new IllegalArgumentException("Order not found: " + orderId));
     }
 
@@ -152,7 +152,7 @@ class OrderService implements OrderApi {
         List<OrderItem> items = o.getItems().stream()
                 .map(i -> new OrderItem(i.getProductId(), i.getProductName(), i.getQuantity(), i.getUnitPrice()))
                 .toList();
-        return new OrderDetails(o.getId(), o.getUserId(), o.getStatus(), items,
-                o.getTotalAmount(), o.getCreatedAt(), o.getUpdatedAt());
+        return new OrderDetails(
+                o.getId(), o.getUserId(), o.getStatus(), items, o.getTotalAmount(), o.getCreatedAt(), o.getUpdatedAt());
     }
 }

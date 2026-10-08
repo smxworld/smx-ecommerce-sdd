@@ -2,10 +2,9 @@ package com.smxworld.ecommerce.shipment.internal.model;
 
 import com.smxworld.ecommerce.shipment.ShipmentStatus;
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-
 import java.time.Instant;
 import java.util.UUID;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Table(name = "shipments", schema = "smx_shipment")
@@ -43,14 +42,15 @@ public class ShipmentEntity {
     protected ShipmentEntity() {}
 
     public ShipmentEntity(UUID orderId, String userId) {
-        this.orderId        = orderId;
-        this.userId         = userId;
-        this.trackingNumber = "TRK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
-        this.carrier        = "SimulatedCarrier";
-        this.status         = ShipmentStatus.IN_TRANSIT;
-        this.shippedAt      = Instant.now();
+        this.orderId = orderId;
+        this.userId = userId;
+        this.trackingNumber =
+                "TRK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+        this.carrier = "SimulatedCarrier";
+        this.status = ShipmentStatus.IN_TRANSIT;
+        this.shippedAt = Instant.now();
         this.estimatedDelivery = Instant.now().plusSeconds(7L * 24 * 3600);
-        this.createdAt      = Instant.now();
+        this.createdAt = Instant.now();
     }
 
     @PrePersist
@@ -62,13 +62,39 @@ public class ShipmentEntity {
         this.status = ShipmentStatus.DELIVERED;
     }
 
-    public UUID getId()                   { return id; }
-    public UUID getOrderId()              { return orderId; }
-    public String getUserId()             { return userId; }
-    public String getTrackingNumber()     { return trackingNumber; }
-    public String getCarrier()            { return carrier; }
-    public ShipmentStatus getStatus()     { return status; }
-    public Instant getShippedAt()         { return shippedAt; }
-    public Instant getEstimatedDelivery() { return estimatedDelivery; }
-    public Instant getCreatedAt()         { return createdAt; }
+    public UUID getId() {
+        return id;
+    }
+
+    public UUID getOrderId() {
+        return orderId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public String getTrackingNumber() {
+        return trackingNumber;
+    }
+
+    public String getCarrier() {
+        return carrier;
+    }
+
+    public ShipmentStatus getStatus() {
+        return status;
+    }
+
+    public Instant getShippedAt() {
+        return shippedAt;
+    }
+
+    public Instant getEstimatedDelivery() {
+        return estimatedDelivery;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
 }

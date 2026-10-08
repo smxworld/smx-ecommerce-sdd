@@ -1,11 +1,25 @@
 package com.smxworld.ecommerce.catalog;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.reset;
+import static org.mockito.Mockito.when;
+
 import com.smxworld.ecommerce.catalog.internal.model.Product;
 import com.smxworld.ecommerce.catalog.internal.model.ProductDocument;
 import com.smxworld.ecommerce.catalog.internal.repository.ProductElasticsearchRepository;
 import com.smxworld.ecommerce.review.ReviewCreatedEvent;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.Executor;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,21 +39,6 @@ import org.springframework.modulith.test.PublishedEvents;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.support.TransactionTemplate;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
-import java.util.concurrent.Executor;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.eq;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.reset;
-import static org.mockito.Mockito.when;
 
 @ApplicationModuleTest
 @ActiveProfiles("test")
@@ -92,13 +91,26 @@ class CatalogModuleTest {
         }
     }
 
-    @Autowired CatalogApi catalogApi;
-    @Autowired ApplicationEventPublisher publisher;
-    @Autowired TransactionTemplate txTemplate;
-    @Autowired ElasticsearchOperations elasticsearchOperations;
-    @Autowired IndexOperations productIndexOperations;
-    @Autowired ProductElasticsearchRepository productElasticsearchRepository;
-    @PersistenceContext EntityManager em;
+    @Autowired
+    CatalogApi catalogApi;
+
+    @Autowired
+    ApplicationEventPublisher publisher;
+
+    @Autowired
+    TransactionTemplate txTemplate;
+
+    @Autowired
+    ElasticsearchOperations elasticsearchOperations;
+
+    @Autowired
+    IndexOperations productIndexOperations;
+
+    @Autowired
+    ProductElasticsearchRepository productElasticsearchRepository;
+
+    @PersistenceContext
+    EntityManager em;
 
     @BeforeEach
     void setup() {
@@ -115,7 +127,8 @@ class CatalogModuleTest {
         when(elasticsearchOperations.indexOps(ProductDocument.class)).thenReturn(productIndexOperations);
         when(productIndexOperations.exists()).thenReturn(true);
         when(productElasticsearchRepository.findById(any())).thenReturn(Optional.empty());
-        when(productElasticsearchRepository.saveAll(any(Iterable.class))).thenAnswer(invocation -> invocation.getArgument(0));
+        when(productElasticsearchRepository.saveAll(any(Iterable.class)))
+                .thenAnswer(invocation -> invocation.getArgument(0));
         doReturn(emptySearchHits())
                 .when(elasticsearchOperations)
                 .search(any(CriteriaQuery.class), eq(ProductDocument.class));
@@ -202,8 +215,14 @@ class CatalogModuleTest {
         UUID productId = saveProduct("Speaker", "Bluetooth speaker", "149.99", "Audio");
 
         // Prima recensione 4, seconda 2 → media mobile attesa = (4 + 2) / 2 = 3.0
-        txTemplate.execute(s -> { publisher.publishEvent(new ReviewCreatedEvent(productId, 4)); return null; });
-        txTemplate.execute(s -> { publisher.publishEvent(new ReviewCreatedEvent(productId, 2)); return null; });
+        txTemplate.execute(s -> {
+            publisher.publishEvent(new ReviewCreatedEvent(productId, 4));
+            return null;
+        });
+        txTemplate.execute(s -> {
+            publisher.publishEvent(new ReviewCreatedEvent(productId, 2));
+            return null;
+        });
 
         assertThat(catalogApi.getProduct(productId).averageRating()).isEqualTo(3.0);
     }

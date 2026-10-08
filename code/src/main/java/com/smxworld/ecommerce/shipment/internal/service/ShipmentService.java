@@ -6,12 +6,11 @@ import com.smxworld.ecommerce.shipment.ShipmentApi;
 import com.smxworld.ecommerce.shipment.ShipmentInfo;
 import com.smxworld.ecommerce.shipment.internal.model.ShipmentEntity;
 import com.smxworld.ecommerce.shipment.internal.repository.ShipmentRepository;
+import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -22,13 +21,14 @@ class ShipmentService implements ShipmentApi {
 
     ShipmentService(ShipmentRepository shipmentRepo, ApplicationEventPublisher events) {
         this.shipmentRepo = shipmentRepo;
-        this.events       = events;
+        this.events = events;
     }
 
     @Override
     @Transactional(readOnly = true)
     public ShipmentInfo getShipment(UUID orderId) {
-        return shipmentRepo.findByOrderId(orderId)
+        return shipmentRepo
+                .findByOrderId(orderId)
                 .map(this::toInfo)
                 .orElseThrow(() -> new IllegalArgumentException("Shipment not found for order: " + orderId));
     }
@@ -45,8 +45,7 @@ class ShipmentService implements ShipmentApi {
 
         ShipmentEntity shipment = new ShipmentEntity(event.orderId(), event.userId());
         shipmentRepo.save(shipment);
-        events.publishEvent(new OrderShippedEvent(
-                event.orderId(), event.userId(), shipment.getTrackingNumber()));
+        events.publishEvent(new OrderShippedEvent(event.orderId(), event.userId(), shipment.getTrackingNumber()));
     }
 
     // ─── Private helpers ──────────────────────────────────────────────────────

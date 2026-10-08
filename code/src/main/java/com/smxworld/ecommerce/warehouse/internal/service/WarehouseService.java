@@ -10,13 +10,12 @@ import com.smxworld.ecommerce.warehouse.StockReservedEvent;
 import com.smxworld.ecommerce.warehouse.WarehouseApi;
 import com.smxworld.ecommerce.warehouse.internal.model.StockEntity;
 import com.smxworld.ecommerce.warehouse.internal.repository.StockRepository;
+import java.util.List;
+import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.UUID;
 
 @Service
 @Transactional
@@ -27,13 +26,14 @@ class WarehouseService implements WarehouseApi {
 
     WarehouseService(StockRepository stockRepo, ApplicationEventPublisher events) {
         this.stockRepo = stockRepo;
-        this.events    = events;
+        this.events = events;
     }
 
     @Override
     @Transactional(readOnly = true)
     public StockInfo getStock(UUID productId) {
-        return stockRepo.findByProductId(productId)
+        return stockRepo
+                .findByProductId(productId)
                 .map(s -> new StockInfo(productId, s.availableQuantity(), s.getQuantityReserved()))
                 .orElse(new StockInfo(productId, 0, 0));
     }
@@ -41,8 +41,7 @@ class WarehouseService implements WarehouseApi {
     @Override
     public ReservationResult reserveStock(UUID orderId, List<ReservationItem> items) {
         for (ReservationItem item : items) {
-            StockEntity stock = stockRepo.findByProductId(item.productId())
-                    .orElse(null);
+            StockEntity stock = stockRepo.findByProductId(item.productId()).orElse(null);
             if (stock == null || !stock.reserve(item.quantity())) {
                 String reason = stock == null
                         ? "No stock record for product: " + item.productId()
@@ -65,8 +64,7 @@ class WarehouseService implements WarehouseApi {
 
     @Override
     public void updateStock(UUID productId, int quantity) {
-        StockEntity stock = stockRepo.findByProductId(productId)
-                .orElseGet(() -> new StockEntity(productId, 0));
+        StockEntity stock = stockRepo.findByProductId(productId).orElseGet(() -> new StockEntity(productId, 0));
         stock.adjustTotal(quantity);
         stockRepo.save(stock);
     }
@@ -75,8 +73,8 @@ class WarehouseService implements WarehouseApi {
 
     @ApplicationModuleListener
     void on(ProductBookedEvent event) {
-        StockEntity stock = stockRepo.findByProductId(event.productId())
-                .orElseGet(() -> new StockEntity(event.productId(), 0));
+        StockEntity stock =
+                stockRepo.findByProductId(event.productId()).orElseGet(() -> new StockEntity(event.productId(), 0));
         stock.reserve(event.quantity());
         stockRepo.save(stock);
     }
@@ -88,5 +86,4 @@ class WarehouseService implements WarehouseApi {
             stockRepo.save(stock);
         });
     }
-
 }

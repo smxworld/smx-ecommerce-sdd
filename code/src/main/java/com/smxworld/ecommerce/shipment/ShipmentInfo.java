@@ -10,5 +10,4 @@ public record ShipmentInfo(
         String carrier,
         ShipmentStatus status,
         Instant estimatedDelivery,
-        Instant lastUpdate
-) {}
+        Instant lastUpdate) {}

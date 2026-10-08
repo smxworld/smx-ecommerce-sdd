@@ -5,9 +5,4 @@ import java.util.UUID;
 
 /** DTO — result of a payment processing attempt. */
 public record PaymentResult(
-        UUID orderId,
-        String transactionId,
-        boolean successful,
-        String failureReason,
-        BigDecimal amount
-) {}
+        UUID orderId, String transactionId, boolean successful, String failureReason, BigDecimal amount) {}

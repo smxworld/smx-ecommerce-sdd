@@ -1,27 +1,26 @@
 package com.smxworld.ecommerce.catalog.internal.service;
 
-import com.smxworld.ecommerce.catalog.internal.model.Product;
-import com.smxworld.ecommerce.catalog.internal.model.ProductDocument;
-import com.smxworld.ecommerce.catalog.internal.repository.ProductElasticsearchRepository;
-import com.smxworld.ecommerce.catalog.internal.repository.ProductJpaRepository;
-import org.junit.jupiter.api.Test;
-import org.mockito.ArgumentCaptor;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.IndexOperations;
-import org.springframework.data.elasticsearch.core.document.Document;
-import org.springframework.test.util.ReflectionTestUtils;
-
-import java.math.BigDecimal;
-import java.util.List;
-import java.util.UUID;
-import java.util.stream.StreamSupport;
-
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+
+import com.smxworld.ecommerce.catalog.internal.model.Product;
+import com.smxworld.ecommerce.catalog.internal.model.ProductDocument;
+import com.smxworld.ecommerce.catalog.internal.repository.ProductElasticsearchRepository;
+import com.smxworld.ecommerce.catalog.internal.repository.ProductJpaRepository;
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.UUID;
+import java.util.stream.StreamSupport;
+import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.IndexOperations;
+import org.springframework.data.elasticsearch.core.document.Document;
+import org.springframework.test.util.ReflectionTestUtils;
 
 class CatalogIndexInitializerTest {
 
@@ -58,16 +57,16 @@ class CatalogIndexInitializerTest {
         ArgumentCaptor<Iterable<ProductDocument>> documentsCaptor = ArgumentCaptor.forClass((Class) Iterable.class);
         verify(esRepo).saveAll(documentsCaptor.capture());
 
-        List<ProductDocument> documents = StreamSupport.stream(documentsCaptor.getValue().spliterator(), false).toList();
-        assertThat(documents)
-                .singleElement()
-                .satisfies(document -> {
-                    assertThat(document.getId()).isEqualTo("aaaaaaaa-0001-0000-0000-000000000001");
-                    assertThat(document.getName()).isEqualTo("Smartphone XPro");
-                    assertThat(document.getCategory()).isEqualTo("Elettronica");
-                    assertThat(document.getAverageRating()).isEqualTo(4.5);
-                    assertThat(document.getSearchScore()).isEqualTo(0.9);
-                });
+        List<ProductDocument> documents = StreamSupport.stream(
+                        documentsCaptor.getValue().spliterator(), false)
+                .toList();
+        assertThat(documents).singleElement().satisfies(document -> {
+            assertThat(document.getId()).isEqualTo("aaaaaaaa-0001-0000-0000-000000000001");
+            assertThat(document.getName()).isEqualTo("Smartphone XPro");
+            assertThat(document.getCategory()).isEqualTo("Elettronica");
+            assertThat(document.getAverageRating()).isEqualTo(4.5);
+            assertThat(document.getSearchScore()).isEqualTo(0.9);
+        });
     }
 
     @Test
@@ -79,14 +78,15 @@ class CatalogIndexInitializerTest {
 
         when(esOps.indexOps(ProductDocument.class)).thenReturn(indexOps);
         when(indexOps.exists()).thenReturn(true);
-        when(productRepo.findAll()).thenReturn(List.of(product(
-                UUID.fromString("aaaaaaaa-0002-0000-0000-000000000002"),
-                "Laptop UltraSlim",
-                "Lightweight laptop",
-                "1299.00",
-                "Elettronica",
-                4.2,
-                0.8)));
+        when(productRepo.findAll())
+                .thenReturn(List.of(product(
+                        UUID.fromString("aaaaaaaa-0002-0000-0000-000000000002"),
+                        "Laptop UltraSlim",
+                        "Lightweight laptop",
+                        "1299.00",
+                        "Elettronica",
+                        4.2,
+                        0.8)));
         when(esRepo.saveAll(any(Iterable.class))).thenAnswer(invocation -> invocation.getArgument(0));
 
         CatalogIndexInitializer initializer = new CatalogIndexInitializer(productRepo, esRepo, esOps);
@@ -97,13 +97,14 @@ class CatalogIndexInitializerTest {
         verify(esRepo).saveAll(any(Iterable.class));
     }
 
-    private static Product product(UUID id,
-                                   String name,
-                                   String description,
-                                   String price,
-                                   String category,
-                                   double averageRating,
-                                   double searchScore) {
+    private static Product product(
+            UUID id,
+            String name,
+            String description,
+            String price,
+            String category,
+            double averageRating,
+            double searchScore) {
         Product product = new Product(name, description, new BigDecimal(price), category);
         ReflectionTestUtils.setField(product, "id", id);
         ReflectionTestUtils.setField(product, "averageRating", averageRating);

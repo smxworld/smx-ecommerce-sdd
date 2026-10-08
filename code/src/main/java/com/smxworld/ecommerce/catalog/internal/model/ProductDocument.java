@@ -1,9 +1,8 @@
 package com.smxworld.ecommerce.catalog.internal.model;
 
+import java.math.BigDecimal;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.elasticsearch.annotations.*;
-
-import java.math.BigDecimal;
 
 /**
  * Documento Elasticsearch per l'indice "products".
@@ -17,9 +16,8 @@ public class ProductDocument {
     private String id;
 
     @MultiField(
-        mainField  = @Field(type = FieldType.Text,    analyzer = "standard"),
-        otherFields = @InnerField(suffix = "keyword", type = FieldType.Keyword)
-    )
+            mainField = @Field(type = FieldType.Text, analyzer = "standard"),
+            otherFields = @InnerField(suffix = "keyword", type = FieldType.Keyword))
     private String name;
 
     @Field(type = FieldType.Text, analyzer = "standard")
@@ -39,36 +37,76 @@ public class ProductDocument {
 
     public ProductDocument() {}
 
-    public ProductDocument(String id, String name, String description,
-                           BigDecimal price, String category,
-                           double averageRating, double searchScore) {
-        this.id            = id;
-        this.name          = name;
-        this.description   = description;
-        this.price         = price;
-        this.category      = category;
+    public ProductDocument(
+            String id,
+            String name,
+            String description,
+            BigDecimal price,
+            String category,
+            double averageRating,
+            double searchScore) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.category = category;
         this.averageRating = averageRating;
-        this.searchScore   = searchScore;
+        this.searchScore = searchScore;
     }
 
-    public String getId()              { return id; }
-    public void   setId(String id)     { this.id = id; }
+    public String getId() {
+        return id;
+    }
 
-    public String getName()            { return name; }
-    public void   setName(String name) { this.name = name; }
+    public void setId(String id) {
+        this.id = id;
+    }
 
-    public String getDescription()                    { return description; }
-    public void   setDescription(String description)  { this.description = description; }
+    public String getName() {
+        return name;
+    }
 
-    public BigDecimal getPrice()              { return price; }
-    public void       setPrice(BigDecimal p)  { this.price = p; }
+    public void setName(String name) {
+        this.name = name;
+    }
 
-    public String getCategory()               { return category; }
-    public void   setCategory(String c)       { this.category = c; }
+    public String getDescription() {
+        return description;
+    }
 
-    public double getAverageRating()              { return averageRating; }
-    public void   setAverageRating(double rating) { this.averageRating = rating; }
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
-    public double getSearchScore()             { return searchScore; }
-    public void   setSearchScore(double score) { this.searchScore = score; }
+    public BigDecimal getPrice() {
+        return price;
+    }
+
+    public void setPrice(BigDecimal p) {
+        this.price = p;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String c) {
+        this.category = c;
+    }
+
+    public double getAverageRating() {
+        return averageRating;
+    }
+
+    public void setAverageRating(double rating) {
+        this.averageRating = rating;
+    }
+
+    public double getSearchScore() {
+        return searchScore;
+    }
+
+    public void setSearchScore(double score) {
+        this.searchScore = score;
+    }
 }

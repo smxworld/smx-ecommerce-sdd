@@ -13,7 +13,9 @@ class ApiExceptionHandler {
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException exception) {
-        FieldError fieldError = exception.getBindingResult().getFieldErrors().stream().findFirst().orElse(null);
+        FieldError fieldError = exception.getBindingResult().getFieldErrors().stream()
+                .findFirst()
+                .orElse(null);
         String message = fieldError != null
                 ? fieldError.getField() + ": " + fieldError.getDefaultMessage()
                 : "Request validation failed";

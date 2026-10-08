@@ -1,12 +1,11 @@
 package com.smxworld.ecommerce.cart.internal.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Table(name = "carts", schema = "smx_cart")
@@ -56,9 +55,23 @@ public class CartEntity {
         this.updatedAt = Instant.now();
     }
 
-    public UUID getId()                   { return id; }
-    public String getUserId()             { return userId; }
-    public List<CartItemEntity> getItems() { return items; }
-    public Instant getCreatedAt()         { return createdAt; }
-    public Instant getUpdatedAt()         { return updatedAt; }
+    public UUID getId() {
+        return id;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public List<CartItemEntity> getItems() {
+        return items;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
 }

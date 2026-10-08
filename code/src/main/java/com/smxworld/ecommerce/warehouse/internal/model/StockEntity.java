@@ -1,10 +1,9 @@
 package com.smxworld.ecommerce.warehouse.internal.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-
 import java.time.Instant;
 import java.util.UUID;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
 @Table(name = "stock", schema = "smx_warehouse")
@@ -33,10 +32,10 @@ public class StockEntity {
     protected StockEntity() {}
 
     public StockEntity(UUID productId, int quantityTotal) {
-        this.productId       = productId;
-        this.quantityTotal   = quantityTotal;
+        this.productId = productId;
+        this.quantityTotal = quantityTotal;
         this.quantityReserved = 0;
-        this.updatedAt       = Instant.now();
+        this.updatedAt = Instant.now();
     }
 
     @PrePersist
@@ -65,13 +64,30 @@ public class StockEntity {
 
     public void book(int qty) {
         this.quantityReserved = Math.max(0, this.quantityReserved - qty);
-        this.quantityTotal    = Math.max(0, this.quantityTotal - qty);
+        this.quantityTotal = Math.max(0, this.quantityTotal - qty);
     }
 
-    public UUID getId()               { return id; }
-    public UUID getProductId()        { return productId; }
-    public int getQuantityTotal()     { return quantityTotal; }
-    public int getQuantityReserved()  { return quantityReserved; }
-    public int getVersion()           { return version; }
-    public Instant getUpdatedAt()     { return updatedAt; }
+    public UUID getId() {
+        return id;
+    }
+
+    public UUID getProductId() {
+        return productId;
+    }
+
+    public int getQuantityTotal() {
+        return quantityTotal;
+    }
+
+    public int getQuantityReserved() {
+        return quantityReserved;
+    }
+
+    public int getVersion() {
+        return version;
+    }
+
+    public Instant getUpdatedAt() {
+        return updatedAt;
+    }
 }

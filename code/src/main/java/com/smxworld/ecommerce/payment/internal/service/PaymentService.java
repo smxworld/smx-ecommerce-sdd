@@ -6,12 +6,11 @@ import com.smxworld.ecommerce.payment.PaymentResult;
 import com.smxworld.ecommerce.payment.PaymentSucceededEvent;
 import com.smxworld.ecommerce.payment.internal.model.PaymentEntity;
 import com.smxworld.ecommerce.payment.internal.repository.PaymentRepository;
+import java.math.BigDecimal;
+import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.util.UUID;
 
 /**
  * Simulated payment gateway: accepts all payments with amount < 10,000.
@@ -28,13 +27,14 @@ class PaymentService implements PaymentApi {
 
     PaymentService(PaymentRepository paymentRepo, ApplicationEventPublisher events) {
         this.paymentRepo = paymentRepo;
-        this.events      = events;
+        this.events = events;
     }
 
     @Override
     public PaymentResult processPayment(UUID orderId, BigDecimal amount) {
         // Idempotency: return existing result if already processed
-        return paymentRepo.findByOrderId(orderId)
+        return paymentRepo
+                .findByOrderId(orderId)
                 .map(existing -> toResult(existing))
                 .orElseGet(() -> process(orderId, amount));
     }

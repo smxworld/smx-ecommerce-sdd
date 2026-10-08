@@ -1,13 +1,14 @@
 package com.smxworld.ecommerce.review.internal.model;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.UuidGenerator;
-
 import java.time.Instant;
 import java.util.UUID;
+import org.hibernate.annotations.UuidGenerator;
 
 @Entity
-@Table(name = "reviews", schema = "smx_review",
+@Table(
+        name = "reviews",
+        schema = "smx_review",
         uniqueConstraints = @UniqueConstraint(columnNames = {"user_id", "product_id"}))
 public class ReviewEntity {
 
@@ -37,10 +38,10 @@ public class ReviewEntity {
 
     public ReviewEntity(UUID productId, String userId, UUID orderId, int rating, String text) {
         this.productId = productId;
-        this.userId    = userId;
-        this.orderId   = orderId;
-        this.rating    = rating;
-        this.text      = text;
+        this.userId = userId;
+        this.orderId = orderId;
+        this.rating = rating;
+        this.text = text;
         this.createdAt = Instant.now();
     }
 
@@ -49,11 +50,31 @@ public class ReviewEntity {
         if (this.createdAt == null) this.createdAt = Instant.now();
     }
 
-    public UUID getId()        { return id; }
-    public UUID getProductId() { return productId; }
-    public String getUserId()  { return userId; }
-    public UUID getOrderId()   { return orderId; }
-    public int getRating()     { return rating; }
-    public String getText()    { return text; }
-    public Instant getCreatedAt() { return createdAt; }
+    public UUID getId() {
+        return id;
+    }
+
+    public UUID getProductId() {
+        return productId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public UUID getOrderId() {
+        return orderId;
+    }
+
+    public int getRating() {
+        return rating;
+    }
+
+    public String getText() {
+        return text;
+    }
+
+    public Instant getCreatedAt() {
+        return createdAt;
+    }
 }

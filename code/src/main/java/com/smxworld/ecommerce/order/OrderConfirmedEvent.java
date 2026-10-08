@@ -9,8 +9,4 @@ import java.util.UUID;
  *
  * <p>To externalize on Kafka: add {@code @Externalized("smx.order-confirmed")}.
  */
-public record OrderConfirmedEvent(
-        UUID orderId,
-        String userId,
-        BigDecimal totalAmount
-) {}
+public record OrderConfirmedEvent(UUID orderId, String userId, BigDecimal totalAmount) {}
