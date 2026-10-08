@@ -205,6 +205,30 @@ Never modify the code directly for a feature that should start from a documentat
 
 ---
 
+## Quality gates
+
+`mvn verify` (run from `code/`) fails on any violation of the following tools; tests include `ApplicationModulesTest`, which checks the Spring Modulith structure.
+
+| Tool | Configuration |
+|------|---------------|
+| Spotless | palantir-java-format (with Javadoc formatting), unused imports removed, imports ordered static-first. Run `mvn spotless:apply` to fix. |
+| Checkstyle | `code/config/checkstyle/checkstyle.xml`, based on `google_checks` |
+| PMD | `code/config/pmd/ruleset.xml`, based on the `quickstart` ruleset |
+| SpotBugs | default effort and threshold, tests included |
+
+### Rule changes and exclusions
+
+Every deviation from the stock rules, with the reason:
+
+1. **Checkstyle `Indentation`**: 4 spaces (continuation 8) instead of Google's 2, as chosen for the project and matching palantir-java-format.
+2. **Checkstyle `LineLength`**: 120 instead of 100, because palantir-java-format wraps at 120 and the formatter cannot satisfy a stricter limit.
+3. **Checkstyle `MissingJavadocMethod`**: removed. It would require Javadoc on every public method of an application (getters, controllers, service methods) with no information gain. `MissingJavadocType` stays active: every class documents what it is and why it exists.
+4. **Spotless import order**: `\#,` (static imports first, then the rest) to match Checkstyle `CustomImportOrder`.
+5. **PMD `UnusedPrivateMethod`**: kept, but methods annotated `@PrePersist` / `@PreUpdate` are ignored (`ignoredAnnotations`). Hibernate calls them by reflection, so PMD cannot see the call; all 10 reports were these callbacks, which set the non-null timestamp columns. Any other unused private method is still reported. No `@SuppressWarnings` is used anywhere.
+6. **No exclusions** for SpotBugs, and no suppression filters for Checkstyle or PMD.
+
+Code changes made to satisfy rules instead of relaxing them: `SmxECommerceApplication` and `ECommerceController` renamed to `SmxEcommerceApplication` and `EcommerceController` (Checkstyle `AbbreviationAsWordInName`); JPQL text blocks in two repositories replaced by concatenated strings (palantir and Checkstyle `TextBlockGoogleStyleFormatting` format text blocks differently, so no layout satisfies both); entity `getItems()` now returns an unmodifiable view with explicit `addItem` / `removeItem` / `clearItems` methods; DTO records copy their lists defensively.
+
 ## Running Tests
 
 ```bash
