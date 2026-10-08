@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useQueryClient } from '@tanstack/react-query'
 import { useCart } from '../hooks/useCart'
 import { checkout } from '../api/orders'
 
@@ -14,6 +15,7 @@ const EMPTY_ADDRESS = {
 
 export default function CheckoutPage() {
   const navigate = useNavigate()
+  const queryClient = useQueryClient()
   const { data: cart } = useCart()
   const [address, setAddress] = useState(EMPTY_ADDRESS)
   const [loading, setLoading] = useState(false)
@@ -32,6 +34,8 @@ export default function CheckoutPage() {
     setError(null)
     try {
       const order = await checkout(address)
+      // The backend empties the cart on checkout: drop the cached copy (staleTime is 30s).
+      await queryClient.invalidateQueries({ queryKey: ['cart'] })
       navigate(`/orders/${order.orderId}`)
     } catch (err) {
       setError(err.response?.data?.message ?? 'Checkout failed. Please try again.')
