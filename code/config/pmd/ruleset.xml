@@ -7,6 +7,7 @@
 
     <rule ref="rulesets/java/quickstart.xml">
         <exclude name="UnusedPrivateMethod"/>
+        <exclude name="GuardLogStatement"/>
     </rule>
 
     <!--
@@ -18,7 +19,7 @@
     <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod">
         <properties>
             <property name="ignoredAnnotations"
-                      value="java.lang.Deprecated|jakarta.annotation.PostConstruct|jakarta.annotation.PreDestroy|jakarta.persistence.PrePersist|jakarta.persistence.PreUpdate"/>
+                      value="java.lang.Deprecated,jakarta.annotation.PostConstruct,jakarta.annotation.PreDestroy,jakarta.persistence.PrePersist,jakarta.persistence.PreUpdate"/>
         </properties>
     </rule>
 </ruleset>

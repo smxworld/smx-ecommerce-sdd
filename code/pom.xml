@@ -281,6 +281,7 @@
                 <configuration>
                     <includeTests>true</includeTests>
                     <failOnError>true</failOnError>
+                    <excludeFilterFile>config/spotbugs/exclude.xml</excludeFilterFile>
                 </configuration>
                 <executions>
                     <execution>
