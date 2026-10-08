@@ -8,24 +8,18 @@ import com.smxworld.ecommerce.catalog.SearchResult;
 import com.smxworld.ecommerce.catalog.SearchScoreUpdatedEvent;
 import com.smxworld.ecommerce.catalog.internal.model.Product;
 import com.smxworld.ecommerce.catalog.internal.model.ProductDocument;
+import com.smxworld.ecommerce.catalog.internal.model.ProductSearchCriteria;
+import com.smxworld.ecommerce.catalog.internal.model.ProductSearchPage;
 import com.smxworld.ecommerce.catalog.internal.repository.ProductElasticsearchRepository;
 import com.smxworld.ecommerce.catalog.internal.repository.ProductJpaRepository;
+import com.smxworld.ecommerce.catalog.internal.repository.ProductSearchRepository;
 import com.smxworld.ecommerce.review.ReviewCreatedEvent;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
-import org.springframework.data.elasticsearch.core.SearchHit;
-import org.springframework.data.elasticsearch.core.SearchHits;
-import org.springframework.data.elasticsearch.core.query.Criteria;
-import org.springframework.data.elasticsearch.core.query.CriteriaQuery;
-import org.springframework.data.elasticsearch.core.query.Query;
-import org.springframework.data.elasticsearch.core.query.StringQuery;
 import org.springframework.modulith.events.ApplicationModuleListener;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 @Service
 @Transactional
@@ -33,17 +27,17 @@ class CatalogService implements CatalogApi {
 
     private final ProductJpaRepository productRepo;
     private final ProductElasticsearchRepository esRepo;
-    private final ElasticsearchOperations esOps;
+    private final ProductSearchRepository searchRepo;
     private final ApplicationEventPublisher events;
 
     CatalogService(
             ProductJpaRepository productRepo,
             ProductElasticsearchRepository esRepo,
-            ElasticsearchOperations esOps,
+            ProductSearchRepository searchRepo,
             ApplicationEventPublisher events) {
         this.productRepo = productRepo;
         this.esRepo = esRepo;
-        this.esOps = esOps;
+        this.searchRepo = searchRepo;
         this.events = events;
     }
 
@@ -60,17 +54,15 @@ class CatalogService implements CatalogApi {
 
     @Override
     public SearchResult search(SearchQuery query) {
-        var pageable = PageRequest.of(query.page(), query.size());
-
-        Query esQuery = buildQuery(query, pageable);
-        SearchHits<ProductDocument> hits = esOps.search(esQuery, ProductDocument.class);
+        ProductSearchPage page = searchRepo.search(new ProductSearchCriteria(
+                query.text(), query.category(), query.minPrice(), query.maxPrice(), query.page(), query.size()));
 
         List<ProductDetails> items =
-                hits.stream().map(SearchHit::getContent).map(this::docToDetails).toList();
+                page.products().stream().map(this::docToDetails).toList();
 
-        events.publishEvent(new SearchPerformedEvent(null, query.text(), hits.getTotalHits()));
+        long total = page.totalHits();
+        events.publishEvent(new SearchPerformedEvent(null, query.text(), total));
 
-        long total = hits.getTotalHits();
         int totalPages = query.size() > 0 ? (int) Math.ceil((double) total / query.size()) : 0;
 
         return new SearchResult(items, total, totalPages);
@@ -104,39 +96,6 @@ class CatalogService implements CatalogApi {
     }
 
     // ─── Private helpers ──────────────────────────────────────────────────────
-
-    private Query buildQuery(SearchQuery query, PageRequest pageable) {
-        boolean hasText = StringUtils.hasText(query.text());
-        boolean hasCategory = StringUtils.hasText(query.category());
-        boolean hasMinPrice = query.minPrice() != null;
-        boolean hasMaxPrice = query.maxPrice() != null;
-
-        if (!hasText && !hasCategory && !hasMinPrice && !hasMaxPrice) {
-            return new StringQuery("{\"match_all\":{}}", pageable);
-        }
-
-        Criteria criteria;
-        if (hasText) {
-            criteria = new Criteria("name").matches(query.text()).or(new Criteria("description").matches(query.text()));
-        } else {
-            criteria = new Criteria();
-        }
-
-        if (hasCategory) {
-            criteria = criteria.and(new Criteria("category").is(query.category()));
-        }
-
-        // Filtro per fascia di prezzo: supporta min, max o entrambi
-        if (hasMinPrice && hasMaxPrice) {
-            criteria = criteria.and(new Criteria("price").between(query.minPrice(), query.maxPrice()));
-        } else if (hasMinPrice) {
-            criteria = criteria.and(new Criteria("price").greaterThanEqual(query.minPrice()));
-        } else if (hasMaxPrice) {
-            criteria = criteria.and(new Criteria("price").lessThanEqual(query.maxPrice()));
-        }
-
-        return new CriteriaQuery(criteria, pageable);
-    }
 
     private void syncScoreToEs(UUID productId, double score) {
         esRepo.findById(productId.toString()).ifPresent(doc -> {

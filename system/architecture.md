@@ -55,6 +55,10 @@ This reorganisation changes only file locations, package declarations and import
 
 Verification requires a clean compilation, the existing Maven test suite and `ApplicationModules.of(SmxEcommerceApplication.class).verify()`. Tests retain all existing methods and assertions; only package declarations, imports and file locations may follow relocated production classes. No legacy internal packages may remain, and a source comparison must confirm that no method body changed.
 
+### Where queries live
+
+Queries against any data store, relational or Elasticsearch, are built and executed in classes under the `repository` package. Classes in `service` that implement business logic call repositories and map the results; they do not use `EntityManager`, `JdbcTemplate` or `ElasticsearchOperations` directly. When a query takes several parameters, the service passes a criteria object of its own (kept in `model`) and the repository translates it into the store's query language. Classes in `service` that only configure or initialise a data store, such as the catalog index initializer, are exempt.
+
 Packages under `internal/` are invisible to other modules. Spring Modulith verifies this automatically with `@ApplicationModuleTest`.
 
 ## Migration strategy to microservices
