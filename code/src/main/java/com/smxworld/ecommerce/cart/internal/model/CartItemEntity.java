@@ -45,7 +45,9 @@ public class CartItemEntity {
     @Column(name = "added_at", nullable = false, updatable = false)
     private Instant addedAt;
 
-    protected CartItemEntity() {}
+    protected CartItemEntity() {
+        // Required by JPA, which instantiates entities reflectively; not meant to be used directly.
+    }
 
     public CartItemEntity(UUID productId, String productName, int quantity, BigDecimal unitPrice) {
         this.productId = productId;

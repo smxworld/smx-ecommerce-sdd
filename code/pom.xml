@@ -249,7 +249,7 @@
                 </dependencies>
                 <configuration>
                     <rulesets>
-                        <ruleset>rulesets/java/quickstart.xml</ruleset>
+                        <ruleset>config/pmd/ruleset.xml</ruleset>
                     </rulesets>
                     <includeTests>true</includeTests>
                     <printFailingErrors>true</printFailingErrors>

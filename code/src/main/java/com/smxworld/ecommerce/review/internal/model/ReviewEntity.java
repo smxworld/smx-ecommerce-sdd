@@ -46,7 +46,9 @@ public class ReviewEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    protected ReviewEntity() {}
+    protected ReviewEntity() {
+        // Required by JPA, which instantiates entities reflectively; not meant to be used directly.
+    }
 
     public ReviewEntity(UUID productId, String userId, UUID orderId, int rating, String text) {
         this.productId = productId;

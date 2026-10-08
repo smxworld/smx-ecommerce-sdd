@@ -9,6 +9,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.Table;
 import java.time.Instant;
+import java.util.Locale;
 import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 
@@ -51,13 +52,15 @@ public class ShipmentEntity {
     @Column(name = "created_at", nullable = false, updatable = false)
     private Instant createdAt;
 
-    protected ShipmentEntity() {}
+    protected ShipmentEntity() {
+        // Required by JPA, which instantiates entities reflectively; not meant to be used directly.
+    }
 
     public ShipmentEntity(UUID orderId, String userId) {
         this.orderId = orderId;
         this.userId = userId;
         this.trackingNumber =
-                "TRK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase();
+                "TRK-" + UUID.randomUUID().toString().substring(0, 8).toUpperCase(Locale.ROOT);
         this.carrier = "SimulatedCarrier";
         this.status = ShipmentStatus.IN_TRANSIT;
         this.shippedAt = Instant.now();

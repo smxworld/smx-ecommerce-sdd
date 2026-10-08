@@ -43,7 +43,9 @@ public class StockEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    protected StockEntity() {}
+    protected StockEntity() {
+        // Required by JPA, which instantiates entities reflectively; not meant to be used directly.
+    }
 
     public StockEntity(UUID productId, int quantityTotal) {
         this.productId = productId;

@@ -42,7 +42,9 @@ public class CartEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    protected CartEntity() {}
+    protected CartEntity() {
+        // Required by JPA, which instantiates entities reflectively; not meant to be used directly.
+    }
 
     public CartEntity(String userId) {
         this.userId = userId;

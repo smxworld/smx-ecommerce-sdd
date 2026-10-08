@@ -56,7 +56,9 @@ public class OrderEntity {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    protected OrderEntity() {}
+    protected OrderEntity() {
+        // Required by JPA, which instantiates entities reflectively; not meant to be used directly.
+    }
 
     public OrderEntity(String userId, String shippingAddress) {
         this.userId = userId;

@@ -40,7 +40,9 @@ public class ProductDocument {
     @Field(type = FieldType.Double)
     private double searchScore;
 
-    public ProductDocument() {}
+    public ProductDocument() {
+        // Required by Spring Data Elasticsearch, which instantiates documents reflectively when reading hits.
+    }
 
     public ProductDocument(
             String id,

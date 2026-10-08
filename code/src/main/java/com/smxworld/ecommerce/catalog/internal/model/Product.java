@@ -53,7 +53,9 @@ public class Product {
     @Column(name = "updated_at", nullable = false)
     private Instant updatedAt;
 
-    protected Product() {}
+    protected Product() {
+        // Required by JPA, which instantiates entities reflectively; not meant to be used directly.
+    }
 
     public Product(String name, String description, BigDecimal price, String category) {
         this.name = name;

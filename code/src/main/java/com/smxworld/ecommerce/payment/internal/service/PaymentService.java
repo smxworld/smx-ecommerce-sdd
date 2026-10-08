@@ -33,10 +33,7 @@ class PaymentService implements PaymentApi {
     @Override
     public PaymentResult processPayment(UUID orderId, BigDecimal amount) {
         // Idempotency: return existing result if already processed
-        return paymentRepo
-                .findByOrderId(orderId)
-                .map(existing -> toResult(existing))
-                .orElseGet(() -> process(orderId, amount));
+        return paymentRepo.findByOrderId(orderId).map(this::toResult).orElseGet(() -> process(orderId, amount));
     }
 
     private PaymentResult process(UUID orderId, BigDecimal amount) {

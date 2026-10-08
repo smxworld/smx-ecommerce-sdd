@@ -35,7 +35,9 @@ public class SearchLogEntity {
     @Column(name = "searched_at", nullable = false, updatable = false)
     private Instant searchedAt;
 
-    protected SearchLogEntity() {}
+    protected SearchLogEntity() {
+        // Required by JPA, which instantiates entities reflectively; not meant to be used directly.
+    }
 
     public SearchLogEntity(String userId, String queryText, long resultsCount) {
         this.userId = userId;

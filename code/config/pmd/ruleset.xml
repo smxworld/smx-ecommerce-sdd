@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<ruleset name="smx-ecommerce"
+         xmlns="http://pmd.sourceforge.net/ruleset/2.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://pmd.sourceforge.net/ruleset/2.0.0 https://pmd.sourceforge.io/ruleset_2_0_0.xsd">
+    <description>PMD quickstart, with the only change that JPA lifecycle callbacks are not reported as unused.</description>
+
+    <rule ref="rulesets/java/quickstart.xml">
+        <exclude name="UnusedPrivateMethod"/>
+    </rule>
+
+    <!--
+        UnusedPrivateMethod is kept, with a single adjustment: methods annotated with the JPA lifecycle
+        callbacks are invoked by Hibernate through reflection, so PMD cannot see the call. They are not dead
+        code: they set the non-nullable createdAt/updatedAt columns. Every other unused private method is still
+        reported. The other values are PMD's own defaults for this property.
+    -->
+    <rule ref="category/java/bestpractices.xml/UnusedPrivateMethod">
+        <properties>
+            <property name="ignoredAnnotations"
+                      value="java.lang.Deprecated|jakarta.annotation.PostConstruct|jakarta.annotation.PreDestroy|jakarta.persistence.PrePersist|jakarta.persistence.PreUpdate"/>
+        </properties>
+    </rule>
+</ruleset>

@@ -42,7 +42,9 @@ public class PaymentEntity {
     @Column(name = "processed_at", nullable = false)
     private Instant processedAt;
 
-    protected PaymentEntity() {}
+    protected PaymentEntity() {
+        // Required by JPA, which instantiates entities reflectively; not meant to be used directly.
+    }
 
     public PaymentEntity(UUID orderId, BigDecimal amount) {
         this.orderId = orderId;

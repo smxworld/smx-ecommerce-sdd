@@ -42,7 +42,9 @@ public class OrderItemEntity {
     @Column(nullable = false)
     private int quantity;
 
-    protected OrderItemEntity() {}
+    protected OrderItemEntity() {
+        // Required by JPA, which instantiates entities reflectively; not meant to be used directly.
+    }
 
     public OrderItemEntity(UUID productId, String productName, BigDecimal unitPrice, int quantity) {
         this.productId = productId;
