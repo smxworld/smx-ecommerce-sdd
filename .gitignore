@@ -5,3 +5,6 @@ code/frontend/.env.local
 
 code/target/
 build/
+# macOS / IDE
+.DS_Store
+.idea/
