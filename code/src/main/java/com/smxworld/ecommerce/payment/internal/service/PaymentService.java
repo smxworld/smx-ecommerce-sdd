@@ -13,8 +13,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 /**
- * Simulated payment gateway: accepts all payments with amount < 10,000.
- * Idempotent: if orderId already processed, returns previous result.
+ * Simulated payment gateway: accepts all payments with amount < 10,000. Idempotent: if orderId already processed,
+ * returns previous result.
  */
 @Service
 @Transactional

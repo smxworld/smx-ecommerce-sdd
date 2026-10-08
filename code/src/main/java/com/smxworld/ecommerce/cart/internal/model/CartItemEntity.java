@@ -1,11 +1,23 @@
 package com.smxworld.ecommerce.cart.internal.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 
+/**
+ * JPA entity for a line of a {@link CartEntity}, persisted in {@code smx_cart.cart_items}.
+ *
+ * <p>It stores the product name and the unit price at the time the product was added, so the cart shows stable prices;
+ * they are not recomputed from the catalog. See product/features/cart.md.
+ */
 @Entity
 @Table(name = "cart_items", schema = "smx_cart")
 public class CartItemEntity {

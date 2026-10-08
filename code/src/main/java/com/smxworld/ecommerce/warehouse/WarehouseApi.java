@@ -3,9 +3,7 @@ package com.smxworld.ecommerce.warehouse;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Public API of the Warehouse module.
- */
+/** Public API of the Warehouse module. */
 public interface WarehouseApi {
 
     StockInfo getStock(UUID productId);

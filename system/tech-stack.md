@@ -129,7 +129,7 @@ smx-ecommerce/
     src/
       main/
         java/com/smxworld/ecommerce/
-          SmxECommerceApplication.java
+          SmxEcommerceApplication.java
           api/              ← REST controllers (internal BFF)
           identity/         ← identity module
           catalog/          ← catalog module
@@ -156,5 +156,5 @@ smx-ecommerce/
 - Do not use `spring.jpa.hibernate.ddl-auto=create` — Flyway only
 - Flyway scripts go in `resources/db/migration/<schema>/` (e.g., `db/migration/smx_order/V1__init.sql`)
 - Runtime isolation is implemented through schema-qualified entities and per-schema Flyway migration configuration
-- For architecture tests: `ApplicationModules.of(SmxECommerceApplication.class).verify()` should be run as the base test
+- For architecture tests: `ApplicationModules.of(SmxEcommerceApplication.class).verify()` should be run as the base test
 - Elasticsearch for product search — use Spring Data Elasticsearch

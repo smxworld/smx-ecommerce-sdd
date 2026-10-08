@@ -7,8 +7,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Configura Flyway per il modulo catalog (schema smx_catalog).
- * Attivo solo quando il datasource PostgreSQL è configurato (non nei test con H2).
+ * Configura Flyway per il modulo catalog (schema smx_catalog). Attivo solo quando il datasource PostgreSQL è
+ * configurato (non nei test con H2).
  */
 @Configuration
 @ConditionalOnProperty("smx.modules.catalog.datasource.url")

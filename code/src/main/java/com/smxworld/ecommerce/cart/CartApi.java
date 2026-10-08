@@ -4,9 +4,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Public API of the Cart module.
- */
+/** Public API of the Cart module. */
 public interface CartApi {
 
     Cart getCart(String userId);

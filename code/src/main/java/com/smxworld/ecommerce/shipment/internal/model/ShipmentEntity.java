@@ -1,11 +1,23 @@
 package com.smxworld.ecommerce.shipment.internal.model;
 
 import com.smxworld.ecommerce.shipment.ShipmentStatus;
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 
+/**
+ * JPA entity for the shipment of a confirmed order, persisted in {@code smx_shipment.shipments}.
+ *
+ * <p>One shipment per order (unique {@code order_id}). The carrier and the tracking number are simulated at creation
+ * time, since there is no real carrier integration yet. See product/features/warehouse-shipment.md.
+ */
 @Entity
 @Table(name = "shipments", schema = "smx_shipment")
 public class ShipmentEntity {
@@ -55,7 +67,9 @@ public class ShipmentEntity {
 
     @PrePersist
     private void onCreate() {
-        if (this.createdAt == null) this.createdAt = Instant.now();
+        if (this.createdAt == null) {
+            this.createdAt = Instant.now();
+        }
     }
 
     public void markDelivered() {

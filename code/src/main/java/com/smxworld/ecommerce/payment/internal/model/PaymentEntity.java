@@ -1,11 +1,21 @@
 package com.smxworld.ecommerce.payment.internal.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 
+/**
+ * JPA entity for the payment attempt of an order, persisted in {@code smx_payment.payments}.
+ *
+ * <p>There is at most one payment per order (unique constraint on {@code order_id}), which enforces idempotency at
+ * database level. It starts as {@code PENDING} and is then marked successful, with the gateway transaction id, or
+ * failed, with the reason later notified to the buyer. See product/features/payment.md.
+ */
 @Entity
 @Table(name = "payments", schema = "smx_payment")
 public class PaymentEntity {

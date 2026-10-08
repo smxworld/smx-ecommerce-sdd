@@ -184,6 +184,7 @@
                         </includes>
                         <palantirJavaFormat>
                             <version>${palantir-java-format.version}</version>
+                            <formatJavadoc>true</formatJavadoc>
                         </palantirJavaFormat>
                         <removeUnusedImports/>
                         <importOrder>

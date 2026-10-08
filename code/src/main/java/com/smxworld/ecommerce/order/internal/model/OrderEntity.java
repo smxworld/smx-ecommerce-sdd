@@ -1,7 +1,17 @@
 package com.smxworld.ecommerce.order.internal.model;
 
 import com.smxworld.ecommerce.order.OrderStatus;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
@@ -9,6 +19,13 @@ import java.util.List;
 import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 
+/**
+ * JPA aggregate root for a customer order, persisted in {@code smx_order.orders}.
+ *
+ * <p>It owns its {@link OrderItemEntity} lines (cascade and orphan removal), keeps the total in sync when items are
+ * added and holds the current {@link OrderStatus}, which is moved through {@link #transitionTo(OrderStatus)} by the
+ * order state machine. Created in {@code PENDING} at the start of checkout. See product/features/checkout-order.md.
+ */
 @Entity
 @Table(name = "orders", schema = "smx_order")
 public class OrderEntity {

@@ -33,11 +33,11 @@ class AnalyticsService implements AnalyticsApi {
     // ─── Private helpers ────────────────────────��─────────────────────────────
 
     /**
-     * Simple score recalculation: queries that appear more often get a higher score.
-     * Published as SearchScoreUpdatedEvent consumed by Catalog.
+     * Simple score recalculation: queries that appear more often get a higher score. Published as
+     * SearchScoreUpdatedEvent consumed by Catalog.
      *
-     * <p>Note: In a real system this would involve product-level click-through data.
-     * Here we derive a proxy score from query frequency.
+     * <p>Note: In a real system this would involve product-level click-through data. Here we derive a proxy score from
+     * query frequency.
      */
     private void recalculateScores() {
         List<Object[]> topQueries = logRepo.findTopQueries();

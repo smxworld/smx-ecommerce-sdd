@@ -3,9 +3,7 @@ package com.smxworld.ecommerce.order;
 import java.util.List;
 import java.util.UUID;
 
-/**
- * Public API of the Order module.
- */
+/** Public API of the Order module. */
 public interface OrderApi {
 
     OrderSummary createOrder(String userId, CreateOrderRequest request);

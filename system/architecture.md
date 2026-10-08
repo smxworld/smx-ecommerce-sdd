@@ -53,7 +53,7 @@ Move application classes to `service`, domain classes to `model`, and infrastruc
 
 This reorganisation changes only file locations, package declarations and imports. Method bodies, dependencies and behaviour remain unchanged; extracting queries from services is outside its scope. Preserve existing public APIs, DTOs and events at module roots, all `package-info.java` annotations, and the existing `api/rest` BFF entry point.
 
-Verification requires a clean compilation, the existing Maven test suite and `ApplicationModules.of(SmxECommerceApplication.class).verify()`. Tests retain all existing methods and assertions; only package declarations, imports and file locations may follow relocated production classes. No legacy internal packages may remain, and a source comparison must confirm that no method body changed.
+Verification requires a clean compilation, the existing Maven test suite and `ApplicationModules.of(SmxEcommerceApplication.class).verify()`. Tests retain all existing methods and assertions; only package declarations, imports and file locations may follow relocated production classes. No legacy internal packages may remain, and a source comparison must confirm that no method body changed.
 
 Packages under `internal/` are invisible to other modules. Spring Modulith verifies this automatically with `@ApplicationModuleTest`.
 
@@ -85,6 +85,6 @@ Keycloak manages authentication. The `identity` module validates the JWT on ever
 - The project is a single Maven module with Spring Boot 3.x and Spring Modulith
 - Root package: `com.smxworld.ecommerce`
 - Each module is a Java package, not a separate Maven project
-- Use `ApplicationModules.of(SmxECommerceApplication.class).verify()` for the cross-module boundary check and `@ApplicationModuleTest` for focused module tests
-- Spring Modulith documentation is generated from `ApplicationModules.of(SmxECommerceApplication.class)` in `ApplicationModulesTest`
+- Use `ApplicationModules.of(SmxEcommerceApplication.class).verify()` for the cross-module boundary check and `@ApplicationModuleTest` for focused module tests
+- Spring Modulith documentation is generated from `ApplicationModules.of(SmxEcommerceApplication.class)` in `ApplicationModulesTest`
 - Code goes in `code/` at the project root

@@ -13,6 +13,14 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * HTTP security of the REST API.
+ *
+ * <p>Requests are stateless and authenticated with the JWT issued by Keycloak (OAuth2 resource server); CSRF protection
+ * is disabled because no session or cookie is used. Warehouse stock updates and order status changes are restricted to
+ * the {@code OPERATOR} role. CORS only allows the local React frontend. See system/architecture.md and
+ * product/features/frontend.md.
+ */
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {

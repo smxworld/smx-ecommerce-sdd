@@ -1,11 +1,23 @@
 package com.smxworld.ecommerce.catalog.internal.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.Id;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 
+/**
+ * JPA entity for a catalog product, persisted in {@code smx_catalog.products}.
+ *
+ * <p>Besides descriptive data and price it carries the aggregates derived from other modules: the average rating and
+ * review count, updated incrementally on every new review, and the search score fed back by analytics. Stock is
+ * deliberately absent: it belongs to the warehouse module. See product/features/catalog-search.md.
+ */
 @Entity
 @Table(name = "products", schema = "smx_catalog")
 public class Product {
@@ -62,8 +74,8 @@ public class Product {
     }
 
     /**
-     * Aggiorna la media del rating con un nuovo voto, usando una media mobile incrementale
-     * per evitare di tenere tutti i rating in memoria.
+     * Aggiorna la media del rating con un nuovo voto, usando una media mobile incrementale per evitare di tenere tutti
+     * i rating in memoria.
      */
     public void applyNewRating(int rating) {
         reviewCount++;

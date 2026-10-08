@@ -2,11 +2,16 @@ package com.smxworld.ecommerce.catalog.internal.model;
 
 import java.math.BigDecimal;
 import org.springframework.data.annotation.Id;
-import org.springframework.data.elasticsearch.annotations.*;
+import org.springframework.data.elasticsearch.annotations.Document;
+import org.springframework.data.elasticsearch.annotations.Field;
+import org.springframework.data.elasticsearch.annotations.FieldType;
+import org.springframework.data.elasticsearch.annotations.InnerField;
+import org.springframework.data.elasticsearch.annotations.MultiField;
+import org.springframework.data.elasticsearch.annotations.Setting;
 
 /**
- * Documento Elasticsearch per l'indice "products".
- * Non contiene lo stock: la disponibilità viene letta da WarehouseApi on-demand.
+ * Documento Elasticsearch per l'indice "products". Non contiene lo stock: la disponibilità viene letta da WarehouseApi
+ * on-demand.
  */
 @Document(indexName = "products", createIndex = false)
 @Setting(shards = 1, replicas = 0)

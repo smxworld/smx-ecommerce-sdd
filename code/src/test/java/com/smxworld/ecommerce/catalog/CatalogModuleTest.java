@@ -45,12 +45,10 @@ import org.springframework.transaction.support.TransactionTemplate;
 class CatalogModuleTest {
 
     /**
-     * Configurazione di test che fornisce:
-     * - SyncTaskExecutor: rende @Async (usato da @ApplicationModuleListener) sincrono e
-     *   deterministico nei test, senza dover ricorrere a sleep o CountDownLatch.
-     * - Mock ES via Mockito.mock() (proxy JDK) invece di @MockBean: su Java 25 byte-buddy
-     *   fallisce nello strumentare l'intera gerarchia di ElasticsearchOperations.
-     *   Le auto-configurazioni ES sono escluse in application-test.yml.
+     * Configurazione di test che fornisce: - SyncTaskExecutor: rende @Async (usato da @ApplicationModuleListener)
+     * sincrono e deterministico nei test, senza dover ricorrere a sleep o CountDownLatch. - Mock ES via Mockito.mock()
+     * (proxy JDK) invece di @MockBean: su Java 25 byte-buddy fallisce nello strumentare l'intera gerarchia di
+     * ElasticsearchOperations. Le auto-configurazioni ES sono escluse in application-test.yml.
      */
     @TestConfiguration
     static class TestConfig {
@@ -239,7 +237,7 @@ class CatalogModuleTest {
         });
     }
 
-    /** Ritorna un mock di SearchHits<ProductDocument> con zero risultati. */
+    /** Ritorna un mock di SearchHits&lt;ProductDocument&gt; con zero risultati. */
     @SuppressWarnings("unchecked")
     private static SearchHits<ProductDocument> emptySearchHits() {
         SearchHits<ProductDocument> hits = mock(SearchHits.class);

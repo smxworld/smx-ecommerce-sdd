@@ -172,4 +172,4 @@ Producers and consumers do not change.
 - Return DTOs (e.g., `ProductDetails`, `OrderSummary`) also go in the root package — they are part of the public contract
 - Never expose JPA entities as return types of public APIs — always use DTOs
 - `@ApplicationModuleListener` is the Spring Modulith annotation for event consumers — handles transactionality automatically
-- Boundary verification is done with: `ApplicationModules.of(SmxECommerceApplication.class).verify()`
+- Boundary verification is done with: `ApplicationModules.of(SmxEcommerceApplication.class).verify()`

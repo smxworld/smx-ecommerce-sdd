@@ -2,10 +2,7 @@ package com.smxworld.ecommerce.catalog;
 
 import java.util.UUID;
 
-/**
- * Public API of the Catalog module.
- * Exposes product lookup and search capabilities.
- */
+/** Public API of the Catalog module. Exposes product lookup and search capabilities. */
 public interface CatalogApi {
 
     ProductDetails getProduct(UUID productId);

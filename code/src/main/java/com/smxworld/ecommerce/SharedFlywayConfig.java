@@ -6,9 +6,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * Esegue le migration Flyway per lo schema public (condiviso).
- * Crea la tabella event_publication richiesta da Spring Modulith
- * prima che Hibernate validi lo schema con ddl-auto=validate.
+ * Esegue le migration Flyway per lo schema public (condiviso). Crea la tabella event_publication richiesta da Spring
+ * Modulith prima che Hibernate validi lo schema con ddl-auto=validate.
  */
 @Configuration
 class SharedFlywayConfig {

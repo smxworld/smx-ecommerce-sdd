@@ -1,12 +1,27 @@
 package com.smxworld.ecommerce.cart.internal.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
+import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 
+/**
+ * JPA aggregate root for a buyer's shopping cart, persisted in {@code smx_cart.carts}.
+ *
+ * <p>There is one cart per user (unique {@code user_id}) and it owns its {@link CartItemEntity} lines, so that the
+ * content and the price snapshots are still there when the buyer returns in a new session. See
+ * product/features/cart.md.
+ */
 @Entity
 @Table(name = "carts", schema = "smx_cart")
 public class CartEntity {

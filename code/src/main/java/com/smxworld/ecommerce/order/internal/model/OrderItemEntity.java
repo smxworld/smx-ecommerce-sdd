@@ -1,10 +1,23 @@
 package com.smxworld.ecommerce.order.internal.model;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
 
+/**
+ * JPA entity for a single order line, persisted in {@code smx_order.order_items}.
+ *
+ * <p>Product name and unit price are snapshotted at checkout so that the order keeps showing what the buyer actually
+ * paid even if the catalog changes later. The reference to the product is a plain {@code productId}, not an
+ * association, to keep the order module decoupled from the catalog. See product/features/checkout-order.md.
+ */
 @Entity
 @Table(name = "order_items", schema = "smx_order")
 public class OrderItemEntity {

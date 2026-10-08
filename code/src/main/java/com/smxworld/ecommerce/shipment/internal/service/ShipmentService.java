@@ -36,12 +36,14 @@ class ShipmentService implements ShipmentApi {
     // ─── Event listeners ──────────────────────────────────────────────────────
 
     /**
-     * When an order is confirmed, immediately create a shipment record
-     * and publish OrderShippedEvent (simulated carrier).
+     * When an order is confirmed, immediately create a shipment record and publish OrderShippedEvent (simulated
+     * carrier).
      */
     @ApplicationModuleListener
     void on(OrderConfirmedEvent event) {
-        if (shipmentRepo.findByOrderId(event.orderId()).isPresent()) return;
+        if (shipmentRepo.findByOrderId(event.orderId()).isPresent()) {
+            return;
+        }
 
         ShipmentEntity shipment = new ShipmentEntity(event.orderId(), event.userId());
         shipmentRepo.save(shipment);
