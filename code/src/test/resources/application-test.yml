@@ -32,3 +32,7 @@ smx:
         # perché Spring Boot considera la stringa "false" come condizione non soddisfatta.
         # Con ddl-auto=create-drop Hibernate crea direttamente le tabelle da JPA, senza Flyway.
         url: "false"
+    cart:
+      datasource:
+        # Same trick as catalog: Hibernate creates the H2 tables, Flyway (PostgreSQL scripts) must not run.
+        url: "false"
