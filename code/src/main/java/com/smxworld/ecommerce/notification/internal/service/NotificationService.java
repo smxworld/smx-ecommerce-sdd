@@ -66,13 +66,9 @@ class NotificationService {
             helper.setSubject(subject);
             helper.setText(body, true);
             mailSender.send(message);
-            if (log.isInfoEnabled()) {
-                log.info("Email sent to {} — subject: {}", to, subject);
-            }
+            log.info("Email sent to {} — subject: {}", to, subject);
         } catch (MessagingException e) {
-            if (log.isErrorEnabled()) {
-                log.error("Failed to send email to {} — {}", to, e.getMessage());
-            }
+            log.error("Failed to send email to {} — {}", to, e.getMessage());
         }
     }
 }
