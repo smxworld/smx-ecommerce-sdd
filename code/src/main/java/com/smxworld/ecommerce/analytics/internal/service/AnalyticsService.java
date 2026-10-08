@@ -5,6 +5,7 @@ import com.smxworld.ecommerce.analytics.internal.model.SearchLogEntity;
 import com.smxworld.ecommerce.analytics.internal.repository.SearchLogRepository;
 import com.smxworld.ecommerce.catalog.SearchPerformedEvent;
 import com.smxworld.ecommerce.catalog.SearchScoreUpdatedEvent;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.UUID;
 import org.springframework.context.ApplicationEventPublisher;
@@ -51,7 +52,7 @@ class AnalyticsService implements AnalyticsApi {
             // Emit a synthetic product score update.
             // In a real system, we'd link queries to product IDs via click logs.
             // Here we use a deterministic UUID derived from the query string as a placeholder.
-            UUID productId = UUID.nameUUIDFromBytes(query.getBytes());
+            UUID productId = UUID.nameUUIDFromBytes(query.getBytes(StandardCharsets.UTF_8));
             events.publishEvent(new SearchScoreUpdatedEvent(productId, score));
         });
     }

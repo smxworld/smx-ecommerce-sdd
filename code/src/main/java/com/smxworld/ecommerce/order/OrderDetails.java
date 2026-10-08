@@ -13,4 +13,8 @@ public record OrderDetails(
         List<OrderItem> items,
         BigDecimal totalAmount,
         Instant createdAt,
-        Instant updatedAt) {}
+        Instant updatedAt) {
+    public OrderDetails {
+        items = List.copyOf(items);
+    }
+}

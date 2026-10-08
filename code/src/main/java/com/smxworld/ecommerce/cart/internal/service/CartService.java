@@ -107,7 +107,7 @@ class CartService implements CartApi {
             cart.getItems()
                     .forEach(item -> events.publishEvent(
                             new ProductUnbookedEvent(item.getProductId(), userId, item.getQuantity())));
-            cart.getItems().clear();
+            cart.clearItems();
             cartRepo.save(cart);
         });
     }

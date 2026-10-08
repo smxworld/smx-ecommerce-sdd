@@ -15,6 +15,7 @@ import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
@@ -115,8 +116,9 @@ public class OrderEntity {
         return shippingAddress;
     }
 
+    /** Read-only view: items are added through {@link #addItem}. */
     public List<OrderItemEntity> getItems() {
-        return items;
+        return Collections.unmodifiableList(items);
     }
 
     public Instant getCreatedAt() {

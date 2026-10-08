@@ -61,11 +61,7 @@ public class CartItemEntity {
         return id;
     }
 
-    public CartEntity getCart() {
-        return cart;
-    }
-
-    public void setCart(CartEntity c) {
+    void setCart(CartEntity c) {
         this.cart = c;
     }
 

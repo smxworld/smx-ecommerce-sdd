@@ -57,11 +57,7 @@ public class OrderItemEntity {
         return id;
     }
 
-    public OrderEntity getOrder() {
-        return order;
-    }
-
-    public void setOrder(OrderEntity o) {
+    void setOrder(OrderEntity o) {
         this.order = o;
     }
 

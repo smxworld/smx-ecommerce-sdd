@@ -11,6 +11,7 @@ import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import org.hibernate.annotations.UuidGenerator;
@@ -80,8 +81,13 @@ public class CartEntity {
         return userId;
     }
 
+    /** Read-only view: items are added and removed through {@link #addItem} and {@link #removeItem}. */
     public List<CartItemEntity> getItems() {
-        return items;
+        return Collections.unmodifiableList(items);
+    }
+
+    public void clearItems() {
+        items.clear();
     }
 
     public Instant getCreatedAt() {
